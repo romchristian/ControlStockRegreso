@@ -49,12 +49,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         setContentView(R.layout.activity_main);
 
         //Verifica Login
-        if (!Mock.LOGEADO) {
+        /*if (!Mock.LOGEADO) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }
+        }*/
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
