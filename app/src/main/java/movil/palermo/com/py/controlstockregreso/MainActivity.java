@@ -91,7 +91,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
 
-
     }
 
 
@@ -183,7 +182,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         View rootView;
         TextView fecha, responsable;
-        AutoCompleteTextView autoCompleteChofer,autoCompleteVendedor,autoCompleteCamion;
+        AutoCompleteTextView autoCompleteChofer, autoCompleteVendedor, autoCompleteCamion;
         ListView listProductos;
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
@@ -201,7 +200,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             int tabId = getArguments().getInt(ARG_SECTION_NUMBER);
-
 
 
             switch (tabId) {
@@ -222,22 +220,22 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
 
-        private void cargaFragmentoNuevo(){
+        private void cargaFragmentoNuevo() {
             //Asigna Fecha
-            fecha = (TextView) rootView.findViewById(R.id.textView_fecha);
-            SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM,new Locale("es","py"));
+            /*fecha = (TextView) rootView.findViewById(R.id.textView_fecha);
+            SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM, new Locale("es", "py"));
             fecha.setText(sdf.format(new Date()));
             //Asigna Responsable
             responsable = (TextView) rootView.findViewById(R.id.textView_resposable);
-            responsable.setText("Resp: "+ Mock.USUARIO);
+            responsable.setText("Resp: " + Mock.USUARIO);*/
         }
 
-        private void cargaFragmentoListado(){
+        private void cargaFragmentoListado() {
             // Get ListView object from xml
             listProductos = (ListView) rootView.findViewById(R.id.list_productos);
 
             // Defined Array values to show in ListView
-            String[] values = new String[] {
+            String[] values = new String[]{
                     "Control 1",
                     "Control 2",
                     "Control 3",
@@ -263,7 +261,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
     }
-
 
 
 }

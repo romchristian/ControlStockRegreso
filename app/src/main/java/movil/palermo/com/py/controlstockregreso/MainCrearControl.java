@@ -31,9 +31,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         bttnAgregarMovil = (Button)findViewById(R.id.bttnAgregarMovil);
         bttnCargarProductos = (Button) findViewById(R.id.bttnCargarProductos);
         bttnFinalizarControl = (Button) findViewById(R.id.bttnFinalizarControl);
-        txtVwVendedor = (TextView) findViewById(R.id.txtVwVendedor);
-        txtVwChofer = (TextView) findViewById(R.id.txtVwChofer);
-        txtVwMovil = (TextView) findViewById(R.id.txtVwMovil);
+
         bttnAgregarVendedor.setOnClickListener(this);
         bttnAgregarChofer.setOnClickListener(this);
         bttnAgregarMovil.setOnClickListener(this);
@@ -58,12 +56,18 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_actualizar:
+                Intent intent = new Intent(this, ActualizaActivity.class);
+                this.startActivity(intent);
+                break;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -97,19 +101,22 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
             String dato = resultado.getString("RESULTADO");
             switch (requestCode) {
                 case AGREGAR_VENDEDOR:
-                    txtVwVendedor.setText("Vendedor: " + dato);
-                    Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    bttnAgregarVendedor.setText("Vendedor: " + dato);
+                    //txtVwVendedor.setText("Vendedor: " + dato);
+                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
                     break;
                 case AGREGAR_CHOFER:
-                    txtVwChofer.setText("Chofer: " + dato);
-                    Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    bttnAgregarChofer.setText("Chofer: " + dato);
+                    //txtVwChofer.setText("Chofer: " + dato);
+                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
                     break;
                 case AGREGAR_MOVIL:
-                    txtVwMovil.setText("Móvil: " + dato);
-                    Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    bttnAgregarMovil.setText("Móvil: " + dato);
+                    //txtVwMovil.setText("Móvil: " + dato);
+                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
                     break;
                 case CARGAR_PRODUCTOS:
-                    Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
                     break;
             }
         }else{

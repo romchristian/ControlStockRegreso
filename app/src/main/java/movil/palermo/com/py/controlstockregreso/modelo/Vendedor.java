@@ -1,0 +1,59 @@
+package movil.palermo.com.py.controlstockregreso.modelo;
+
+import com.j256.ormlite.field.DatabaseField;
+
+/**
+ * Created by cromero on 18/11/2014.
+ */
+public class Vendedor {
+    @DatabaseField(id = true)
+    private Integer id;
+    @DatabaseField(index = true)
+    private String nombre;
+    @DatabaseField
+    private Integer depositoId;
+    @DatabaseField(foreign = true,columnName = "conductor_id",canBeNull = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+    private Conductor conductor;
+
+    public Vendedor() {
+    }
+
+    public Vendedor(Integer id, String nombre, Integer depositoId, Conductor conductor) {
+        this.id = id;
+        this.nombre = nombre;
+        this.depositoId = depositoId;
+        this.conductor = conductor;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getDepositoId() {
+        return depositoId;
+    }
+
+    public void setDepositoId(Integer depositoId) {
+        this.depositoId = depositoId;
+    }
+
+    public Conductor getConductor() {
+        return conductor;
+    }
+
+    public void setConductor(Conductor conductor) {
+        this.conductor = conductor;
+    }
+}

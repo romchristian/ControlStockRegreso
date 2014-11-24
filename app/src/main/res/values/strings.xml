@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ControlStockRegreso</string>
+    <string name="app_name">Control Stock</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
@@ -9,11 +9,15 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_lista_vendedor_chofer_movil">ListaVendedorChoferMovil</string>
-    <string name="title_activity_lista_productos">ListaProductos</string>
+    <string name="title_activity_lista_productos">Seleccione productos</string>
     <string name="title_activity_detalle_producto">DetalleProducto</string>
     <string name="title_activity_historial_cargas">HistorialCargas</string>
-    <string name="title_activity_lista_vendedor">ListaVendedor</string>
-    <string name="title_activity_lista_chofer">ListaChofer</string>
-    <string name="title_activity_lista_movil">ListaMovil</string>
+    <string name="title_activity_lista_vendedor">Seleccione un Vendedor</string>
+    <string name="title_activity_lista_chofer">Seleccione un Chofer</string>
+    <string name="title_activity_lista_movil">Seleccione un Móvil</string>
+    <string name="nuevocontrol">Nuevo Control</string>
+    <string name="title_activity_actualiza">ActualizaActivity</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="listado">Listado</string>
 
 </resources>

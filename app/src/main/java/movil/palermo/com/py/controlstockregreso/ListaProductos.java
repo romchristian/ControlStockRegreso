@@ -1,6 +1,7 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,14 +14,29 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
+import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+
 
 public class ListaProductos extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int CONTAR_PRODUCTOS = 201;
-    private String productos[] = { "PLM3", "Palermo Premium Red", "Palermo Premium Blue", "Palermo Premium Green",
-            "Kentucky", "San Marino", "Ei8ht"};
+
     private Button bttnFinalizarConteo;
     private ListView lstVwProductos;
     Intent intentDetalleProducto;
+
+    private List<Producto> productoList = new ArrayList<Producto>();
+    private CustomListAdapter adapter;
+    private DatabaseHelper databaseHelper;
+    private RuntimeExceptionDao<Producto,Integer> productoDao;
+    private ProgressDialog pDialog;
+
+
     private ArrayAdapter<String> adaptador;
 
     @Override
@@ -30,10 +46,41 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         bttnFinalizarConteo = (Button) findViewById(R.id.bttnFinalizarConteo);
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
-        adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,productos);
-        lstVwProductos.setAdapter(adaptador);
+
+        //Seteo el custom adapter
+        adapter = new CustomListAdapter(this, productoList);
+        lstVwProductos.setAdapter(adapter);
+
+        //instancio la BD y cargo mi lista
+
+        databaseHelper = new DatabaseHelper(this.getApplicationContext());
+        productoDao = databaseHelper.getProductoRuntimeDao();
+        recargaLista();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        recargaLista();
+    }
+
+    private void recargaLista() {
+        pDialog = new ProgressDialog(this);
+        // Showing progress dialog before making http request
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        productoList.clear();
+        productoList.addAll(productoDao.queryForAll());
+        adapter.notifyDataSetChanged();
+        hidePDialog();
+    }
+
+    private void hidePDialog() {
+        if (pDialog != null) {
+            pDialog.dismiss();
+            pDialog = null;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
