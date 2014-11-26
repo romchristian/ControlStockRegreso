@@ -54,7 +54,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         //instancio la BD y cargo mi lista
 
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
-        productoDao = databaseHelper.getProductoRuntimeDao();
+        productoDao = databaseHelper.getProductoDao();
         recargaLista();
     }
 

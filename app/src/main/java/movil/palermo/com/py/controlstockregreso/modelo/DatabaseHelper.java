@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -23,10 +22,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
 
-    private Dao<Producto, Integer> productoDao = null;
-    private RuntimeExceptionDao<Producto, Integer> productoRuntimeDao = null;
-    private Dao<Vehiculo, Integer> vehiculoDao = null;
-    private RuntimeExceptionDao<Vehiculo, Integer> vehiculoRuntimeDao = null;
+    private RuntimeExceptionDao<Vendedor, Integer> vendedorDao = null;
+    private RuntimeExceptionDao<Conductor, Integer> conductorDao = null;
+    private RuntimeExceptionDao<Vehiculo, Integer> vehiculoDao = null;
+    private RuntimeExceptionDao<UnidadMedida, Integer> unidadMedidaDao = null;
+    private RuntimeExceptionDao<Producto, Integer> productoDao = null;
+    private RuntimeExceptionDao<Control, Integer> controlDao = null;
+    private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao = null;
+    private RuntimeExceptionDao<Sesion, Integer> sesionDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -38,19 +41,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, Producto.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla Producto creada!");
-            TableUtils.createTable(connectionSource,Vehiculo.class);
+            TableUtils.createTable(connectionSource, Vehiculo.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla Vehiculo creada!");
-            TableUtils.createTable(connectionSource,Conductor.class);
+            TableUtils.createTable(connectionSource, Conductor.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla Conductor creada!");
-            TableUtils.createTable(connectionSource,Vendedor.class);
+            TableUtils.createTable(connectionSource, Vendedor.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla Vendedor creada!");
-            TableUtils.createTable(connectionSource,UnidadMedida.class);
+            TableUtils.createTable(connectionSource, UnidadMedida.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla UnidadMedida creada!");
-            TableUtils.createTable(connectionSource,Sesion.class);
+            TableUtils.createTable(connectionSource, Sesion.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla Session creada!");
-            TableUtils.createTable(connectionSource,Control.class);
+            TableUtils.createTable(connectionSource, Control.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla Control creada!");
-            TableUtils.createTable(connectionSource,ControlDetalle.class);
+            TableUtils.createTable(connectionSource, ControlDetalle.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla ControlDetalle creada!");
 
 
@@ -68,7 +71,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, Producto.class, true);
 
-            switch (newVersion){
+            switch (newVersion) {
                 case 2:
 
                     break;
@@ -86,40 +89,67 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
 
-    public Dao<Producto, Integer> getProductoDao() throws SQLException {
+    public RuntimeExceptionDao<Producto, Integer> getProductoDao() {
         if (productoDao == null) {
-            productoDao = getDao(Producto.class);
+            productoDao = getRuntimeExceptionDao(Producto.class);
         }
         return productoDao;
     }
 
-    public RuntimeExceptionDao<Producto, Integer> getProductoRuntimeDao() {
-        if (productoRuntimeDao == null) {
-            productoRuntimeDao = getRuntimeExceptionDao(Producto.class);
-        }
-        return productoRuntimeDao;
-    }
 
-    public Dao<Vehiculo, Integer> getVehiculoDao() throws SQLException {
+    public RuntimeExceptionDao<Vehiculo, Integer> getVehiculoDao() {
         if (vehiculoDao == null) {
-            vehiculoDao = getDao(Vehiculo.class);
+            vehiculoDao = getRuntimeExceptionDao(Vehiculo.class);
         }
         return vehiculoDao;
     }
 
-    public RuntimeExceptionDao<Vehiculo, Integer> getVehiculoRuntimeDao() {
-        if (vehiculoRuntimeDao == null) {
-            vehiculoRuntimeDao = getRuntimeExceptionDao(Vehiculo.class);
-        }
-        return vehiculoRuntimeDao;
+    public RuntimeExceptionDao<Vendedor, Integer> getVendedorDao() {
+        if (vehiculoDao == null)
+            vendedorDao = getRuntimeExceptionDao(Vendedor.class);
+        return vendedorDao;
+    }
+
+    public RuntimeExceptionDao<Conductor, Integer> getConductorDao() {
+        if(conductorDao == null)
+            conductorDao = getRuntimeExceptionDao(Conductor.class);
+        return conductorDao;
+    }
+
+    public RuntimeExceptionDao<UnidadMedida, Integer> getUnidadMedidaDao() {
+        if(unidadMedidaDao == null)
+            unidadMedidaDao = getRuntimeExceptionDao(UnidadMedida.class);
+        return unidadMedidaDao;
+    }
+
+    public RuntimeExceptionDao<Control, Integer> getControlDao() {
+        if(controlDao == null)
+            controlDao = getRuntimeExceptionDao(Control.class);
+        return controlDao;
+    }
+
+    public RuntimeExceptionDao<ControlDetalle, Integer> getControlDetalleDao() {
+        if(controlDetalleDao == null)
+            controlDetalleDao = getRuntimeExceptionDao(ControlDetalle.class);
+        return controlDetalleDao;
+    }
+
+    public RuntimeExceptionDao<Sesion, Integer> getSesionDao() {
+        if (sesionDao == null)
+            sesionDao = getRuntimeExceptionDao(Sesion.class);
+        return sesionDao;
     }
 
     @Override
     public void close() {
         super.close();
-        productoDao = null;
-        productoRuntimeDao = null;
+        vendedorDao = null;
+        conductorDao = null;
         vehiculoDao = null;
-        vehiculoRuntimeDao = null;
+        productoDao = null;
+        unidadMedidaDao = null;
+        controlDao = null;
+        controlDetalleDao = null;
+        sesionDao = null;
     }
 }

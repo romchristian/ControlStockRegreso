@@ -1,5 +1,6 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -22,7 +23,12 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
+
         setContentView(R.layout.activity_lista_vendedor);
+
         lstVwVendedor =(ListView) findViewById(R.id.lstVwVendedor);
         adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,vendedores);
         lstVwVendedor.setAdapter(adaptador);

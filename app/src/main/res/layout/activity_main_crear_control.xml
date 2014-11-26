@@ -1,83 +1,189 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".MainCrearControl">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainCrearControl"
+    android:layout_marginTop="?attr/actionBarSize">
+    <FrameLayout
+        android:id="@+id/recuadroVendedor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/fondo_recuadro"
+        android:layout_margin="5dp">
 
-
-        <!--<TextView
-            android:id="@+id/txtVwTitulo"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Nuevo Control"
-            android:padding="15dp"
-            android:background="@drawable/fondo_celeste"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center_horizontal" />-->
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtVwVendedorTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Vendedor: "
+                android:paddingTop="5dp"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"/>
+            <TextView
+                android:id="@+id/txtVwVendedorValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                android:paddingLeft="10dp"
+                android:hint="Seleccione un vendedor"
+                android:layout_below="@+id/txtVwVendedorTitulo"
+                android:layout_marginTop="10dp"
+                />
 
+            <ImageView
+                android:layout_alignTop="@+id/txtVwVendedorValue"
+                android:id="@+id/search_vendedor"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/search"
+                android:layout_width="wrap_content"
+                android:background="@drawable/fondo_img"
+                android:padding="10dp"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
+    </FrameLayout>
+    <FrameLayout
+        android:layout_below="@+id/recuadroVendedor"
+        android:id="@+id/recuadroChofer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/fondo_recuadro"
+        android:layout_margin="5dp">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Seleccionar Vendedor"
-            android:id="@+id/bttnAgregarVendedor"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="30dp"
-            android:paddingTop="30dp"/>
-
-
-        <Button
-            android:layout_below="@+id/bttnAgregarVendedor"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccionar Chofer"
-            android:id="@+id/bttnAgregarChofer"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="30dp"
-            android:paddingTop="30dp"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtVwChoferTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Conductor: "
+                android:paddingTop="5dp"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"/>
+            <TextView
+                android:id="@+id/txtVwChoferValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                android:paddingLeft="10dp"
+                android:hint="Seleccione un conductor"
 
+                android:layout_below="@+id/txtVwChoferTitulo"
+                android:layout_marginTop="10dp"
+                />
 
+            <ImageView
+                android:layout_alignTop="@+id/txtVwChoferValue"
+                android:id="@+id/search_chofer"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/search"
+                android:layout_width="wrap_content"
+                android:background="@drawable/fondo_img"
+                android:padding="10dp"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
-        <Button
-            android:layout_below="@id/bttnAgregarChofer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Seleccionar Móvil"
-            android:id="@+id/bttnAgregarMovil"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="30dp"
-            android:paddingTop="30dp"/>
+    </FrameLayout>
+    <FrameLayout
+        android:layout_below="@+id/recuadroChofer"
+        android:id="@+id/recuadroMovil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/fondo_recuadro"
+        android:layout_margin="5dp">
 
-        <Button
-            android:layout_below="@+id/bttnAgregarMovil"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cargar Productos"
-            android:id="@+id/bttnCargarProductos"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="20dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="30dp"
-            android:paddingTop="30dp"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtVwMovilTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Movil: "
+                android:paddingTop="5dp"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"/>
+            <TextView
+                android:id="@+id/txtVwMovilValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                android:paddingLeft="10dp"
+                android:hint="Seleccione un movil"
+                android:layout_below="@+id/txtVwMovilTitulo"
+                android:layout_marginTop="10dp"
+                />
 
-        <Button
-            android:padding="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#1499FF"
-            android:textSize="24sp"
-            android:textColor="#fff"
-            android:textStyle="bold"
-            android:text="Confirmar"
-            android:id="@+id/bttnFinalizarControl" />
+            <ImageView
+                android:layout_alignTop="@+id/txtVwMovilValue"
+                android:id="@+id/search_movil"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/search"
+                android:layout_width="wrap_content"
+                android:background="@drawable/fondo_img"
+                android:padding="10dp"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
+
+
+
+    <Button
+        android:layout_below="@+id/recuadroMovil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cargar Productos"
+        android:id="@+id/bttnCargarProductos"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="30dp"
+        android:paddingTop="30dp" />
+
+    <Button
+        android:padding="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#1499FF"
+        android:textSize="24sp"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:text="Confirmar"
+        android:id="@+id/bttnFinalizarControl" />
+
+    <ImageView
+        android:id="@+id/ok_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ok"
+        android:visibility="invisible"
+        android:background="#00ffffff"/>
 
 
 </RelativeLayout>
