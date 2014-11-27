@@ -1,4 +1,4 @@
-package movil.palermo.com.py.controlstockregreso;
+package movil.palermo.com.py.controlstockregreso.custom;
 
 /**
  * Created by cromero on 14/11/2014.
@@ -17,16 +17,18 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.List;
 
+import movil.palermo.com.py.controlstockregreso.AppController;
+import movil.palermo.com.py.controlstockregreso.R;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 
 
-public class CustomListAdapter extends BaseAdapter {
+public class ProductoListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Producto> productos;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public CustomListAdapter(Activity activity, List<Producto> productos) {
+    public ProductoListAdapter(Activity activity, List<Producto> productos) {
         this.activity = activity;
         this.productos = productos;
     }

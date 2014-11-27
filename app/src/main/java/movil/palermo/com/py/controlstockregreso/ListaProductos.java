@@ -19,6 +19,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import java.util.ArrayList;
 import java.util.List;
 
+import movil.palermo.com.py.controlstockregreso.custom.ProductoListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 
@@ -31,7 +32,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     Intent intentDetalleProducto;
 
     private List<Producto> productoList = new ArrayList<Producto>();
-    private CustomListAdapter adapter;
+    private ProductoListAdapter adapter;
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Producto,Integer> productoDao;
     private ProgressDialog pDialog;
@@ -48,7 +49,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         lstVwProductos.setOnItemClickListener(this);
 
         //Seteo el custom adapter
-        adapter = new CustomListAdapter(this, productoList);
+        adapter = new ProductoListAdapter(this, productoList);
         lstVwProductos.setAdapter(adapter);
 
         //instancio la BD y cargo mi lista

@@ -157,10 +157,13 @@
         android:text="Cargar Productos"
         android:id="@+id/bttnCargarProductos"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:enabled="false"
         android:paddingBottom="30dp"
         android:paddingTop="30dp" />
 
@@ -181,7 +184,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/ok"
+        android:src="@drawable/check"
         android:visibility="invisible"
         android:background="#00ffffff"/>
 

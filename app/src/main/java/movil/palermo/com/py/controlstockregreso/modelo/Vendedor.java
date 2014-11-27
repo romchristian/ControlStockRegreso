@@ -1,11 +1,15 @@
 package movil.palermo.com.py.controlstockregreso.modelo;
 
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DatabaseField;
+
+import java.io.Serializable;
 
 /**
  * Created by cromero on 18/11/2014.
  */
-public class Vendedor {
+public class Vendedor implements Serializable{
     @DatabaseField(id = true)
     private Integer id;
     @DatabaseField(index = true)

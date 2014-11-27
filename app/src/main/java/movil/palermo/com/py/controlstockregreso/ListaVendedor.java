@@ -1,6 +1,7 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -12,29 +13,72 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import movil.palermo.com.py.controlstockregreso.custom.ProductoListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.VendedorListAdapter;
+import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
+import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
+
 
 public class ListaVendedor extends ActionBarActivity implements AdapterView.OnItemClickListener {
-    private String vendedores[] = { "Jhon Doe", "Pablo Marmol", "Homero Simpson", "Philip J. Fry",
-            "Ronald Mcdonald", "Peter Griffin", "Bruce Wayne"};
+
     Intent datos;
     private ListView lstVwVendedor;
-    private ArrayAdapter<String> adaptador;
+
+    private List<Vendedor> vendedorList = new ArrayList<Vendedor>();
+    private VendedorListAdapter adapter;
+    private DatabaseHelper databaseHelper;
+    private RuntimeExceptionDao<Vendedor,Integer> vendedorDao;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        actionBar.setTitle("Seleccione un vendedor");
 
         setContentView(R.layout.activity_lista_vendedor);
 
         lstVwVendedor =(ListView) findViewById(R.id.lstVwVendedor);
-        adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,vendedores);
-        lstVwVendedor.setAdapter(adaptador);
+
+        adapter = new VendedorListAdapter(this, vendedorList);
+
+        lstVwVendedor.setAdapter(adapter);
         lstVwVendedor.setOnItemClickListener(this);
+        databaseHelper = new DatabaseHelper(this.getApplicationContext());
+        vendedorDao = databaseHelper.getVendedorDao();
+        recargaLista();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        recargaLista();
+    }
+
+    private void recargaLista() {
+        pDialog = new ProgressDialog(this);
+        // Showing progress dialog before making http request
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+        vendedorList.clear();
+        vendedorList.addAll(vendedorDao.queryForAll());
+        adapter.notifyDataSetChanged();
+        hidePDialog();
+    }
+
+    private void hidePDialog() {
+        if (pDialog != null) {
+            pDialog.dismiss();
+            pDialog = null;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,7 +105,7 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         //String item = adaptador.getItem(i).toString();
-        String item = vendedores[i].toString();
+        Vendedor item = vendedorList.get(i);
         datos = new Intent();
         datos.putExtra("RESULTADO",item);
         setResult(RESULT_OK,datos);
