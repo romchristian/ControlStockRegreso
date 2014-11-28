@@ -163,7 +163,10 @@
         android:layout_marginRight="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:background="@drawable/fondo_boton"
         android:enabled="false"
+        android:textColor="@drawable/boton_texto"
+        android:textStyle="bold"
         android:paddingBottom="30dp"
         android:paddingTop="30dp" />
 

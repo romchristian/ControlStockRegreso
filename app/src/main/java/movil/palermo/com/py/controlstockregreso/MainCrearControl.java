@@ -68,10 +68,13 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     private RuntimeExceptionDao<Vehiculo, Integer> vehiculoDao;
     private ImageView okImg;
     private Animation fadeOut;
-
     ProgressDialog pDialog;
-
     Intent intentMain;
+
+    private Vendedor vendedorSeleccionado;
+    private Conductor conductorSeleccionado;
+    private Vehiculo vehiculoSeleccionado;
+    private Integer kmVehiculoSeleccionado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +102,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         searchMovil = (ImageView) findViewById(R.id.search_movil);
         bttnCargarProductos = (Button) findViewById(R.id.bttnCargarProductos);
         bttnFinalizarControl = (Button) findViewById(R.id.bttnFinalizarControl);
-
-
-
 
 
         searchVendedor.setOnClickListener(this);
@@ -156,7 +156,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         });
 
 
-
         Animation a = AnimationUtils.loadAnimation(this, R.anim.shake);
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -195,7 +194,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
 
         switch (id) {
             case R.id.action_actualizar:
-                if(estaConectado()){
+                if (estaConectado()) {
                     cargaDatos();
                 }
                 break;
@@ -232,6 +231,16 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         }
     }
 
+
+    private boolean sePuedeCargarProductos() {
+        if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
+            bttnCargarProductos.requestFocus();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -239,23 +248,28 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
             Object obj = data.getSerializableExtra("RESULTADO");
             switch (requestCode) {
                 case AGREGAR_VENDEDOR:
-                    if(obj instanceof  Vendedor) {
-                        Vendedor v = (Vendedor) obj;
-                        txtVendedorValue.setText(v != null ? v.getNombre() : "Seleccione un vendedor*");
+                    if (obj instanceof Vendedor) {
+                        vendedorSeleccionado = (Vendedor) obj;
+                        txtVendedorValue.setText(vendedorSeleccionado != null ? vendedorSeleccionado.getNombre() : "Seleccione un vendedor");
                         recuadroVendedor.setBackgroundResource(R.drawable.recuadro_seleccionado);
+                        bttnCargarProductos.setEnabled(sePuedeCargarProductos());
                     }
                     break;
                 case AGREGAR_CHOFER:
-                    //txtChoferValue.setText(dato);
-                    recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
-                    //txtVwChofer.setText("Chofer: " + dato);
-                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    if (obj instanceof Conductor) {
+                        conductorSeleccionado = (Conductor) obj;
+                        txtChoferValue.setText(conductorSeleccionado != null ? conductorSeleccionado.getNombre() : "Seleccione un conductor");
+                        recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
+                        bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+                    }
                     break;
                 case AGREGAR_MOVIL:
-                    //txtMovilValue.setText(dato);
-                    recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
-                    //txtVwMovil.setText("Móvil: " + dato);
-                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    if (obj instanceof Vehiculo) {
+                        vehiculoSeleccionado = (Vehiculo) obj;
+                        txtMovilValue.setText(vehiculoSeleccionado != null ? vehiculoSeleccionado.getMarca() + ", Chapa: " + vehiculoSeleccionado.getChapa() : "Seleccione un Móvil");
+                        recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
+                        bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+                    }
                     break;
                 case CARGAR_PRODUCTOS:
                     //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
@@ -266,6 +280,8 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 Toast.makeText(this, "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
             }
         }
+
+
     }
 
     private void showpDialog() {
@@ -287,10 +303,10 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         }
     }
 
-    protected Boolean estaConectado(){
-        if(conectadoWifi()){
+    protected Boolean estaConectado() {
+        if (conectadoWifi()) {
             return true;
-        }else{
+        } else {
             okImg.setImageResource(R.drawable.no_wifi);
             okImg.setVisibility(View.VISIBLE);
             okImg.startAnimation(fadeOut);
@@ -305,9 +321,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     }
 
 
-
-
-    protected Boolean conectadoWifi(){
+    protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -321,7 +335,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     }
 
 
-    protected Boolean conectadoRedMovil(){
+    protected Boolean conectadoRedMovil() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -395,9 +409,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     }
 
 
-
     private void conductorRequest() {
-
 
 
         JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/conductores/123456",
@@ -451,7 +463,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     private void vendedorRequest() {
 
 
-
         JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/vendedores/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -470,7 +481,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                                     JSONObject obj = response.getJSONObject(i);
 
 
-                                    if (vendedorDao.create(new Vendedor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("depositoId"),conductorDao.queryForId(obj.getInt("conductorId")))) == 1) {
+                                    if (vendedorDao.create(new Vendedor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("depositoId"), conductorDao.queryForId(obj.getInt("conductorId")))) == 1) {
                                         actualizacionCorrecta = true;
                                         //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
@@ -501,7 +512,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
 
 
     private void vehiculoRequest() {
-
 
 
         JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/vehiculos/123456",

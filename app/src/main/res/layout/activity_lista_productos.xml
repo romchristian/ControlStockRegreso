@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="py.com.palermo.movil.movilcontrolstockretorno.ListaProductos">
-
+    tools:context="py.com.palermo.movil.movilcontrolstockretorno.ListaProductos"
+    android:layout_marginTop="?attr/actionBarSize">
 
     <ListView
         android:layout_width="0dp"
@@ -11,21 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
-        android:layout_above="@+id/bttnFinalizarConteo"
         android:id="@+id/lstVwProductos"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice"/>
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        android:text="Finalizar conteo"
-        android:background="#1499FF"
-        android:textSize="24sp"
-        android:textColor="#fff"
-        android:textStyle="bold"
-        android:padding="15dp"
-        android:id="@+id/bttnFinalizarConteo" />
 </RelativeLayout>

@@ -44,7 +44,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
-        bttnFinalizarConteo = (Button) findViewById(R.id.bttnFinalizarConteo);
+
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
 
@@ -107,28 +107,28 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        if (view.getId()== R.id.bttnFinalizarConteo){
+        /*if (view.getId()== R.id.bttnFinalizarConteo){
             intentDetalleProducto = new Intent();
             intentDetalleProducto.putExtra("RESULTADO","PRODUCTOS CARGADOS CORRECTAMENTE");
             setResult(RESULT_OK, intentDetalleProducto);
             finish();
-        }
+        }*/
 
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        intentDetalleProducto = new Intent(this,DetalleProducto.class);
+       /* intentDetalleProducto = new Intent(this,DetalleProducto.class);
         String producto;
         producto = adapterView.getSelectedItem().toString();
         intentDetalleProducto.putExtra("PRODUCTO",producto);
-        startActivityForResult(intentDetalleProducto,CONTAR_PRODUCTOS);
+        startActivityForResult(intentDetalleProducto,CONTAR_PRODUCTOS);*/
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK ){
+       /* if (resultCode == Activity.RESULT_OK ){
             Bundle resultado = data.getExtras();
             String dato = resultado.getString("RESULTADO");
             Toast.makeText(this, "Conteo del producto finalizado: ", Toast.LENGTH_SHORT).show();
@@ -138,6 +138,6 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
             if(resultCode == Activity.RESULT_CANCELED){
                 Toast.makeText(this, "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
             }
-        }
+        }*/
     }
 }

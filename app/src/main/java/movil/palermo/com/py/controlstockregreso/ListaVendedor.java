@@ -3,6 +3,7 @@ package movil.palermo.com.py.controlstockregreso;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -39,22 +40,38 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActionBar actionBar = getActionBar();
-        actionBar.setTitle("Seleccione un vendedor");
-
         setContentView(R.layout.activity_lista_vendedor);
-
         lstVwVendedor =(ListView) findViewById(R.id.lstVwVendedor);
-
         adapter = new VendedorListAdapter(this, vendedorList);
-
         lstVwVendedor.setAdapter(adapter);
         lstVwVendedor.setOnItemClickListener(this);
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
         vendedorDao = databaseHelper.getVendedorDao();
         recargaLista();
+        configuraActionBar();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    private void  configuraActionBar(){
+        final ActionBar actionBar = getActionBar();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                actionBar.setTitle("Seleccione un vendedor");
+                if(Build.VERSION.SDK_INT >=14) {
+                    actionBar.setIcon(R.drawable.default_user);
+                }
+            }
+        });
+
+        t.start();
+    }
+
 
     @Override
     protected void onRestart() {
@@ -63,14 +80,11 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
     }
 
     private void recargaLista() {
-        pDialog = new ProgressDialog(this);
-        // Showing progress dialog before making http request
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+
         vendedorList.clear();
         vendedorList.addAll(vendedorDao.queryForAll());
         adapter.notifyDataSetChanged();
-        hidePDialog();
+
     }
 
     private void hidePDialog() {
@@ -104,12 +118,10 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //String item = adaptador.getItem(i).toString();
         Vendedor item = vendedorList.get(i);
         datos = new Intent();
         datos.putExtra("RESULTADO",item);
         setResult(RESULT_OK,datos);
-        Toast.makeText(this, "Vendedor seleccionado: " + item, Toast.LENGTH_SHORT).show();
         finish();
     }
 }

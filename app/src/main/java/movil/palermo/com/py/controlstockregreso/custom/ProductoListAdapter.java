@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -57,10 +58,12 @@ public class ProductoListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_row, null);
 
-        if (imageLoader == null)
+        /*if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
         NetworkImageView thumbNail = (NetworkImageView) convertView
-                .findViewById(R.id.thumbnail);
+                .findViewById(R.id.thumbnail);*/
+
+        ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView title = (TextView) convertView.findViewById(R.id.title);
         TextView rating = (TextView) convertView.findViewById(R.id.rating);
         TextView genre = (TextView) convertView.findViewById(R.id.genre);
@@ -70,7 +73,34 @@ public class ProductoListAdapter extends BaseAdapter {
         Producto m = productos.get(position);
 
         // thumbnail image
-        thumbNail.setImageUrl(m.getImg(), imageLoader);
+        /*thumbNail.setImageUrl(m.getImg(), imageLoader);*/
+
+        int img = 0;
+        if (m.getNombre().toLowerCase().contains("blue")) {
+            img = R.drawable.palermo_blue;
+        } else if (m.getNombre().toLowerCase().contains("green")) {
+            img = R.drawable.palermo_green;
+        }else if (m.getNombre().toLowerCase().contains("red")) {
+            img = R.drawable.palermo_red;
+        }else if (m.getNombre().toLowerCase().contains("plm 3")) {
+            img = R.drawable.plm3;
+        }else if (m.getNombre().toLowerCase().contains("duo")) {
+            img = R.drawable.palermo_duo;
+        }else if (m.getId() == 218) {
+            img = R.drawable.kentucky_10;
+        }else if (m.getId() == 403) {
+            img = R.drawable.sanmarino_20;
+        }else if (m.getId() == 404) {
+            img = R.drawable.sanmarino_10;
+        }else if (m.getId() == 198) {
+            img = R.drawable.kentucky_20;
+        }else if (m.getId() == 204) {
+            img = R.drawable.kentucky_soft;
+        }else{
+            img = R.drawable.kit;
+        }
+
+        thumbNail.setImageResource(img);
 
         // title
         title.setText(m.getNombre());

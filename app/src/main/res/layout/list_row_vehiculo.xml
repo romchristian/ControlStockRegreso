@@ -6,60 +6,46 @@
     android:padding="8dp" >
 
     <!-- Thumbnail Image -->
-    <!--<com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="8dp" />-->
-
     <ImageView
         android:id="@+id/thumbnail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/kentucky_10"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/camion"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="8dp"/>
 
+
     <!-- Movie Title -->
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/nro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
         android:textSize="@dimen/title"
+        android:text="Nro: 12345678"
         android:textStyle="bold" />
 
     <!-- Rating -->
     <TextView
-        android:id="@+id/rating"
+        android:id="@+id/marca"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_marginTop="1dip"
+        android:layout_below="@id/nro"
+        android:layout_marginTop="5dip"
         android:layout_toRightOf="@+id/thumbnail"
+        android:text="Marca: Mercedez Benz"
         android:textSize="@dimen/rating" />
 
-    <!-- Genre -->
     <TextView
-        android:id="@+id/genre"
+        android:id="@+id/chapa"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rating"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dip"
         android:layout_toRightOf="@+id/thumbnail"
-        android:textColor="@color/genre"
-        android:textSize="@dimen/genre" />
-
-    <!-- Release Year -->
-    <TextView
-        android:id="@+id/releaseYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/year"
-        android:textSize="@dimen/year" />
+        android:layout_alignBottom="@+id/thumbnail"
+        android:text="Chapa: BJD 456"
+        android:textSize="@dimen/title"
+        android:textStyle="bold"/>
 
 </RelativeLayout>
