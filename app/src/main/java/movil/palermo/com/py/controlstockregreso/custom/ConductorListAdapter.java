@@ -15,32 +15,33 @@ import android.widget.TextView;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.R;
+import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 
 
-public class VendedorListAdapter extends BaseAdapter {
+public class ConductorListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Vendedor> vendedores;
+    private List<Conductor> conductores;
 
-    public VendedorListAdapter(Activity activity, List<Vendedor> vendedores) {
+    public ConductorListAdapter(Activity activity, List<Conductor> conductores) {
         this.activity = activity;
-        this.vendedores = vendedores;
+        this.conductores = conductores;
     }
 
     @Override
     public int getCount() {
-        return vendedores.size();
+        return conductores.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return vendedores.get(location);
+        return conductores.get(location);
     }
 
     @Override
     public long getItemId(int position) {
-        return vendedores.get(position) == null ? vendedores.get(position).getId() : position;
+        return conductores.get(position) == null ? conductores.get(position).getId() : position;
     }
 
     @Override
@@ -50,14 +51,14 @@ public class VendedorListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row_vendedor, null);
+            convertView = inflater.inflate(R.layout.list_row_conductor, null);
 
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
-        TextView conductor = (TextView) convertView.findViewById(R.id.conductor);
+        TextView ci = (TextView) convertView.findViewById(R.id.ci);
 
-        Vendedor v = vendedores.get(position);
-        nombre.setText(v.getNombre());
-        conductor.setText(v.getConductor() == null ? "Conductor: " + "No asignado" : "Conductor: " + v.getConductor().getNombre());
+        Conductor c = conductores.get(position);
+        nombre.setText(c.getNombre());
+        ci.setText("CI: "+c.getCi());
 
         return convertView;
     }
