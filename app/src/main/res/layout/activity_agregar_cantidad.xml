@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="movil.palermo.com.py.controlstockregreso.AgregarCantidadActivity"
+    android:layout_marginTop="?attr/actionBarSize">
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <RadioButton
+            android:id="@+id/radioCajas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cajas" />
+
+        <RadioButton
+            android:id="@+id/radioGruesas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gruesas" />
+
+        <RadioButton
+            android:id="@+id/radioCajetillas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cajetillas" />
+    </RadioGroup>
+
+    <ImageView
+        android:id="@+id/imgPlus"
+        android:layout_below="@id/radioGroup"
+        android:layout_alignParentLeft="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/plus" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioGroup"
+        android:layout_toLeftOf="@+id/imgMinus"
+        android:layout_toRightOf="@+id/imgPlus"
+        android:inputType="number"
+        android:layout_marginTop="30dp"
+        android:text="120"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:id="@+id/editTextCantidad" />
+
+
+    <ImageView
+        android:id="@+id/imgMinus"
+        android:layout_below="@id/radioGroup"
+        android:layout_alignParentRight="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/minus" />
+
+    <Button
+        android:id="@+id/btnAgregar"
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/imgPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregar" />
+
+
+    <ListView
+        android:id="@+id/detalle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/botonera"
+        android:layout_below="@+id/btnAgregar"
+        android:background="#ddd" />
+
+
+    <LinearLayout
+        android:id="@+id/botonera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/btnConfirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirmar"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

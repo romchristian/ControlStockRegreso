@@ -2,12 +2,14 @@ package movil.palermo.com.py.controlstockregreso.modelo;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.io.Serializable;
+
 /**
  * Created by cromero on 14/11/2014.
  */
 
 
-public class Producto {
+public class Producto implements Serializable{
     @DatabaseField(id = true)
     private Integer id;
     @DatabaseField(index = true)

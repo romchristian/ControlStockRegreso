@@ -5,6 +5,8 @@ import com.j256.ormlite.field.DatabaseField;
 /**
  * Created by cromero on 24/11/2014.
  */
+
+
 public class ControlDetalle {
     @DatabaseField(generatedId = true)
     private Integer id;
@@ -20,6 +22,7 @@ public class ControlDetalle {
     private Integer cantidad;
 
     public ControlDetalle() {
+
     }
 
     public ControlDetalle(Control control, Integer orden, Producto producto, UnidadMedida unidadMedida, Integer cantidad) {

@@ -118,11 +118,9 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-       /* intentDetalleProducto = new Intent(this,DetalleProducto.class);
-        String producto;
-        producto = adapterView.getSelectedItem().toString();
-        intentDetalleProducto.putExtra("PRODUCTO",producto);
-        startActivityForResult(intentDetalleProducto,CONTAR_PRODUCTOS);*/
+        Intent intent = new Intent(this,AgregarCantidadActivity.class);
+        intent.putExtra("PRODUCTO",(Producto)adapterView.getItemAtPosition(i));//le paso el id
+        startActivity(intent);
     }
 
     @Override
