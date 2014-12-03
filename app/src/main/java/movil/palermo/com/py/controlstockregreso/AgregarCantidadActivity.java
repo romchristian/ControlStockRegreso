@@ -1,5 +1,6 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,11 +46,12 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         cantidad = (EditText) findViewById(R.id.editTextCantidad);
         listaDetalle = (ListView) findViewById(R.id.detalle);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        Object obj = getIntent().getSerializableExtra("PRODUCTO");
-        if (obj != null && obj instanceof Producto) {
-            productoSeleccionado = (Producto) obj;
-        }
+//        Object obj = getIntent().getSerializableExtra("PRODUCTO");
+//        if (obj != null && obj instanceof Producto) {
+//            productoSeleccionado = (Producto) obj;
+//        }
 
+        cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
         adapter = new ControlDetalleListAdapter(this, detalles);
         listaDetalle.setAdapter(adapter);
 
