@@ -21,15 +21,16 @@ import java.util.List;
 import movil.palermo.com.py.controlstockregreso.AppController;
 import movil.palermo.com.py.controlstockregreso.R;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoResumen;
 
 
 public class ProductoListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Producto> productos;
+    private List<ProductoResumen> productos;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public ProductoListAdapter(Activity activity, List<Producto> productos) {
+    public ProductoListAdapter(Activity activity, List<ProductoResumen> productos) {
         this.activity = activity;
         this.productos = productos;
     }
@@ -64,56 +65,49 @@ public class ProductoListAdapter extends BaseAdapter {
                 .findViewById(R.id.thumbnail);*/
 
         ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
-        TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView rating = (TextView) convertView.findViewById(R.id.rating);
-        TextView genre = (TextView) convertView.findViewById(R.id.genre);
-        TextView year = (TextView) convertView.findViewById(R.id.releaseYear);
+        TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
+        TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantGruesas);
+        TextView cantCajas = (TextView) convertView.findViewById(R.id.cantCajas);
+        TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantCajetillas);
+        TextView cantUnidad = (TextView) convertView.findViewById(R.id.cantUnidad);
 
         // getting movie data for the row
-        Producto m = productos.get(position);
+        ProductoResumen p = productos.get(position);
 
         // thumbnail image
         /*thumbNail.setImageUrl(m.getImg(), imageLoader);*/
 
         int img = 0;
-        if (m.getNombre().toLowerCase().contains("blue")) {
+        if (p.getNombre().toLowerCase().contains("blue")) {
             img = R.drawable.palermo_blue;
-        } else if (m.getNombre().toLowerCase().contains("green")) {
+        } else if (p.getNombre().toLowerCase().contains("green")) {
             img = R.drawable.palermo_green;
-        }else if (m.getNombre().toLowerCase().contains("red")) {
+        }else if (p.getNombre().toLowerCase().contains("red")) {
             img = R.drawable.palermo_red;
-        }else if (m.getNombre().toLowerCase().contains("plm 3")) {
+        }else if (p.getNombre().toLowerCase().contains("plm 3")) {
             img = R.drawable.plm3;
-        }else if (m.getNombre().toLowerCase().contains("duo")) {
+        }else if (p.getNombre().toLowerCase().contains("duo")) {
             img = R.drawable.palermo_duo;
-        }else if (m.getId() == 218) {
+        }else if (p.getId() == 218) {
             img = R.drawable.kentucky_10;
-        }else if (m.getId() == 403) {
+        }else if (p.getId() == 403) {
             img = R.drawable.sanmarino_20;
-        }else if (m.getId() == 404) {
+        }else if (p.getId() == 404) {
             img = R.drawable.sanmarino_10;
-        }else if (m.getId() == 198) {
+        }else if (p.getId() == 198) {
             img = R.drawable.kentucky_20;
-        }else if (m.getId() == 204) {
+        }else if (p.getId() == 204) {
             img = R.drawable.kentucky_soft;
         }else{
             img = R.drawable.kit;
         }
 
         thumbNail.setImageResource(img);
-
-        // title
-        title.setText(m.getNombre());
-
-        // rating
-        rating.setText("Rating: " + String.valueOf(2));
-
-        // genre
-
-        genre.setText(m.getUnidadMedidadEstandar()+"");
-
-        // release year
-        year.setText(String.valueOf(2014));
+        nombre.setText(p.getNombre());
+        cantCajas.setText(""+p.getCantCajas());
+        cantGruesas.setText(""+p.getCantGruesas());
+        cantCajetillas.setText(""+p.getCantCajetillas());
+        cantUnidad.setText(""+p.getCantUnidad());
 
         return convertView;
     }

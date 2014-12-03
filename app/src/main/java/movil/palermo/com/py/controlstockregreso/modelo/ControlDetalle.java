@@ -2,12 +2,14 @@ package movil.palermo.com.py.controlstockregreso.modelo;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.io.Serializable;
+
 /**
  * Created by cromero on 24/11/2014.
  */
 
 
-public class ControlDetalle {
+public class ControlDetalle implements Serializable{
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField(foreign = true,columnName = "control_id",foreignAutoCreate = true,foreignAutoRefresh = true)

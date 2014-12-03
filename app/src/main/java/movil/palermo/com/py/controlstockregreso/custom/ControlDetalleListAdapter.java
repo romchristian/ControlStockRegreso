@@ -68,7 +68,7 @@ public class ControlDetalleListAdapter extends BaseAdapter {
 
         cantidad.setText("" + d.getCantidad());
         producto.setText(d.getProducto() != null ? d.getProducto().getNombre() : "No definido");
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         fecha.setText(sdf.format(new Date()));
 
         return convertView;

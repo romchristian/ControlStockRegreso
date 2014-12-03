@@ -35,9 +35,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
+import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
+import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 import movil.palermo.com.py.controlstockregreso.util.UtilJson;
@@ -66,6 +71,12 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     private RuntimeExceptionDao<Vendedor, Integer> vendedorDao;
     private RuntimeExceptionDao<Producto, Integer> productoDao;
     private RuntimeExceptionDao<Vehiculo, Integer> vehiculoDao;
+    private RuntimeExceptionDao<UnidadMedida, Integer> unidadMedidaDao;
+
+    private RuntimeExceptionDao<Sesion, Integer> sesionDao;
+    private RuntimeExceptionDao<Control, Integer> controlDao;
+
+
     private ImageView okImg;
     private Animation fadeOut;
     ProgressDialog pDialog;
@@ -75,6 +86,8 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     private Conductor conductorSeleccionado;
     private Vehiculo vehiculoSeleccionado;
     private Integer kmVehiculoSeleccionado;
+    private Sesion sesionActual;
+    private Control controlActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +98,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         actionBar.setSubtitle("Resp: Christian Romero");
 
         setContentView(R.layout.activity_main_crear_control);
-
-        // okImg = (ImageView) findViewById(R.id.ok_img);
 
 
         recuadroVendedor = (FrameLayout) findViewById(R.id.recuadroVendedor);
@@ -111,12 +122,14 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         bttnFinalizarControl.setOnClickListener(this);
 
 
-        databaseHelper = new DatabaseHelper(this.getApplicationContext());
+        databaseHelper = new DatabaseHelper(this);
         productoDao = databaseHelper.getProductoDao();
         conductorDao = databaseHelper.getConductorDao();
         vendedorDao = databaseHelper.getVendedorDao();
         vehiculoDao = databaseHelper.getVehiculoDao();
-
+        sesionDao = databaseHelper.getSesionDao();
+        controlDao = databaseHelper.getControlDao();
+        unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
 
         okImg = (ImageView) findViewById(R.id.ok_img);
 
@@ -174,8 +187,16 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
             }
         });
         bttnFinalizarControl.startAnimation(a);
+        inicializaSesion();
     }
 
+
+    public void inicializaSesion(){
+        sesionActual = new Sesion();
+        sesionActual.setFechaControl(new Date());
+        sesionActual.setResponsable("Christian Romero");
+        sesionDao.create(sesionActual);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -200,6 +221,12 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 break;
             case R.id.action_settings:
                 return true;
+            case R.id.action_extraer_bd:
+                databaseHelper.extraerBD(getPackageName());
+                okImg.setImageResource(R.drawable.check);
+                okImg.setVisibility(View.VISIBLE);
+                okImg.startAnimation(fadeOut);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -223,7 +250,18 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 startActivityForResult(intentMain, AGREGAR_MOVIL);
                 break;
             case R.id.bttnCargarProductos:
+                controlActual = new Control();
+                controlActual.setConductor(conductorSeleccionado);
+                controlActual.setFechaControl(new Date());
+                controlActual.setSesion(sesionActual);
+                controlActual.setVehiculo(vehiculoSeleccionado);
+                controlActual.setVehiculoChapa(vehiculoSeleccionado != null?vehiculoSeleccionado.getChapa():"no asignado");
+                controlActual.setVendedor(vendedorSeleccionado);
+                controlActual.setKm(0);//falta el input
+
+                controlDao.create(controlActual);
                 intentMain = new Intent(this, ListaProductos.class);
+                intentMain.putExtra("CONTROL",controlActual);
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
             default:
@@ -280,7 +318,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 Toast.makeText(this, "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
             }
         }
-
 
     }
 
@@ -351,10 +388,27 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
 
     public void cargaDatos() {
         productosRequest();
+        unidadMedidadResquest();
         conductorRequest();
         vendedorRequest();
         vehiculoRequest();
+
     }
+
+    private void unidadMedidadResquest() {
+
+        unidadMedidaDao.executeRaw("delete from unidadmedida");
+        UnidadMedida m1 = new UnidadMedida(1,"Cajas");
+        UnidadMedida m2 = new UnidadMedida(2,"Gruesas");
+        UnidadMedida m3 = new UnidadMedida(3,"Cajetillas");
+        UnidadMedida m4 = new UnidadMedida(4,"Unidad");
+
+        unidadMedidaDao.create(m1);
+        unidadMedidaDao.create(m2);
+        unidadMedidaDao.create(m3);
+        unidadMedidaDao.create(m4);
+    }
+
 
     private void productosRequest() {
 

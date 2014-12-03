@@ -2,12 +2,13 @@ package movil.palermo.com.py.controlstockregreso.modelo;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by cromero on 24/11/2014.
  */
-public class Sesion {
+public class Sesion implements Serializable{
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField

@@ -2,6 +2,7 @@ package movil.palermo.com.py.controlstockregreso.modelo;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -9,6 +10,10 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 
 import movil.palermo.com.py.controlstockregreso.R;
@@ -151,5 +156,34 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         controlDao = null;
         controlDetalleDao = null;
         sesionDao = null;
+    }
+
+
+    public void extraerBD(String packagename){
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+
+
+
+                String currentDBPath = "/data/data/movil.palermo.com.py.controlstockregreso/databases/"+DATABASE_NAME;
+                Log.d("DatabaseHelper","PATHHHHHHHHHHHHHHHHHHHHHHHHHH: " + currentDBPath);
+                Log.d("DatabaseHelper","destino: " + sd.getAbsolutePath());
+                String backupDBPath = "stock.db";
+                File currentDB = new File(currentDBPath);
+                File backupDB = new File(sd, backupDBPath);
+
+                //if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                //}
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

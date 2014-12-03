@@ -23,43 +23,118 @@
 
     <!-- Movie Title -->
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
         android:textSize="@dimen/title"
+        android:text="KENTUKY 20"
         android:textStyle="bold" />
 
     <!-- Rating -->
     <TextView
-        android:id="@+id/rating"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:textSize="@dimen/rating" />
-
-    <!-- Genre -->
-    <TextView
-        android:id="@+id/genre"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rating"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:textColor="@color/genre"
-        android:textSize="@dimen/genre" />
-
-    <!-- Release Year -->
-    <TextView
-        android:id="@+id/releaseYear"
+        android:id="@+id/tituloCajas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/year"
-        android:textSize="@dimen/year" />
+        android:layout_below="@id/nombre"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Cajas"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tituloGruesas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nombre"
+        android:layout_marginTop="1dip"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/tituloCajas"
+        android:text="Gruesas"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tituloCajetillas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nombre"
+        android:layout_marginTop="1dip"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/tituloGruesas"
+        android:text="Cajetillas"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tituloUnidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nombre"
+        android:layout_marginTop="1dip"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/tituloCajetillas"
+        android:text="Un"
+        android:textSize="12sp"/>
+
+
+    <TextView
+        android:id="@+id/cantCajas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tituloCajas"
+        android:layout_marginTop="1dip"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignRight="@+id/tituloCajas"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="120"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/cantGruesas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tituloGruesas"
+        android:layout_marginTop="1dip"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignRight="@+id/tituloGruesas"
+        android:layout_alignLeft="@+id/tituloGruesas"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="300"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/cantCajetillas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tituloCajetillas"
+        android:layout_marginTop="1dip"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignRight="@+id/tituloCajetillas"
+        android:layout_alignLeft="@+id/tituloCajetillas"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="50"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/cantUnidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tituloUnidad"
+        android:layout_marginTop="1dip"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignRight="@+id/tituloUnidad"
+        android:layout_alignLeft="@+id/tituloUnidad"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="0"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+
 
 </RelativeLayout>

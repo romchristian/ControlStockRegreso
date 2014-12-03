@@ -8,6 +8,9 @@
     <item android:id="@+id/action_actualizar" android:title="@string/actualizar"
         android:orderInCategory="100" app:showAsAction="never" />
 
+    <item android:id="@+id/action_extraer_bd" android:title="Extraer BD"
+        android:orderInCategory="100" app:showAsAction="never" />
+
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>
