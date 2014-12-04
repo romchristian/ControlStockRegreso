@@ -20,5 +20,6 @@
     <string name="actualizar">Actualizar</string>
     <string name="listado">Listado</string>
     <string name="title_activity_agregar_cantidad">AgregarCantidadActivity</string>
+    <string name="title_activity_prueba">PruebaActivity</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -11,11 +12,15 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -24,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.custom.ControlDetalleListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.ResizeAnimation;
+import movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout;
+import movil.palermo.com.py.controlstockregreso.custom.UnidadMedidaSpinnerAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
@@ -39,11 +47,15 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     ListView listaDetalle;
     List<ControlDetalle> detalles = new ArrayList<ControlDetalle>();
     ControlDetalleListAdapter adapter;
+    UnidadMedidaSpinnerAdapter adapterUnidadMedida;
     RadioGroup radioGroup;
     Producto productoSeleccionado;
     private RuntimeExceptionDao<UnidadMedida,Integer> unidadMedidaDao;
     private RuntimeExceptionDao<Control, Integer> controlDao;
     private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
+    RelativeLayout bottom;
+    private Spinner unidadMedida;
+    private List<UnidadMedida> listaUnidadMedida = new ArrayList<UnidadMedida>();
 
 
     private DatabaseHelper databaseHelper;
@@ -54,13 +66,9 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
         setContentView(R.layout.activity_agregar_cantidad);
         btnMas = (ImageView) findViewById(R.id.imgPlus);
-        btnMinus = (ImageView) findViewById(R.id.imgMinus);
-        btnAgregar = (Button) findViewById(R.id.btnAgregar);
-        btnConfirmar = (Button) findViewById(R.id.btnConfirmar);
-        btnCancelar = (Button) findViewById(R.id.btnCancelar);
         cantidad = (EditText) findViewById(R.id.editTextCantidad);
         listaDetalle = (ListView) findViewById(R.id.detalle);
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        /*radioGroup = (RadioGroup) findViewById(R.id.radioGroup);*/
         Object obj = getIntent().getSerializableExtra("PRODUCTO");
         if (obj != null && obj instanceof Producto) {
             productoSeleccionado = (Producto) obj;
@@ -71,21 +79,9 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         listaDetalle.setAdapter(adapter);
 
         btnMas.setOnClickListener(this);
-        btnMinus.setOnClickListener(this);
-        btnAgregar.setOnClickListener(this);
-        btnConfirmar.setOnClickListener(this);
-        btnCancelar.setOnClickListener(this);
 
        final Context context = this;
         btnMas.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.scale));
-                return false;
-            }
-        });
-
-        btnMinus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.scale));
@@ -102,8 +98,43 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
         controlDao = databaseHelper.getControlDao();
         controlDetalleDao = databaseHelper.getControlDetalleDao();
+
+        final float density = getResources().getDisplayMetrics().density;
+
+        SlidingUpPaneLayout slidingUpPaneLayout = (SlidingUpPaneLayout) findViewById(R.id.sliding_up_layout);
+        slidingUpPaneLayout.setParallaxDistance((int) (200 * density));
+        slidingUpPaneLayout.setShadowResourceTop(R.drawable.shadow_top);
+
+        bottom = (RelativeLayout) findViewById(R.id.bottom_view);
+        slidingUpPaneLayout.openPane(bottom,0);
+
+        //unidadMedida = (Spinner) findViewById(R.id.spinner);
+        //adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this,listaUnidadMedida);
+
+        //recargaUnidadMedida();
+        addItemsOnSpinner2();
     }
 
+
+    public void addItemsOnSpinner2() {
+
+        unidadMedida = (Spinner) findViewById(R.id.spinner);
+        /*List<String> list = new ArrayList<String>();
+        list.add("list 1");
+        list.add("list 2");
+        list.add("list 3");*/
+        listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
+        adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this,listaUnidadMedida);
+        /*ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);*/
+        //adapterUnidadMedida.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unidadMedida.setAdapter(adapterUnidadMedida);
+    }
+    private void recargaUnidadMedida() {
+        listaUnidadMedida.clear();
+        listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
+        adapterUnidadMedida.notifyDataSetChanged();
+    }
 
     private void  configuraActionBar(){
         final ActionBar actionBar = getActionBar();
@@ -172,7 +203,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         int cantActual = 0;
         String texto = cantidad.getText()== null?"0":cantidad.getText().toString();
 
-        switch (view.getId()) {
+        /*switch (view.getId()) {
             case R.id.imgPlus:
                 cantActual = Integer.valueOf(texto);
                 cantidad.setText("" + (cantActual + 1));
@@ -222,7 +253,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             case R.id.btnCancelar:
                 finish();
                 break;
-        }
+        }*/
 
     }
 }
