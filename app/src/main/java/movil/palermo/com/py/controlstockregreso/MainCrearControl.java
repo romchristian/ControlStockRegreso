@@ -387,15 +387,54 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
 
 
     public void cargaDatos() {
-        productosRequest();
-        unidadMedidadResquest();
+        unidadMedidadMock();
+        productoMock();
+        conductorMock();
+        vendedorMock();
+        vehiculoMock();
+
+        /*productosRequest();
         conductorRequest();
         vendedorRequest();
-        vehiculoRequest();
+        vehiculoRequest();*/
 
     }
 
-    private void unidadMedidadResquest() {
+    private void productoMock() {
+        Producto p1 = new Producto(218,"Kentuky 10",25,null);
+        Producto p2 = new Producto(198,"Kentuky 20",25,null);
+        Producto p3 = new Producto(3,"Palermo Blue 10",25,null);
+        Producto p4 = new Producto(4,"Palermo Red 20",25,null);
+
+        productoDao.create(p1);
+        productoDao.create(p2);
+        productoDao.create(p3);
+        productoDao.create(p4);
+    }
+
+    private void conductorMock() {
+        Conductor c1 = new Conductor(1,"Conductor 1",123456);
+        Conductor c2 = new Conductor(2,"Conductor 2",456123);
+
+        conductorDao.create(c1);
+        conductorDao.create(c2);
+    }
+    private void vendedorMock() {
+        Vendedor v1 = new Vendedor(1,"Vendedor",1,conductorDao.queryForId(1));
+        Vendedor v2 = new Vendedor(2,"Vendedor",1,conductorDao.queryForId(2));
+
+        vendedorDao.create(v1);
+        vendedorDao.create(v2);
+    }
+
+    private void vehiculoMock() {
+        Vehiculo v1 = new Vehiculo(1,"Toyota","ADV 456");
+        Vehiculo v2 = new Vehiculo(2,"Daihasu","ADV 400");
+
+        vehiculoDao.create(v1);
+        vehiculoDao.create(v2);
+    }
+    private void unidadMedidadMock() {
 
         unidadMedidaDao.executeRaw("delete from unidadmedida");
         UnidadMedida m1 = new UnidadMedida(1,"Cajas");

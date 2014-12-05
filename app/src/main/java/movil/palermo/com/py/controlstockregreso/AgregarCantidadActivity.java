@@ -68,7 +68,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         btnMas = (ImageView) findViewById(R.id.imgPlus);
         cantidad = (EditText) findViewById(R.id.editTextCantidad);
         listaDetalle = (ListView) findViewById(R.id.detalle);
-        /*radioGroup = (RadioGroup) findViewById(R.id.radioGroup);*/
+
         Object obj = getIntent().getSerializableExtra("PRODUCTO");
         if (obj != null && obj instanceof Producto) {
             productoSeleccionado = (Producto) obj;
@@ -84,7 +84,12 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         btnMas.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.scale));
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.pulse));
+                        break;
+                }
+
                 return false;
             }
         });
@@ -108,10 +113,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         bottom = (RelativeLayout) findViewById(R.id.bottom_view);
         slidingUpPaneLayout.openPane(bottom,0);
 
-        //unidadMedida = (Spinner) findViewById(R.id.spinner);
-        //adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this,listaUnidadMedida);
 
-        //recargaUnidadMedida();
         addItemsOnSpinner2();
     }
 
@@ -203,21 +205,9 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         int cantActual = 0;
         String texto = cantidad.getText()== null?"0":cantidad.getText().toString();
 
-        /*switch (view.getId()) {
+        switch (view.getId()) {
             case R.id.imgPlus:
-                cantActual = Integer.valueOf(texto);
-                cantidad.setText("" + (cantActual + 1));
-                break;
-            case R.id.imgMinus:
-                cantActual = Integer.valueOf(texto);
-                int cant = cantActual - 1;
-                cantidad.setText("" + (cant < 0?0:cant));
-                break;
-            case R.id.btnAgregar:
-                if(radioGroup.getCheckedRadioButtonId() == -1){
-                    Toast.makeText(this,"Seleccione una Unidad de Medida",Toast.LENGTH_LONG).show();
-                    break;
-                }
+
 
                 if(cantidad.getText().toString().compareToIgnoreCase("0")==0){
                     Toast.makeText(this,"No hay cantidad",Toast.LENGTH_LONG).show();
@@ -228,16 +218,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                     ControlDetalle d = new ControlDetalle();
                     UnidadMedida um = null;
 
-                    switch (radioGroup.getCheckedRadioButtonId()) {
-                        case R.id.radioCajas:
-                            um = unidadMedidaDao.queryForId(1);
-                            break;
-                        case R.id.radioGruesas:
-                            um = unidadMedidaDao.queryForId(2);
-                            break;
-                        case R.id.radioCajetillas:
-                            um = unidadMedidaDao.queryForId(3);
-                            break;
+                    if(unidadMedida.getSelectedItem() instanceof UnidadMedida) {
+                        um = (UnidadMedida) unidadMedida.getSelectedItem();
                     }
 
                     d.setUnidadMedida(um);
@@ -248,12 +230,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                     controlDetalleDao.create(d);
                 }
                 break;
-            case R.id.btnConfirmar:
-                break;
-            case R.id.btnCancelar:
-                finish();
-                break;
-        }*/
+
+        }
 
     }
 }
