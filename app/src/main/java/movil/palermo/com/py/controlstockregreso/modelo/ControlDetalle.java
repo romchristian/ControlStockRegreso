@@ -10,6 +10,9 @@ import java.io.Serializable;
 
 
 public class ControlDetalle implements Serializable{
+    public final static String COL_PRODUCTO_NOMBRE = "producto";
+    public final static String COL_CONTROL_NOMBRE = "control";
+
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField(foreign = true,columnName = "control_id",foreignAutoCreate = true,foreignAutoRefresh = true)

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.custom.ProductoListAdapter;
+import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.ProductoResumen;
@@ -42,6 +43,8 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
 
     private ArrayAdapter<String> adaptador;
 
+    private Control controlActual;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,12 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
         productoDao = databaseHelper.getProductoDao();
         recargaLista();
+
+        Object obj = getIntent().getSerializableExtra("CONTROL");
+        if(obj != null && obj instanceof Control){
+            controlActual = (Control)obj;
+        }
+
     }
 
     @Override
@@ -145,7 +154,8 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         Intent intent = new Intent(this, AgregarCantidadActivity.class);
         ProductoResumen pr = (ProductoResumen) adapterView.getItemAtPosition(i);
         productoDao.queryForId(pr.getId());
-        intent.putExtra("PRODUCTO", productoDao.queryForId(pr.getId()));//le paso el id
+        intent.putExtra("PRODUCTO", productoDao.queryForId(pr.getId()));
+        intent.putExtra("CONTROL", controlActual);
         startActivity(intent);
     }
 

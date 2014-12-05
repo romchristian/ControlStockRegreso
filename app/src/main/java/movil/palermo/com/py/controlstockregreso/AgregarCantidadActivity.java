@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     private List<UnidadMedida> listaUnidadMedida = new ArrayList<UnidadMedida>();
     Animation fadeOut;
     ImageView okImg;
+    private Control controlActual;
 
 
     private DatabaseHelper databaseHelper;
@@ -71,9 +73,16 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             productoSeleccionado = (Producto) obj;
         }
 
-        cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
         adapter = new ControlDetalleListAdapter(this, detalles);
         listaDetalle.setAdapter(adapter);
+        Object obj2 = getIntent().getSerializableExtra("CONTROL");
+        if (obj2 != null && obj2 instanceof Control) {
+            controlActual = (Control) obj2;
+            cargaDetalles();
+        }
+
+        cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
+
 
         btnMas.setOnClickListener(this);
 
@@ -111,7 +120,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         slidingUpPaneLayout.openPane(bottom, 0);
 
 
-        addItemsOnSpinner2();
+        cargaSpinnerUnidadMedida();
 
         okImg = (ImageView) findViewById(R.id.ok_img);
 
@@ -138,18 +147,16 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     }
 
 
-    public void addItemsOnSpinner2() {
+    private void cargaDetalles(){
+        QueryBuilder<ControlDetalle,Integer> cdqueryBuilder = controlDetalleDao.queryBuilder();
+        //cdqueryBuilder.where().eq(ControlDetalle.COL_CONTROL_NOMBRE,controlActual);
 
+    }
+
+    public void cargaSpinnerUnidadMedida() {
         unidadMedida = (Spinner) findViewById(R.id.spinner);
-        /*List<String> list = new ArrayList<String>();
-        list.add("list 1");
-        list.add("list 2");
-        list.add("list 3");*/
         listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
         adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this, listaUnidadMedida);
-        /*ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);*/
-        //adapterUnidadMedida.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unidadMedida.setAdapter(adapterUnidadMedida);
     }
 
