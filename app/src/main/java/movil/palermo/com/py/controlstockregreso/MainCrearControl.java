@@ -1,5 +1,7 @@
 package movil.palermo.com.py.controlstockregreso;
 
+//region Imports
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,9 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +21,6 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -46,12 +48,11 @@ import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 import movil.palermo.com.py.controlstockregreso.util.UtilJson;
-
-
-//import py.com.palermo.movil.movilcontrolstockretorno.RequestCodes;
+//endregion
 
 public class MainCrearControl extends ActionBarActivity implements View.OnClickListener {
 
+    //region Variables y staticos
     private static String TAG = MainCrearControl.class.getSimpleName();
 
     public static final int AGREGAR_VENDEDOR = 101;
@@ -88,115 +89,30 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     private Integer kmVehiculoSeleccionado;
     private Sesion sesionActual;
     private Control controlActual;
+    //endregion
 
+    //region Metodos sobreescritos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Chofer: Jose Colman");
-        actionBar.setSubtitle("Resp: Christian Romero");
-
         setContentView(R.layout.activity_main_crear_control);
 
-
-        recuadroVendedor = (FrameLayout) findViewById(R.id.recuadroVendedor);
-        recuadroChofer = (FrameLayout) findViewById(R.id.recuadroChofer);
-        recuadroMovil = (FrameLayout) findViewById(R.id.recuadroMovil);
-        txtVendedorValue = (TextView) findViewById(R.id.txtVwVendedorValue);
-        txtChoferValue = (TextView) findViewById(R.id.txtVwChoferValue);
-        txtMovilValue = (TextView) findViewById(R.id.txtVwMovilValue);
-
-
-        searchVendedor = (ImageView) findViewById(R.id.search_vendedor);
-        searchChofer = (ImageView) findViewById(R.id.search_chofer);
-        searchMovil = (ImageView) findViewById(R.id.search_movil);
-        bttnCargarProductos = (Button) findViewById(R.id.bttnCargarProductos);
-        bttnFinalizarControl = (Button) findViewById(R.id.bttnFinalizarControl);
-
-
-        searchVendedor.setOnClickListener(this);
-        searchChofer.setOnClickListener(this);
-        searchMovil.setOnClickListener(this);
-        bttnCargarProductos.setOnClickListener(this);
-        bttnFinalizarControl.setOnClickListener(this);
-
-
-        databaseHelper = new DatabaseHelper(this);
-        productoDao = databaseHelper.getProductoDao();
-        conductorDao = databaseHelper.getConductorDao();
-        vendedorDao = databaseHelper.getVendedorDao();
-        vehiculoDao = databaseHelper.getVehiculoDao();
-        sesionDao = databaseHelper.getSesionDao();
-        controlDao = databaseHelper.getControlDao();
-        unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
-
-        okImg = (ImageView) findViewById(R.id.ok_img);
-
-
-        fadeOut = new AlphaAnimation(1f, 0f);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(2000);
-
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                okImg.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Actualizando...");
-        pDialog.setCancelable(false);
-        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                okImg.setImageResource(R.drawable.check);
-                okImg.setVisibility(View.VISIBLE);
-                okImg.startAnimation(fadeOut);
-            }
-        });
-
-
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.shake);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                bttnFinalizarControl.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        bttnFinalizarControl.startAnimation(a);
+        //Verifica Login
+        /*if (!Mock.LOGEADO) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }*/
+        configurarActionBar();
+        inicializarViews();
+        asignarListeners();
+        inicializarDaos();
         inicializaSesion();
+        esconderBotonFinalzar();
+
     }
 
-
-    public void inicializaSesion(){
-        sesionActual = new Sesion();
-        sesionActual.setFechaControl(new Date());
-        sesionActual.setResponsable("Christian Romero");
-        sesionDao.create(sesionActual);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -255,27 +171,17 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 controlActual.setFechaControl(new Date());
                 controlActual.setSesion(sesionActual);
                 controlActual.setVehiculo(vehiculoSeleccionado);
-                controlActual.setVehiculoChapa(vehiculoSeleccionado != null?vehiculoSeleccionado.getChapa():"no asignado");
+                controlActual.setVehiculoChapa(vehiculoSeleccionado != null ? vehiculoSeleccionado.getChapa() : "no asignado");
                 controlActual.setVendedor(vendedorSeleccionado);
                 controlActual.setKm(0);//falta el input
 
                 controlDao.create(controlActual);
                 intentMain = new Intent(this, ListaProductos.class);
-                intentMain.putExtra("CONTROL",controlActual);
+                intentMain.putExtra("CONTROL", controlActual);
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
             default:
                 break;
-        }
-    }
-
-
-    private boolean sePuedeCargarProductos() {
-        if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
-            bttnCargarProductos.requestFocus();
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -320,7 +226,126 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         }
 
     }
+    //endregion
 
+    //region metodos privados
+    private void configurarActionBar() {
+
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setTitle("Chofer: Jose Colman");
+            actionBar.setSubtitle("Resp: Christian Romero");
+
+    }
+
+    private void inicializarViews() {
+        recuadroVendedor = (FrameLayout) findViewById(R.id.recuadroVendedor);
+        recuadroChofer = (FrameLayout) findViewById(R.id.recuadroChofer);
+        recuadroMovil = (FrameLayout) findViewById(R.id.recuadroMovil);
+        txtVendedorValue = (TextView) findViewById(R.id.txtVwVendedorValue);
+        txtChoferValue = (TextView) findViewById(R.id.txtVwChoferValue);
+        txtMovilValue = (TextView) findViewById(R.id.txtVwMovilValue);
+
+
+        searchVendedor = (ImageView) findViewById(R.id.search_vendedor);
+        searchChofer = (ImageView) findViewById(R.id.search_chofer);
+        searchMovil = (ImageView) findViewById(R.id.search_movil);
+        bttnCargarProductos = (Button) findViewById(R.id.bttnCargarProductos);
+        bttnFinalizarControl = (Button) findViewById(R.id.bttnFinalizarControl);
+        okImg = (ImageView) findViewById(R.id.ok_img);
+
+        fadeOut = new AlphaAnimation(1f, 0f);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(2000);
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                okImg.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Actualizando...");
+        pDialog.setCancelable(false);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                okImg.setImageResource(R.drawable.check);
+                okImg.setVisibility(View.VISIBLE);
+                okImg.startAnimation(fadeOut);
+            }
+        });
+    }
+
+    private void asignarListeners() {
+        searchVendedor.setOnClickListener(this);
+        searchChofer.setOnClickListener(this);
+        searchMovil.setOnClickListener(this);
+        bttnCargarProductos.setOnClickListener(this);
+        bttnFinalizarControl.setOnClickListener(this);
+    }
+
+    private void inicializarDaos() {
+        databaseHelper = new DatabaseHelper(this);
+        productoDao = databaseHelper.getProductoDao();
+        conductorDao = databaseHelper.getConductorDao();
+        vendedorDao = databaseHelper.getVendedorDao();
+        vehiculoDao = databaseHelper.getVehiculoDao();
+        sesionDao = databaseHelper.getSesionDao();
+        controlDao = databaseHelper.getControlDao();
+        unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
+    }
+
+    public void inicializaSesion() {
+        sesionActual = new Sesion();
+        sesionActual.setFechaControl(new Date());
+        sesionActual.setResponsable("Christian Romero");
+        sesionDao.create(sesionActual);
+    }
+
+    private void esconderBotonFinalzar() {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.shake);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                bttnFinalizarControl.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        bttnFinalizarControl.startAnimation(a);
+    }
+
+    private boolean sePuedeCargarProductos() {
+        if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
+            bttnCargarProductos.requestFocus();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //endregion
+
+    //region Metodos para el Progress Dialog
     private void showpDialog() {
         if (!pDialog.isShowing()) {
             pDialog.show();
@@ -339,7 +364,9 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
             pDialog.setProgress(progress);
         }
     }
+    //endregion
 
+    //region Metodos para verificar conexion
     protected Boolean estaConectado() {
         if (conectadoWifi()) {
             return true;
@@ -357,7 +384,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         }
     }
 
-
     protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
@@ -368,10 +394,8 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 }
             }
         }
-        //return false;
         return true;
     }
-
 
     protected Boolean conectadoRedMovil() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -385,9 +409,10 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         }
         return false;
     }
+    //endregion
 
-
-    public void cargaDatos() {
+    //region Datos de prueba
+    private void cargaDatos() {
         unidadMedidadMock();
         productoMock();
         conductorMock();
@@ -402,10 +427,10 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     }
 
     private void productoMock() {
-        Producto p1 = new Producto(218,"Kentuky 10",25,null);
-        Producto p2 = new Producto(198,"Kentuky 20",25,null);
-        Producto p3 = new Producto(3,"Palermo Blue 10",25,null);
-        Producto p4 = new Producto(4,"Palermo Red 20",25,null);
+        Producto p1 = new Producto(218, "Kentuky 10", 25, null);
+        Producto p2 = new Producto(198, "Kentuky 20", 25, null);
+        Producto p3 = new Producto(3, "Palermo Blue 10", 25, null);
+        Producto p4 = new Producto(4, "Palermo Red 20", 25, null);
 
         productoDao.create(p1);
         productoDao.create(p2);
@@ -414,42 +439,45 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     }
 
     private void conductorMock() {
-        Conductor c1 = new Conductor(1,"Conductor 1",123456);
-        Conductor c2 = new Conductor(2,"Conductor 2",456123);
+        Conductor c1 = new Conductor(1, "Conductor 1", 123456);
+        Conductor c2 = new Conductor(2, "Conductor 2", 456123);
 
         conductorDao.create(c1);
         conductorDao.create(c2);
     }
+
     private void vendedorMock() {
-        Vendedor v1 = new Vendedor(1,"Vendedor",1,conductorDao.queryForId(1));
-        Vendedor v2 = new Vendedor(2,"Vendedor",1,conductorDao.queryForId(2));
+        Vendedor v1 = new Vendedor(1, "Vendedor", 1, conductorDao.queryForId(1));
+        Vendedor v2 = new Vendedor(2, "Vendedor", 1, conductorDao.queryForId(2));
 
         vendedorDao.create(v1);
         vendedorDao.create(v2);
     }
 
     private void vehiculoMock() {
-        Vehiculo v1 = new Vehiculo(1,"Toyota","ADV 456");
-        Vehiculo v2 = new Vehiculo(2,"Daihasu","ADV 400");
+        Vehiculo v1 = new Vehiculo(1, "Toyota", "ADV 456");
+        Vehiculo v2 = new Vehiculo(2, "Daihasu", "ADV 400");
 
         vehiculoDao.create(v1);
         vehiculoDao.create(v2);
     }
+
     private void unidadMedidadMock() {
 
         unidadMedidaDao.executeRaw("delete from unidadmedida");
-        UnidadMedida m1 = new UnidadMedida(1,"Cajas");
-        UnidadMedida m2 = new UnidadMedida(2,"Gruesas");
-        UnidadMedida m3 = new UnidadMedida(3,"Cajetillas");
-        UnidadMedida m4 = new UnidadMedida(4,"Unidad");
+        UnidadMedida m1 = new UnidadMedida(1, "Cajas");
+        UnidadMedida m2 = new UnidadMedida(2, "Gruesas");
+        UnidadMedida m3 = new UnidadMedida(3, "Cajetillas");
+        UnidadMedida m4 = new UnidadMedida(4, "Unidad");
 
         unidadMedidaDao.create(m1);
         unidadMedidaDao.create(m2);
         unidadMedidaDao.create(m3);
         unidadMedidaDao.create(m4);
     }
+    //endregion
 
-
+    //region Metodos json
     private void productosRequest() {
 
         showpDialog();
@@ -502,7 +530,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         AppController.getInstance().addToRequestQueue(req);
     }
 
-
     private void conductorRequest() {
 
 
@@ -552,7 +579,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req);
     }
-
 
     private void vendedorRequest() {
 
@@ -604,7 +630,6 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         AppController.getInstance().addToRequestQueue(req);
     }
 
-
     private void vehiculoRequest() {
 
 
@@ -655,6 +680,5 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req);
     }
-
-
+    //endregion
 }

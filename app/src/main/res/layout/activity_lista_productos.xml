@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="py.com.palermo.movil.movilcontrolstockretorno.ListaProductos"
-    android:layout_marginTop="?attr/actionBarSize">
+    android:layout_marginTop="?attr/actionBarSize"
+    android:keepScreenOn="true" >
 
     <ListView
         android:layout_width="0dp"

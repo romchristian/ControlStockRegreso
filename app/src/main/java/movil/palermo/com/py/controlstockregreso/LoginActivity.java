@@ -57,11 +57,11 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         switch (view.getId()){
             case R.id.button_login:
 
-                if(usuario.getText() != null && usuario.getText().toString().compareToIgnoreCase(Mock.USUARIO) == 0
-                        && password.getText()!= null && password.getText().toString().compareToIgnoreCase(Mock.PASSWORD) == 0) {
+                if(usuario.getText() != null && usuario.getText().toString().compareToIgnoreCase("admin") == 0
+                        && password.getText()!= null && password.getText().toString().compareToIgnoreCase("admin") == 0) {
 
-                    Mock.LOGEADO = true;
-                    Intent intent = new Intent(this, MainActivity.class);
+                    //Mock.LOGEADO = true;
+                    Intent intent = new Intent(this, MainCrearControl.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

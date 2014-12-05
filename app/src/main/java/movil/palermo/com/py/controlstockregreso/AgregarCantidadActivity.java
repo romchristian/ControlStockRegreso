@@ -1,7 +1,6 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.support.v7.app.ActionBar;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -11,14 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.custom.ControlDetalleListAdapter;
-import movil.palermo.com.py.controlstockregreso.custom.ResizeAnimation;
 import movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout;
 import movil.palermo.com.py.controlstockregreso.custom.UnidadMedidaSpinnerAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
@@ -54,6 +51,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     RelativeLayout bottom;
     private Spinner unidadMedida;
     private List<UnidadMedida> listaUnidadMedida = new ArrayList<UnidadMedida>();
+    Animation fadeOut;
+    ImageView okImg;
 
 
     private DatabaseHelper databaseHelper;
@@ -113,6 +112,29 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
 
         addItemsOnSpinner2();
+
+        okImg = (ImageView) findViewById(R.id.ok_img);
+
+        fadeOut = new AlphaAnimation(1f, 0f);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(2000);
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                okImg.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
 
@@ -214,6 +236,13 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                     detalles.add(d);
                     adapter.notifyDataSetChanged();
                     controlDetalleDao.create(d);
+
+
+                    cantidad.setText("");
+                    okImg.setImageResource(R.drawable.check);
+                    okImg.setVisibility(View.VISIBLE);
+                    okImg.startAnimation(fadeOut);
+
                 }
                 break;
 
