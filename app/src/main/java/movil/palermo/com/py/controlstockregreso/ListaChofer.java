@@ -1,6 +1,6 @@
 package movil.palermo.com.py.controlstockregreso;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -57,18 +57,12 @@ public class ListaChofer extends ActionBarActivity implements AdapterView.OnItem
 
 
     private void  configuraActionBar(){
-        final ActionBar actionBar = getActionBar();
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        final ActionBar actionBar = getSupportActionBar();
+
                 actionBar.setTitle("Seleccione un conductor");
                 if(Build.VERSION.SDK_INT >=14) {
                     actionBar.setIcon(R.drawable.default_user_orange);
                 }
-            }
-        });
-
-        t.start();
     }
     @Override
     protected void onRestart() {

@@ -1,6 +1,6 @@
 package movil.palermo.com.py.controlstockregreso;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -41,16 +41,14 @@ import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 
 public class AgregarCantidadActivity extends ActionBarActivity implements View.OnClickListener {
 
-    ImageView btnMas, btnMinus;
-    Button btnAgregar, btnConfirmar, btnCancelar;
+    ImageView btnMas;
     EditText cantidad;
     ListView listaDetalle;
     List<ControlDetalle> detalles = new ArrayList<ControlDetalle>();
     ControlDetalleListAdapter adapter;
     UnidadMedidaSpinnerAdapter adapterUnidadMedida;
-    RadioGroup radioGroup;
     Producto productoSeleccionado;
-    private RuntimeExceptionDao<UnidadMedida,Integer> unidadMedidaDao;
+    private RuntimeExceptionDao<UnidadMedida, Integer> unidadMedidaDao;
     private RuntimeExceptionDao<Control, Integer> controlDao;
     private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
     RelativeLayout bottom;
@@ -80,11 +78,11 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
         btnMas.setOnClickListener(this);
 
-       final Context context = this;
+        final Context context = this;
         btnMas.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
+                switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.pulse));
                         break;
@@ -95,7 +93,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         });
 
 
-        if(productoSeleccionado!=null){
+        if (productoSeleccionado != null) {
             configuraActionBar();
         }
 
@@ -111,7 +109,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         slidingUpPaneLayout.setShadowResourceTop(R.drawable.shadow_top);
 
         bottom = (RelativeLayout) findViewById(R.id.bottom_view);
-        slidingUpPaneLayout.openPane(bottom,0);
+        slidingUpPaneLayout.openPane(bottom, 0);
 
 
         addItemsOnSpinner2();
@@ -126,56 +124,44 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         list.add("list 2");
         list.add("list 3");*/
         listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
-        adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this,listaUnidadMedida);
+        adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this, listaUnidadMedida);
         /*ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);*/
         //adapterUnidadMedida.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unidadMedida.setAdapter(adapterUnidadMedida);
     }
-    private void recargaUnidadMedida() {
-        listaUnidadMedida.clear();
-        listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
-        adapterUnidadMedida.notifyDataSetChanged();
-    }
 
-    private void  configuraActionBar(){
-        final ActionBar actionBar = getActionBar();
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                actionBar.setTitle(productoSeleccionado.getNombre());
-                if(Build.VERSION.SDK_INT >=14) {
-                    int img = 0;
-                    if (productoSeleccionado.getNombre().toLowerCase().contains("blue")) {
-                        img = R.drawable.palermo_blue;
-                    } else if (productoSeleccionado.getNombre().toLowerCase().contains("green")) {
-                        img = R.drawable.palermo_green;
-                    }else if (productoSeleccionado.getNombre().toLowerCase().contains("red")) {
-                        img = R.drawable.palermo_red;
-                    }else if (productoSeleccionado.getNombre().toLowerCase().contains("plm 3")) {
-                        img = R.drawable.plm3;
-                    }else if (productoSeleccionado.getNombre().toLowerCase().contains("duo")) {
-                        img = R.drawable.palermo_duo;
-                    }else if (productoSeleccionado.getId() == 218) {
-                        img = R.drawable.kentucky_10;
-                    }else if (productoSeleccionado.getId() == 403) {
-                        img = R.drawable.sanmarino_20;
-                    }else if (productoSeleccionado.getId() == 404) {
-                        img = R.drawable.sanmarino_10;
-                    }else if (productoSeleccionado.getId() == 198) {
-                        img = R.drawable.kentucky_20;
-                    }else if (productoSeleccionado.getId() == 204) {
-                        img = R.drawable.kentucky_soft;
-                    }else{
-                        img = R.drawable.kit;
-                    }
-
-                    actionBar.setIcon(img);
-                }
+    private void configuraActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(productoSeleccionado.getNombre());
+        if (Build.VERSION.SDK_INT >= 14) {
+            int img = 0;
+            if (productoSeleccionado.getNombre().toLowerCase().contains("blue")) {
+                img = R.drawable.palermo_blue;
+            } else if (productoSeleccionado.getNombre().toLowerCase().contains("green")) {
+                img = R.drawable.palermo_green;
+            } else if (productoSeleccionado.getNombre().toLowerCase().contains("red")) {
+                img = R.drawable.palermo_red;
+            } else if (productoSeleccionado.getNombre().toLowerCase().contains("plm 3")) {
+                img = R.drawable.plm3;
+            } else if (productoSeleccionado.getNombre().toLowerCase().contains("duo")) {
+                img = R.drawable.palermo_duo;
+            } else if (productoSeleccionado.getId() == 218) {
+                img = R.drawable.kentucky_10;
+            } else if (productoSeleccionado.getId() == 403) {
+                img = R.drawable.sanmarino_20;
+            } else if (productoSeleccionado.getId() == 404) {
+                img = R.drawable.sanmarino_10;
+            } else if (productoSeleccionado.getId() == 198) {
+                img = R.drawable.kentucky_20;
+            } else if (productoSeleccionado.getId() == 204) {
+                img = R.drawable.kentucky_soft;
+            } else {
+                img = R.drawable.kit;
             }
-        });
 
-        t.start();
+            actionBar.setIcon(img);
+        }
     }
 
     @Override
@@ -203,14 +189,14 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     @Override
     public void onClick(View view) {
         int cantActual = 0;
-        String texto = cantidad.getText()== null?"0":cantidad.getText().toString();
+        String texto = cantidad.getText() == null ? "0" : cantidad.getText().toString();
 
         switch (view.getId()) {
             case R.id.imgPlus:
 
 
-                if(cantidad.getText().toString().compareToIgnoreCase("0")==0){
-                    Toast.makeText(this,"No hay cantidad",Toast.LENGTH_LONG).show();
+                if (cantidad.getText() == null || cantidad.getText().toString().compareToIgnoreCase("0") == 0 || cantidad.getText().toString().compareToIgnoreCase("") == 0) {
+                    Toast.makeText(this, "No hay cantidad", Toast.LENGTH_LONG).show();
                     break;
                 }
 
@@ -218,7 +204,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                     ControlDetalle d = new ControlDetalle();
                     UnidadMedida um = null;
 
-                    if(unidadMedida.getSelectedItem() instanceof UnidadMedida) {
+                    if (unidadMedida.getSelectedItem() instanceof UnidadMedida) {
                         um = (UnidadMedida) unidadMedida.getSelectedItem();
                     }
 

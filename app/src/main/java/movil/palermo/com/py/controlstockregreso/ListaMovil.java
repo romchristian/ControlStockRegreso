@@ -1,6 +1,5 @@
 package movil.palermo.com.py.controlstockregreso;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -58,18 +57,12 @@ public class ListaMovil extends ActionBarActivity implements AdapterView.OnItemC
 
 
     private void  configuraActionBar(){
-        final ActionBar actionBar = getActionBar();
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                actionBar.setTitle("Seleccione un móvil");
-                if(Build.VERSION.SDK_INT >=14) {
-                    actionBar.setIcon(R.drawable.camion);
-                }
-            }
-        });
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
-        t.start();
+        actionBar.setTitle("Seleccione un móvil");
+        if(Build.VERSION.SDK_INT >=14) {
+            actionBar.setIcon(R.drawable.camion);
+        }
     }
 
     @Override

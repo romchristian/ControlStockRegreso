@@ -1,6 +1,5 @@
 package movil.palermo.com.py.controlstockregreso;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,7 +93,7 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Chofer: Jose Colman");
         actionBar.setSubtitle("Resp: Christian Romero");
 
@@ -368,7 +368,8 @@ public class MainCrearControl extends ActionBarActivity implements View.OnClickL
                 }
             }
         }
-        return false;
+        //return false;
+        return true;
     }
 
 
