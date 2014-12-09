@@ -112,8 +112,6 @@ public class MainActivity extends ActionBarActivity
                         .commit();
 
         }
-
-
     }
 
     //
@@ -149,6 +147,8 @@ public class MainActivity extends ActionBarActivity
             // decide what to show in the action bar.
             if (numeroSeccion == 0) {
                 getMenuInflater().inflate(R.menu.menu_main_crear_control, menu);
+            }else if (numeroSeccion == 1) {
+                getMenuInflater().inflate(R.menu.menu_listado_control, menu);
             }
             restoreActionBar();
             return true;

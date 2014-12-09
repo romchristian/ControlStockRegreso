@@ -8,6 +8,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listaControl"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28sp"
+        android:layout_marginTop="0dp"
+        android:textStyle="bold"
+        android:textColor="#36000000"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imgFlecha"
+        android:text="Cree un nuevo Control"/>
+
+    <ImageView
+        android:id="@+id/imgFlecha"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/flecha"/>
+
 
 </RelativeLayout>

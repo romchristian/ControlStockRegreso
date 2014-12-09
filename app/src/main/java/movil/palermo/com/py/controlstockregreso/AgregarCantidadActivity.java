@@ -102,6 +102,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         slidingUpPaneLayout.openPane(bottom, 0);
 
     }
+
     private void configuraEfectos(){
 
         final Context context = this;
