@@ -163,7 +163,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     private void esconderBotonFinalzar() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.shake);
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.hide);
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -173,6 +173,27 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             @Override
             public void onAnimationEnd(Animation animation) {
                 bttnFinalizarControl.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        bttnFinalizarControl.startAnimation(a);
+    }
+
+    private void mostrarBotonFinalzar() {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.show);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                bttnFinalizarControl.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -223,6 +244,21 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 intentMain.putExtra("CONTROL", controlActual);
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
+            case R.id.bttnFinalizarControl:
+
+                controlActual = null;
+                vendedorSeleccionado = null;
+                conductorSeleccionado = null;
+                vehiculoSeleccionado = null;
+                txtVendedorValue.setText("");
+                recuadroVendedor.setBackgroundResource(R.drawable.recuadro);
+                txtChoferValue.setText("");
+                recuadroChofer.setBackgroundResource(R.drawable.recuadro);
+                txtMovilValue.setText("");
+                recuadroMovil.setBackgroundResource(R.drawable.recuadro);
+                bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+                esconderBotonFinalzar();
+                break;
             default:
                 break;
         }
@@ -260,6 +296,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     break;
                 case CARGAR_PRODUCTOS:
                     //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    mostrarBotonFinalzar();
                     break;
             }
         } else {

@@ -39,7 +39,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Producto, Integer> productoDao;
     private ProgressDialog pDialog;
-
+    private Intent datos;
 
     private ArrayAdapter<String> adaptador;
 
@@ -49,6 +49,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
+
 
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
@@ -69,6 +70,15 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         }
         recargaLista();
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        datos = new Intent();
+        datos.putExtra("RESULTADO",new Producto());
+        setResult(RESULT_OK,datos);
+        super.onBackPressed();
     }
 
     @Override
