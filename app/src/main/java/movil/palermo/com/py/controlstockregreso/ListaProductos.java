@@ -61,12 +61,13 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
 
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
         productoDao = databaseHelper.getProductoDao();
-        recargaLista();
+
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
         if(obj != null && obj instanceof Control){
             controlActual = (Control)obj;
         }
+        recargaLista();
 
     }
 
@@ -83,15 +84,17 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         pDialog.show();
 
         //Hago consulta nativa para sumar las cantidades
+        int idControl = controlActual.getId();
 
 
         GenericRawResults<String[]> rawResults =
                 productoDao.queryRaw(
                         "select p.id, p.nombre , " +
-                                "     sum(case when d.unidad_medida_id = 1 then d.cantidad else 0 end) as cajas, " +
-                                "     sum(case when d.unidad_medida_id = 2 then d.cantidad else 0 end) as gruesas, " +
-                                "     sum(case when d.unidad_medida_id = 3 then d.cantidad else 0 end) as cajetillas " +
-                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.nombre ");
+                                "     sum(case when d.unidad_medida_id = 1 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
+                                "     sum(case when d.unidad_medida_id = 2 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
+                                "     sum(case when d.unidad_medida_id = 3 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
+                                "     sum(case when d.unidad_medida_id = 4 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
+                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.nombre");
 
         productoList.clear();
 

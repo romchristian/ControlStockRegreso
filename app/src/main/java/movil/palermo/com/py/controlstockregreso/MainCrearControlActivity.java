@@ -3,19 +3,11 @@ package movil.palermo.com.py.controlstockregreso;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -26,15 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -46,14 +30,13 @@ import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
-import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 /**
  * Created by Christian on 08/12/2014.
  */
-public class MainCrearControlFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
+public class MainCrearControlActivity extends ActionBarActivity implements View.OnClickListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static String TAG = MainCrearControlFragment.class.getSimpleName();
+    private static String TAG = MainCrearControlActivity.class.getSimpleName();
 
     public static final int AGREGAR_VENDEDOR = 101;
     public static final int AGREGAR_CHOFER = 102;
@@ -90,58 +73,33 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
     private Sesion sesionActual;
     private Control controlActual;
 
-    View rootView;
-
-    public static MainCrearControlFragment newInstance(int sectionNumber) {
-        MainCrearControlFragment fragment = new MainCrearControlFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public MainCrearControlFragment() {
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_main_crear_control, container, false);
-
-        //configurarActionBar();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_crear_control);
         inicializarViews();
         asignarListeners();
         inicializarDaos();
         inicializaSesion();
         esconderBotonFinalzar();
-        return rootView;
-    }
 
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
 
     private void inicializarViews() {
-        recuadroVendedor = (FrameLayout) rootView.findViewById(R.id.recuadroVendedor);
-        recuadroChofer = (FrameLayout) rootView.findViewById(R.id.recuadroChofer);
-        recuadroMovil = (FrameLayout) rootView.findViewById(R.id.recuadroMovil);
-        txtVendedorValue = (TextView) rootView.findViewById(R.id.txtVwVendedorValue);
-        txtChoferValue = (TextView) rootView.findViewById(R.id.txtVwChoferValue);
-        txtMovilValue = (TextView) rootView.findViewById(R.id.txtVwMovilValue);
+        recuadroVendedor = (FrameLayout) findViewById(R.id.recuadroVendedor);
+        recuadroChofer = (FrameLayout) findViewById(R.id.recuadroChofer);
+        recuadroMovil = (FrameLayout) findViewById(R.id.recuadroMovil);
+        txtVendedorValue = (TextView) findViewById(R.id.txtVwVendedorValue);
+        txtChoferValue = (TextView) findViewById(R.id.txtVwChoferValue);
+        txtMovilValue = (TextView) findViewById(R.id.txtVwMovilValue);
 
 
-        searchVendedor = (ImageView) rootView.findViewById(R.id.search_vendedor);
-        searchChofer = (ImageView) rootView.findViewById(R.id.search_chofer);
-        searchMovil = (ImageView) rootView.findViewById(R.id.search_movil);
-        bttnCargarProductos = (Button) rootView.findViewById(R.id.bttnCargarProductos);
-        bttnFinalizarControl = (Button) rootView.findViewById(R.id.bttnFinalizarControl);
-        okImg = (ImageView) rootView.findViewById(R.id.ok_img);
+        searchVendedor = (ImageView) findViewById(R.id.search_vendedor);
+        searchChofer = (ImageView) findViewById(R.id.search_chofer);
+        searchMovil = (ImageView) findViewById(R.id.search_movil);
+        bttnCargarProductos = (Button) findViewById(R.id.bttnCargarProductos);
+        bttnFinalizarControl = (Button) findViewById(R.id.bttnFinalizarControl);
+        okImg = (ImageView) findViewById(R.id.ok_img);
 
         fadeOut = new AlphaAnimation(1f, 0f);
         fadeOut.setInterpolator(new AccelerateInterpolator());
@@ -164,7 +122,7 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
             }
         });
 
-        pDialog = new ProgressDialog(rootView.getContext());
+        pDialog = new ProgressDialog(this);
         pDialog.setMessage("Actualizando...");
         pDialog.setCancelable(false);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -187,7 +145,7 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
     }
 
     private void inicializarDaos() {
-        databaseHelper = new DatabaseHelper(rootView.getContext());
+        databaseHelper = new DatabaseHelper(this);
         productoDao = databaseHelper.getProductoDao();
         conductorDao = databaseHelper.getConductorDao();
         vendedorDao = databaseHelper.getVendedorDao();
@@ -205,7 +163,7 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
     }
 
     private void esconderBotonFinalzar() {
-        Animation a = AnimationUtils.loadAnimation(rootView.getContext(), R.anim.shake);
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.shake);
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -239,15 +197,15 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_vendedor:
-                intentMain = new Intent(rootView.getContext(), ListaVendedor.class);
+                intentMain = new Intent(this, ListaVendedor.class);
                 startActivityForResult(intentMain, AGREGAR_VENDEDOR);
                 break;
             case R.id.search_chofer:
-                intentMain = new Intent(rootView.getContext(), ListaChofer.class);
+                intentMain = new Intent(this, ListaChofer.class);
                 startActivityForResult(intentMain, AGREGAR_CHOFER);
                 break;
             case R.id.search_movil:
-                intentMain = new Intent(rootView.getContext(), ListaMovil.class);
+                intentMain = new Intent(this, ListaMovil.class);
                 startActivityForResult(intentMain, AGREGAR_MOVIL);
                 break;
             case R.id.bttnCargarProductos:
@@ -261,7 +219,7 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
                 controlActual.setKm(0);//falta el input
 
                 controlDao.create(controlActual);
-                intentMain = new Intent(rootView.getContext(), ListaProductos.class);
+                intentMain = new Intent(this, ListaProductos.class);
                 intentMain.putExtra("CONTROL", controlActual);
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
@@ -306,7 +264,7 @@ public class MainCrearControlFragment extends android.support.v4.app.Fragment im
             }
         } else {
             if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(rootView.getContext(), "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
             }
         }
 

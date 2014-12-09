@@ -5,11 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -21,7 +24,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 
 
-public class ListaControlFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
+public class ListaControlFragment extends android.support.v4.app.Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaControl;
@@ -31,6 +34,8 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Control, Integer> controlDao;
     private ProgressDialog pDialog;
+    private TextView txtVwNuevoControl;
+    private ImageView imgVwflecha;
 
 
     View rootView;
@@ -48,15 +53,38 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     }
 
     @Override
+    public void onResume() {
+        recargaLista();
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_lista_control, container, false);
         listaControl = (ListView) rootView.findViewById(R.id.listaControl);
+        txtVwNuevoControl = (TextView) rootView.findViewById(R.id.txtVwNuevoControl);
+        imgVwflecha = (ImageView) rootView.findViewById(R.id.imgFlecha);
 
         adapter = new ControlListAdapter(getActivity(), controlList);
+        listaControl.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+
+                Log.d("OnClick","Hola 1");
+                Control control = (Control)  adapterView.getItemAtPosition(pos);
+                Log.d("OnClick2","Hola 2");
+                Intent i = new Intent(rootView.getContext(), ListaProductos.class);
+                Log.d("OnClick3","Hola 3");
+                i.putExtra("CONTROL",control);
+                Log.d("OnClick4","Hola 4");
+                startActivity(i);
+                Log.d("OnClick5","Hola 5");
+            }
+        });
 
         listaControl.setAdapter(adapter);
-        listaControl.setOnItemClickListener(this);
+
 
         databaseHelper = new DatabaseHelper(getActivity());
         controlDao = databaseHelper.getControlDao();
@@ -66,7 +94,8 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     }
 
 
-    private void recargaLista() {
+
+    public void recargaLista() {
         pDialog = new ProgressDialog(getActivity());
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
@@ -74,6 +103,16 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         controlList.clear();
         controlList.addAll(controlDao.queryForAll());
         adapter.notifyDataSetChanged();
+        if (adapter.getCount()>0) {
+            listaControl.setVisibility(View.VISIBLE);
+            txtVwNuevoControl.setVisibility(View.GONE);
+            imgVwflecha.setVisibility(View.GONE);
+        }
+        else {
+            listaControl.setVisibility(View.GONE);
+            txtVwNuevoControl.setVisibility(View.VISIBLE);
+            imgVwflecha.setVisibility(View.VISIBLE);
+        }
         hidePDialog();
     }
 
@@ -82,12 +121,6 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
             pDialog.dismiss();
             pDialog = null;
         }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
     }
 
   @Override

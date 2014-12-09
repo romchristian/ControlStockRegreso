@@ -25,5 +25,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_main_crear_control">Nuevo Control</string>
 
 </resources>

@@ -61,7 +61,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                         && password.getText()!= null && password.getText().toString().compareToIgnoreCase("admin") == 0) {
 
                     //Mock.LOGEADO = true;
-                    Intent intent = new Intent(this, MainCrearControlFragment.class);
+                    Intent intent = new Intent(this, MainCrearControlActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

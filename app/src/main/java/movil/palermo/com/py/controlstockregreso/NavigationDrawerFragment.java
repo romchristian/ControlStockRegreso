@@ -102,7 +102,6 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        "Nuevo",
                         "Listado Controles",
                         "Reposicion",
                 }));

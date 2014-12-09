@@ -28,6 +28,7 @@ public class ProductoResumen implements Serializable{
         this.cantCajas = Integer.valueOf(row[2]==null?"0":row[2]);
         this.cantGruesas = Integer.valueOf(row[3]==null?"0":row[3]);
         this.cantCajetillas = Integer.valueOf(row[4]==null?"0":row[4]);
+        this.cantUnidad =  Integer.valueOf(row[5]==null?"0":row[5]);
     }
 
 
