@@ -1,15 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="py.com.palermo.movil.movilcontrolstockretorno.ListaChofer"
-    android:layout_marginTop="?attr/actionBarSize" >
+    android:layout_height="match_parent">
 
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lstVwChofer"
+        android:id="@+id/listaControl"
         android:choiceMode="singleChoice" />
 
 </RelativeLayout>

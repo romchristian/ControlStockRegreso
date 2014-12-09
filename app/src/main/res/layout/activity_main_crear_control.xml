@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainCrearControl"
-    android:layout_marginTop="?attr/actionBarSize">
+    tools:context=".MainCrearControl">
     <FrameLayout
-        android:id="@+id/recuadroVendedor"
+        android:layout_below="@+id/recuadroChofer"
+        android:id="@+id/recuadroMovil"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/fondo_recuadro"
@@ -15,31 +15,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/txtVwVendedorTitulo"
+                android:id="@+id/txtVwMovilTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Vendedor: "
+                android:text="Movil: "
                 android:paddingTop="5dp"
                 android:paddingLeft="10dp"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"/>
             <TextView
-                android:id="@+id/txtVwVendedorValue"
+                android:id="@+id/txtVwMovilValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:paddingLeft="10dp"
-                android:hint="Seleccione un vendedor"
-                android:layout_below="@+id/txtVwVendedorTitulo"
+                android:hint="Seleccione un movil"
+                android:layout_below="@+id/txtVwMovilTitulo"
                 android:layout_marginTop="10dp"
                 />
 
             <ImageView
-                android:layout_alignTop="@+id/txtVwVendedorValue"
-                android:id="@+id/search_vendedor"
+                android:layout_alignTop="@+id/txtVwMovilValue"
+                android:id="@+id/search_movil"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/search"
@@ -99,8 +99,7 @@
 
     </FrameLayout>
     <FrameLayout
-        android:layout_below="@+id/recuadroChofer"
-        android:id="@+id/recuadroMovil"
+        android:id="@+id/recuadroVendedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/fondo_recuadro"
@@ -110,31 +109,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/txtVwMovilTitulo"
+                android:id="@+id/txtVwVendedorTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Movil: "
+                android:text="Vendedor: "
                 android:paddingTop="5dp"
                 android:paddingLeft="10dp"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"/>
             <TextView
-                android:id="@+id/txtVwMovilValue"
+                android:id="@+id/txtVwVendedorValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:paddingLeft="10dp"
-                android:hint="Seleccione un movil"
-                android:layout_below="@+id/txtVwMovilTitulo"
+                android:hint="Seleccione un vendedor"
+                android:layout_below="@+id/txtVwVendedorTitulo"
                 android:layout_marginTop="10dp"
                 />
 
             <ImageView
-                android:layout_alignTop="@+id/txtVwMovilValue"
-                android:id="@+id/search_movil"
+                android:layout_alignTop="@+id/txtVwVendedorValue"
+                android:id="@+id/search_vendedor"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/search"
@@ -145,6 +144,8 @@
         </RelativeLayout>
 
     </FrameLayout>
+
+
 
 
 

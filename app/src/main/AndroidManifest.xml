@@ -7,59 +7,58 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="movil.palermo.com.py.controlstockregreso.AppController"
+        android:name=".AppController"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
         <activity
-            android:name="movil.palermo.com.py.controlstockregreso.LoginActivity"
-            android:label="@string/title_activity_login"
+            android:name=".LoginActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="movil.palermo.com.py.controlstockregreso.MainCrearControl"
-            android:label="@string/app_name"
+            android:name=".ListaProductos"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
-
+            android:label="@string/title_activity_lista_productos"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ListaVendedor"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_lista_vendedor"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ListaChofer"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_lista_chofer"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ListaMovil"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_lista_movil"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".AgregarCantidadActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_agregar_cantidad"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" >
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-        <activity
-            android:name="movil.palermo.com.py.controlstockregreso.ListaProductos"
-            android:label="@string/title_activity_lista_productos"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="movil.palermo.com.py.controlstockregreso.ListaVendedor"
-            android:label="@string/title_activity_lista_vendedor"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="movil.palermo.com.py.controlstockregreso.ListaChofer"
-            android:label="@string/title_activity_lista_chofer"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="movil.palermo.com.py.controlstockregreso.ListaMovil"
-            android:label="@string/title_activity_lista_movil"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="movil.palermo.com.py.controlstockregreso.AgregarCantidadActivity"
-            android:label="@string/title_activity_agregar_cantidad"
-            android:windowSoftInputMode="adjustNothing"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -14,6 +14,8 @@ public class Vehiculo implements Serializable{
     private String marca;
     @DatabaseField
     private String chapa;
+    @DatabaseField
+    private String numero;
 
     public Vehiculo() {
 
@@ -23,6 +25,14 @@ public class Vehiculo implements Serializable{
         this.id = id;
         this.marca = marca;
         this.chapa = chapa;
+    }
+
+
+    public Vehiculo(Integer id, String marca, String chapa, String numero) {
+        this.id = id;
+        this.marca = marca;
+        this.chapa = chapa;
+        this.numero = numero;
     }
 
     public Integer getId() {
@@ -47,5 +57,13 @@ public class Vehiculo implements Serializable{
 
     public void setChapa(String chapa) {
         this.chapa = chapa;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 }

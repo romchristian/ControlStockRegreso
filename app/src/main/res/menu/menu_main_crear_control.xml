@@ -2,15 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainCrearControl">
 
-    <item android:id="@+id/action_listado" android:title="@string/listado"
-        android:orderInCategory="100" app:showAsAction="always" />
-
     <item android:id="@+id/action_actualizar" android:title="@string/actualizar"
         android:orderInCategory="100" app:showAsAction="never" />
 
     <item android:id="@+id/action_extraer_bd" android:title="Extraer BD"
         android:orderInCategory="100" app:showAsAction="never" />
 
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+    <item android:id="@+id/action_settings" android:title="Configuraciones"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

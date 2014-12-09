@@ -6,4 +6,5 @@
     <dimen name="rating">15dip</dimen>
     <dimen name="genre">13dip</dimen>
     <dimen name="year">12dip</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
 </resources>

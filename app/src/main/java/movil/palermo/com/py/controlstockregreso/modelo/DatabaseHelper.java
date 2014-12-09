@@ -25,7 +25,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "stock.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private RuntimeExceptionDao<Vendedor, Integer> vendedorDao = null;
     private RuntimeExceptionDao<Conductor, Integer> conductorDao = null;
@@ -72,25 +72,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        try {
+
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
-            TableUtils.dropTable(connectionSource, Producto.class, true);
+
 
             switch (newVersion) {
                 case 2:
-
+                   getVehiculoDao().executeRaw("Alter table vehiculo add column numero text");
                     break;
                 default:
                     break;
             }
 
 
-            // after we drop the old databases, we create the new ones
-            onCreate(database, connectionSource);
-        } catch (SQLException e) {
-            Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
-            throw new RuntimeException(e);
-        }
     }
 
 
