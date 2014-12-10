@@ -3,6 +3,7 @@ package movil.palermo.com.py.controlstockregreso;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -77,6 +78,18 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         inicializarDaos();
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Actualizando...");
+        pDialog.setCancelable(false);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                /*okImg.setImageResource(R.drawable.check);
+                okImg.setVisibility(View.VISIBLE);
+                okImg.startAnimation(fadeOut);*/
+            }
+        });
     }
 
 
@@ -99,7 +112,7 @@ public class MainActivity extends ActionBarActivity
         switch (position) {
             case 0:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, ListaControlFragment.newInstance(position),"LISTA_CONTROL_FRAGMENT")
+                        .replace(R.id.container, ListaControlFragment.newInstance(position), "LISTA_CONTROL_FRAGMENT")
                         .commit();
                 break;
             default:
@@ -140,7 +153,7 @@ public class MainActivity extends ActionBarActivity
             // decide what to show in the action bar.
             if (numeroSeccion == 0) {
                 getMenuInflater().inflate(R.menu.menu_listado_control, menu);
-            }else if (numeroSeccion == 1) {
+            } else if (numeroSeccion == 1) {
                 getMenuInflater().inflate(R.menu.menu_listado_control, menu);
             }
             restoreActionBar();
@@ -168,7 +181,7 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_extraer_bd:
                 break;
             case R.id.action_nuevo:
-                Intent i = new Intent(this,MainCrearControlActivity.class);
+                Intent i = new Intent(this, MainCrearControlActivity.class);
                 startActivity(i);
             default:
                 return super.onOptionsItemSelected(item);
@@ -253,15 +266,15 @@ return false;
         vehiculoDao.executeRaw("DELETE FROM controldetalle");
         vehiculoDao.executeRaw("DELETE FROM control");
 
-        unidadMedidadMock();
+       /* unidadMedidadMock();
         productoMock();
         conductorMock();
         vendedorMock();
-        vehiculoMock();
-/*productosRequest();
-conductorRequest();
-vendedorRequest();
-vehiculoRequest();*/
+        vehiculoMock();*/
+        productosRequest();
+        conductorRequest();
+        vendedorRequest();
+        vehiculoRequest();
     }
 
     private void productoMock() {

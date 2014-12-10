@@ -1,7 +1,9 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,7 +26,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 
 
-public class ListaControlFragment extends android.support.v4.app.Fragment {
+public class ListaControlFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemLongClickListener {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaControl;
@@ -82,6 +84,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment {
                 Log.d("OnClick5","Hola 5");
             }
         });
+        listaControl.setOnItemLongClickListener(this);
 
         listaControl.setAdapter(adapter);
 
@@ -128,5 +131,32 @@ public class ListaControlFragment extends android.support.v4.app.Fragment {
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+    }
+
+    @Override
+    public boolean onItemLongClick(final AdapterView<?> parent, View view, int position, long id) {
+
+        //controlDetalleDao.deleteById(Long.valueOf(id).intValue());
+        final int  pos = position;
+        AlertDialog dialog = new AlertDialog.Builder(rootView.getContext()).create();
+        dialog.setTitle("Advertencia!");
+        dialog.setMessage("Desea editar este control?");
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
+                i.putExtra("CONTROL", (Control) parent.getItemAtPosition(pos));
+                startActivity(i);
+            }
+        });
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+        return true;
+
     }
 }

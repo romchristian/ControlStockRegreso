@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -80,10 +81,36 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         asignarListeners();
         inicializarDaos();
         inicializaSesion();
-        esconderBotonFinalzar();
+
+        Object obj = getIntent().getSerializableExtra("CONTROL");
+        Log.d("log1", "Antes del if" + obj);
+        if(obj != null && obj instanceof Control){
+            Log.d("log2", "despues del if" +obj);
+            controlActual = (Control)obj;
+            vendedorSeleccionado = controlActual.getVendedor();
+            conductorSeleccionado = controlActual.getConductor();
+            vehiculoSeleccionado = controlActual.getVehiculo();
+            txtVendedorValue.setText(vendedorSeleccionado.getNombre());
+            recuadroVendedor.setBackgroundResource(R.drawable.recuadro_seleccionado);
+            txtChoferValue.setText(conductorSeleccionado.getNombre());
+            recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
+            txtMovilValue.setText(vehiculoSeleccionado.getMarca() + " Chapa: " + vehiculoSeleccionado.getChapa());
+            recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
+            bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+            mostrarBotonFinalzar();
+        }else{
+            esconderBotonFinalzar();
+        }
+
 
     }
 
+    public Control getControlActual() {
+        if(controlActual == null){
+            controlActual = new Control();
+        }
+        return controlActual;
+    }
 
     private void inicializarViews() {
         recuadroVendedor = (FrameLayout) findViewById(R.id.recuadroVendedor);
@@ -230,38 +257,36 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 startActivityForResult(intentMain, AGREGAR_MOVIL);
                 break;
             case R.id.bttnCargarProductos:
-                controlActual = new Control();
-                controlActual.setConductor(conductorSeleccionado);
-                controlActual.setFechaControl(new Date());
-                controlActual.setSesion(sesionActual);
-                controlActual.setVehiculo(vehiculoSeleccionado);
-                controlActual.setVehiculoChapa(vehiculoSeleccionado != null ? vehiculoSeleccionado.getChapa() : "no asignado");
-                controlActual.setVendedor(vendedorSeleccionado);
-                controlActual.setKm(0);//falta el input
-
-                controlDao.create(controlActual);
+                getControlActual().setFechaControl(new Date());
+                getControlActual().setSesion(sesionActual);
+                getControlActual().setKm(0);//falta el input
+                controlDao.createOrUpdate(getControlActual());
                 intentMain = new Intent(this, ListaProductos.class);
-                intentMain.putExtra("CONTROL", controlActual);
+                intentMain.putExtra("CONTROL", getControlActual());
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
             case R.id.bttnFinalizarControl:
-
-                controlActual = null;
-                vendedorSeleccionado = null;
-                conductorSeleccionado = null;
-                vehiculoSeleccionado = null;
-                txtVendedorValue.setText("");
-                recuadroVendedor.setBackgroundResource(R.drawable.recuadro);
-                txtChoferValue.setText("");
-                recuadroChofer.setBackgroundResource(R.drawable.recuadro);
-                txtMovilValue.setText("");
-                recuadroMovil.setBackgroundResource(R.drawable.recuadro);
-                bttnCargarProductos.setEnabled(sePuedeCargarProductos());
-                esconderBotonFinalzar();
+                controlDao.update(getControlActual());
+                finish();
                 break;
             default:
                 break;
         }
+    }
+
+    private void limpiarPantalla() {
+        controlActual = null;
+        vendedorSeleccionado = null;
+        conductorSeleccionado = null;
+        vehiculoSeleccionado = null;
+        txtVendedorValue.setText("");
+        recuadroVendedor.setBackgroundResource(R.drawable.recuadro);
+        txtChoferValue.setText("");
+        recuadroChofer.setBackgroundResource(R.drawable.recuadro);
+        txtMovilValue.setText("");
+        recuadroMovil.setBackgroundResource(R.drawable.recuadro);
+        bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+        esconderBotonFinalzar();
     }
 
     @Override
@@ -274,6 +299,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     if (obj instanceof Vendedor) {
                         vendedorSeleccionado = (Vendedor) obj;
                         txtVendedorValue.setText(vendedorSeleccionado != null ? vendedorSeleccionado.getNombre() : "Seleccione un vendedor");
+                        getControlActual().setVendedor(vendedorSeleccionado);
                         recuadroVendedor.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
                     }
@@ -282,6 +308,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     if (obj instanceof Conductor) {
                         conductorSeleccionado = (Conductor) obj;
                         txtChoferValue.setText(conductorSeleccionado != null ? conductorSeleccionado.getNombre() : "Seleccione un conductor");
+                        getControlActual().setConductor(conductorSeleccionado);
                         recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
                     }
@@ -290,6 +317,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     if (obj instanceof Vehiculo) {
                         vehiculoSeleccionado = (Vehiculo) obj;
                         txtMovilValue.setText(vehiculoSeleccionado != null ? vehiculoSeleccionado.getMarca() + ", Chapa: " + vehiculoSeleccionado.getChapa() : "Seleccione un Móvil");
+                        getControlActual().setVehiculo(vehiculoSeleccionado);
+                        getControlActual().setVehiculoChapa(vehiculoSeleccionado.getChapa());
                         recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
                     }

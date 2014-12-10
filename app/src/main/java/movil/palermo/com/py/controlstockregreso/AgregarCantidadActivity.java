@@ -1,5 +1,7 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -12,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,7 +38,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 
 
-public class AgregarCantidadActivity extends ActionBarActivity implements View.OnClickListener {
+public class AgregarCantidadActivity extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener {
 
     //region Variables
     private ImageView btnMas;
@@ -75,6 +78,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
         adapter = new ControlDetalleListAdapter(this, detalles);
         listaDetalle.setAdapter(adapter);
+        listaDetalle.setOnItemLongClickListener(this);
 
         btnMas.setOnClickListener(this);
 
@@ -276,6 +280,33 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                 break;
 
         }
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        //controlDetalleDao.deleteById(Long.valueOf(id).intValue());
+        final int  pos = position;
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle("Advertencia!");
+        dialog.setMessage("Desea eliminar este control?");
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                controlDetalleDao.delete(detalles.get(pos));
+                detalles.remove(pos);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+        return true;
 
     }
     //endregion
