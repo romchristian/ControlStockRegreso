@@ -100,10 +100,10 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         GenericRawResults<String[]> rawResults =
                 productoDao.queryRaw(
                         "select p.id, p.nombre , " +
-                                "     sum(case when d.unidad_medida_id = 1 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
-                                "     sum(case when d.unidad_medida_id = 2 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
-                                "     sum(case when d.unidad_medida_id = 3 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
-                                "     sum(case when d.unidad_medida_id = 4 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
+                                "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
+                                "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
+                                "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
+                                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
                                 " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.nombre");
 
         productoList.clear();

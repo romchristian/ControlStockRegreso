@@ -258,11 +258,11 @@ return false;
 
     //region Datos de prueba
     private void cargaDatos() {
-        unidadMedidaDao.executeRaw("DELETE FROM unidadmedida");
+        /*unidadMedidaDao.executeRaw("DELETE FROM unidadmedida");
         productoDao.executeRaw("DELETE FROM producto");
         conductorDao.executeRaw("DELETE FROM conductor");
         vendedorDao.executeRaw("DELETE FROM vendedor");
-        vehiculoDao.executeRaw("DELETE FROM vehiculo");
+        vehiculoDao.executeRaw("DELETE FROM vehiculo");*/
         vehiculoDao.executeRaw("DELETE FROM controldetalle");
         vehiculoDao.executeRaw("DELETE FROM control");
 
@@ -275,6 +275,7 @@ return false;
         conductorRequest();
         vendedorRequest();
         vehiculoRequest();
+        unidadMedidaRequest();
     }
 
     private void productoMock() {
@@ -459,6 +460,48 @@ return false;
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
                                     if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"))) == 1) {
+                                        actualizacionCorrecta = true;
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+                                    actualizacionCorrecta = false;
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                        hidepDialog();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                hidepDialog();
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+
+    private void unidadMedidaRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/unidades/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            unidadMedidaDao.executeRaw("delete from unidadmedida");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (unidadMedidaDao.create(new UnidadMedida(obj.getInt("id"), obj.getString("nombre"))) == 1) {
                                         actualizacionCorrecta = true;
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
