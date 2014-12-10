@@ -170,6 +170,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         intent.putExtra("PRODUCTO", productoDao.queryForId(pr.getId()));
         intent.putExtra("CONTROL", controlActual);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_right);
     }
 
     @Override

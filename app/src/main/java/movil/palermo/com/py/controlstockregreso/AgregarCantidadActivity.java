@@ -10,8 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -22,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -119,10 +116,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             }
         });
 
-        fadeOut = new AlphaAnimation(1f, 0f);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(1000);
-
+        fadeOut = AnimationUtils.loadAnimation(context, R.anim.move_fade_out);
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -222,6 +216,12 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_left);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -268,7 +268,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
 
                     cantidad.setText("");
-                    okImg.setImageResource(R.drawable.check);
+
                     okImg.setVisibility(View.VISIBLE);
                     okImg.startAnimation(fadeOut);
 
