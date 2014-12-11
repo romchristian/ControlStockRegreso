@@ -13,6 +13,7 @@ public class ControlDetalle implements Serializable{
     public final static String COL_PRODUCTO_NOMBRE = "producto_id";
     public final static String COL_CONTROL_NOMBRE = "control_id";
 
+
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField(foreign = true,columnName = "control_id",foreignAutoCreate = true,foreignAutoRefresh = true)

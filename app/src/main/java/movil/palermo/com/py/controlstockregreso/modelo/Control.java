@@ -3,22 +3,24 @@ package movil.palermo.com.py.controlstockregreso.modelo;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by cromero on 24/11/2014.
  */
-public class Control implements Serializable{
+public class Control implements Serializable {
 
     @DatabaseField(generatedId = true)
     private Integer id;
-    @DatabaseField(foreign = true, columnName = "sesion_id",canBeNull = false,foreignAutoCreate = true,foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, columnName = "sesion_id", canBeNull = false, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Sesion sesion;
-    @DatabaseField(foreign = true, columnName = "vendedor_id",canBeNull = false,foreignAutoCreate = true,foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, columnName = "vendedor_id", canBeNull = false, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Vendedor vendedor;
-    @DatabaseField(foreign = true, columnName = "conductor_id",canBeNull = false,foreignAutoCreate = true,foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, columnName = "conductor_id", canBeNull = false, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Conductor conductor;
-    @DatabaseField(foreign = true, columnName = "vehiculo_id",canBeNull = false,foreignAutoCreate = true,foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, columnName = "vehiculo_id", canBeNull = false, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Vehiculo vehiculo;
     @DatabaseField
     private String vehiculoChapa;
@@ -26,7 +28,7 @@ public class Control implements Serializable{
     private Integer km;
     @DatabaseField
     private Date fechaControl;
-
+    private List<ControlDetalle> detalles;
 
 
     public Control() {
@@ -39,7 +41,7 @@ public class Control implements Serializable{
         this.vehiculo = vehiculo;
         this.vehiculoChapa = vehiculoChapa;
         this.km = km;
-        this.fechaControl = sesion!=null?sesion.getFechaControl()!=null?sesion.getFechaControl():new Date():new Date();
+        this.fechaControl = sesion != null ? sesion.getFechaControl() != null ? sesion.getFechaControl() : new Date() : new Date();
     }
 
     public Integer getId() {
@@ -104,5 +106,16 @@ public class Control implements Serializable{
 
     public void setFechaControl(Date fechaControl) {
         this.fechaControl = fechaControl;
+    }
+
+    public List<ControlDetalle> getDetalles() {
+        if (detalles == null) {
+            detalles = new ArrayList<ControlDetalle>();
+        }
+        return detalles;
+    }
+
+    public void setDetalles(List<ControlDetalle> detalles) {
+        this.detalles = detalles;
     }
 }

@@ -3,8 +3,11 @@ package movil.palermo.com.py.controlstockregreso;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -19,18 +22,41 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
+import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
+import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 /**
  * Created by Christian on 08/12/2014.
@@ -60,6 +86,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     private RuntimeExceptionDao<Sesion, Integer> sesionDao;
     private RuntimeExceptionDao<Control, Integer> controlDao;
+    private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
 
 
     private ImageView okImg;
@@ -84,9 +111,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
         Log.d("log1", "Antes del if" + obj);
-        if(obj != null && obj instanceof Control){
-            Log.d("log2", "despues del if" +obj);
-            controlActual = (Control)obj;
+        if (obj != null && obj instanceof Control) {
+            Log.d("log2", "despues del if" + obj);
+            controlActual = (Control) obj;
             vendedorSeleccionado = controlActual.getVendedor();
             conductorSeleccionado = controlActual.getConductor();
             vehiculoSeleccionado = controlActual.getVehiculo();
@@ -98,7 +125,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
             bttnCargarProductos.setEnabled(sePuedeCargarProductos());
             mostrarBotonFinalzar();
-        }else{
+        } else {
             esconderBotonFinalzar();
         }
 
@@ -106,7 +133,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     public Control getControlActual() {
-        if(controlActual == null){
+        if (controlActual == null) {
             controlActual = new Control();
         }
         return controlActual;
@@ -173,13 +200,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     private void inicializarDaos() {
         databaseHelper = new DatabaseHelper(this);
-        productoDao = databaseHelper.getProductoDao();
-        conductorDao = databaseHelper.getConductorDao();
-        vendedorDao = databaseHelper.getVendedorDao();
-        vehiculoDao = databaseHelper.getVehiculoDao();
         sesionDao = databaseHelper.getSesionDao();
         controlDao = databaseHelper.getControlDao();
-        unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
+        controlDetalleDao = databaseHelper.getControlDetalleDao();
     }
 
     public void inicializaSesion() {
@@ -267,12 +290,114 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 break;
             case R.id.bttnFinalizarControl:
                 controlDao.update(getControlActual());
+                enviarDatos();
+
                 finish();
                 break;
             default:
                 break;
         }
     }
+
+    private void enviarDatos() {
+        if (estaConectado()) {
+            try {
+
+                cargaDetalles();
+                insertaRequest();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void cargaDetalles(){
+        try {
+            getControlActual().getDetalles().clear();
+            List<ControlDetalle> lista =controlDetalleDao.queryBuilder()
+                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE,controlActual)
+                    .query();
+            if(lista != null) {
+                getControlActual().getDetalles().addAll(lista);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void insertaRequest() throws JSONException {
+
+        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(getControlActual());
+
+        Request req = new JsonRequest<Control>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", body,
+                new Response.Listener<Control>() {
+                    @Override
+                    public void onResponse(Control response) {
+                        Toast.makeText(getApplicationContext(), "Control" + response.getId(), Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+
+            @Override
+            protected Response<Control> parseNetworkResponse(NetworkResponse response) {
+                String jsonString = null;
+                try {
+                    jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Log.d("CONTROL", jsonString);
+                Control control = new GsonBuilder().create().fromJson(jsonString, Control.class);
+                Response<Control> result = Response.success(control, HttpHeaderParser.parseCacheHeaders(response));
+                return result;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+
+    //region Metodos para verificar conexion
+    protected Boolean estaConectado() {
+        if (conectadoWifi()) {
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //endregion
 
     private void limpiarPantalla() {
         controlActual = null;
