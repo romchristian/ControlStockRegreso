@@ -52,13 +52,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".MainCrearControlActivity"
@@ -66,6 +61,17 @@
             android:label="@string/title_main_crear_control"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" >
+        </activity>
+        <activity
+            android:name=".SplashActivity"
+            android:label="@string/title_activity_splash"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
