@@ -40,6 +40,7 @@ public class SplashActivity extends Activity {
     TextView mensaje;
     final static String TAG = "SPLASH";
     final static String PREFERENCIAS = "PREF_SPLASH";
+    final static String PREF_LOGIN = "PREF_LOGIN";
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Conductor, Integer> conductorDao;
     private RuntimeExceptionDao<Vendedor, Integer> vendedorDao;
@@ -64,7 +65,9 @@ public class SplashActivity extends Activity {
         String fechaActual = sdf.format(new Date());
         Log.d("FECHA_ACTUAL","FECHA_ACTUAL " + fechaActual );
         if (fecha.compareTo(fechaActual) !=0){
-            Log.d("IF","FECHA_IF");
+            SharedPreferences pref_login = getSharedPreferences(PREF_LOGIN,MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref_login.edit();
+            editor.putBoolean("LOGUEADO",false);
             inicializarDaos();
             cargaDatos();
         }else{

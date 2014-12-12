@@ -1,8 +1,10 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +12,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonRequest;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+
+import movil.palermo.com.py.controlstockregreso.modelo.Control;
+import movil.palermo.com.py.controlstockregreso.modelo.Login;
+import movil.palermo.com.py.controlstockregreso.util.UtilJson;
+
 
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener{
 
     Button button;
     EditText usuario;
     EditText password;
+    final static String PREFERENCIAS = "PREF_LOGIN";
+    private Login login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +47,10 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         password = (EditText)findViewById(R.id.editText_pass);
 
         button.setOnClickListener(this);
-
+        SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("LOGUEADO", false);
+        editor.commit();
     }
 
 
@@ -56,19 +80,67 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.button_login:
+                if(!(usuario.getText().toString().isEmpty()) && !(password.getText().toString().isEmpty())){
+                    login = new Login();
+                    login.setUsuario(usuario.getText().toString());
+                    login.setPassword(password.getText().toString());
+                    try {
+                        loginRequest(login);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                if(usuario.getText() != null && usuario.getText().toString().compareToIgnoreCase("admin") == 0
-                        && password.getText()!= null && password.getText().toString().compareToIgnoreCase("admin") == 0) {
-
-                    //Mock.LOGEADO = true;
-                    Intent intent = new Intent(this, MainCrearControlActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
                 }else{
-                    Toast.makeText(this,"Acceso Denegado",Toast.LENGTH_LONG);
+                    Toast.makeText(this,"Debe ingresar Usuario y Contraseña",Toast.LENGTH_LONG).show();
                 }
                 break;
         }
+    }
+
+    private void loginRequest(Login login) throws JSONException {
+
+        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(login);
+
+        Request req = new JsonRequest<String>(Request.Method.POST, UtilJson.PREF_URL + "/login", body,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.compareToIgnoreCase("true")==0){
+                            Toast.makeText(getApplicationContext(),"Login exitoso!",Toast.LENGTH_LONG).show();
+                            SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putBoolean("LOGUEADO", true);
+                            editor.commit();
+                            Intent i;
+                            i = new Intent(getApplicationContext(),MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Usuario y/o contraseña incorrectos",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"ERROR DE LOGIN: " + error.getMessage(),Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String jsonString = null;
+                Log.d("Respuesta1 ", "Respuesta1: " + jsonString);
+                try {
+                    jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    Log.d("Respuesta2 ","Respuesta2: " + jsonString);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Response<String> result = Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));
+                return result;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(req);
     }
 }

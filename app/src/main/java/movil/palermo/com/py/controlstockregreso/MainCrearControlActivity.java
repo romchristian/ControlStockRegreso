@@ -346,12 +346,14 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             @Override
             protected Response<Control> parseNetworkResponse(NetworkResponse response) {
                 String jsonString = null;
+                Log.d("Respuesta1 ", "Respuesta1: " + jsonString);
                 try {
                     jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    Log.d("Respuesta2 ","Respuesta2: " + jsonString);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Log.d("CONTROL", jsonString);
+                Log.d("Respuesta3 ","Respuesta3: " + jsonString);
                 Control control = new GsonBuilder().create().fromJson(jsonString, Control.class);
                 Response<Control> result = Response.success(control, HttpHeaderParser.parseCacheHeaders(response));
                 return result;

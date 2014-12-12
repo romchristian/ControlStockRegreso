@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
@@ -62,6 +63,8 @@ public class MainActivity extends ActionBarActivity
     ProgressDialog pDialog;
     private boolean actualizacionCorrecta;
     private int numeroSeccion = 0;
+    final static String PREFERENCIAS = "PREF_LOGIN";
+    private boolean logueado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +80,29 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        inicializarDaos();
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Actualizando...");
-        pDialog.setCancelable(false);
-        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
+        SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
+        logueado = pref.getBoolean("LOGUEADO",false);
+        if (logueado){
+            inicializarDaos();
+            pDialog = new ProgressDialog(this);
+            pDialog.setMessage("Actualizando...");
+            pDialog.setCancelable(false);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
                 /*okImg.setImageResource(R.drawable.check);
                 okImg.setVisibility(View.VISIBLE);
                 okImg.startAnimation(fadeOut);*/
-            }
-        });
+                }
+            });
+        }else{
+            Intent i = new Intent(this,LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+
     }
 
 
