@@ -1,17 +1,21 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -44,6 +48,9 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
         lstVwVendedor =(ListView) findViewById(R.id.lstVwVendedor);
         adapter = new VendedorListAdapter(this, vendedorList);
         lstVwVendedor.setAdapter(adapter);
+
+        lstVwVendedor.setTextFilterEnabled(true);
+
         lstVwVendedor.setOnItemClickListener(this);
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
         vendedorDao = databaseHelper.getVendedorDao();
@@ -92,7 +99,37 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_lista_vendedor, menu);
-        return true;
+
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint("Buscar");
+
+
+        SearchView.OnQueryTextListener textChangeListener = new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                // this is your adapter that will be filtered
+                adapter.getFilter().filter(newText);
+                System.out.println("on text chnge text: "+newText);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                // this is your adapter that will be filtered
+                adapter.getFilter().filter(query);
+                System.out.println("on query submit: "+query);
+                return true;
+            }
+        };
+        searchView.setOnQueryTextListener(textChangeListener);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -112,7 +149,7 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Vendedor item = vendedorList.get(i);
+        Vendedor item = (Vendedor) adapterView.getItemAtPosition(i);
         datos = new Intent();
         datos.putExtra("RESULTADO",item);
         setResult(RESULT_OK,datos);

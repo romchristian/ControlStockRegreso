@@ -81,7 +81,8 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
-        logueado = pref.getBoolean("LOGUEADO",false);
+       // logueado = pref.getBoolean("LOGUEADO",false);
+        logueado = true;
         if (logueado){
             inicializarDaos();
             pDialog = new ProgressDialog(this);

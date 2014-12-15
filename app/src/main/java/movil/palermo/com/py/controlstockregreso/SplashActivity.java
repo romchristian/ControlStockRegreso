@@ -119,24 +119,72 @@ public class SplashActivity extends Activity {
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
     }
     private void cargaDatos() {
-        /*unidadMedidaDao.executeRaw("DELETE FROM unidadmedida");
+        unidadMedidaDao.executeRaw("DELETE FROM unidadmedida");
         productoDao.executeRaw("DELETE FROM producto");
         conductorDao.executeRaw("DELETE FROM conductor");
         vendedorDao.executeRaw("DELETE FROM vendedor");
-        vehiculoDao.executeRaw("DELETE FROM vehiculo");*/
+        vehiculoDao.executeRaw("DELETE FROM vehiculo");
         vehiculoDao.executeRaw("DELETE FROM controldetalle");
         vehiculoDao.executeRaw("DELETE FROM control");
 
-       /* unidadMedidadMock();
+        unidadMedidadMock();
         productoMock();
         conductorMock();
         vendedorMock();
-        vehiculoMock();*/
-        productosRequest();
+        vehiculoMock();
+        finalizarSplash();
+
+        /*productosRequest();
         conductorRequest();
         vendedorRequest();
         vehiculoRequest();
-        unidadMedidaRequest();
+        unidadMedidaRequest();*/
+    }
+
+
+
+    private void productoMock() {
+        Producto p1 = new Producto(218, "Kentuky 10", 25, null);
+        Producto p2 = new Producto(198, "Kentuky 20", 25, null);
+        Producto p3 = new Producto(3, "Palermo Blue 10", 25, null);
+        Producto p4 = new Producto(4, "Palermo Red 20", 25, null);
+        productoDao.create(p1);
+        productoDao.create(p2);
+        productoDao.create(p3);
+        productoDao.create(p4);
+    }
+
+    private void conductorMock() {
+        Conductor c1 = new Conductor(1, "Conductor 1", 123456);
+        Conductor c2 = new Conductor(2, "Conductor 2", 456123);
+        conductorDao.create(c1);
+        conductorDao.create(c2);
+    }
+
+    private void vendedorMock() {
+        Vendedor v1 = new Vendedor(1, "Christian Romero", 1, conductorDao.queryForId(1));
+        Vendedor v2 = new Vendedor(2, "Jose Colman", 1, conductorDao.queryForId(2));
+        vendedorDao.create(v1);
+        vendedorDao.create(v2);
+    }
+
+    private void vehiculoMock() {
+        Vehiculo v1 = new Vehiculo(1, "Toyota", "ADV 456");
+        Vehiculo v2 = new Vehiculo(2, "Daihasu", "ADV 400");
+        vehiculoDao.create(v1);
+        vehiculoDao.create(v2);
+    }
+
+    private void unidadMedidadMock() {
+        unidadMedidaDao.executeRaw("delete from unidadmedida");
+        UnidadMedida m1 = new UnidadMedida(1, "Cajas");
+        UnidadMedida m2 = new UnidadMedida(2, "Gruesas");
+        UnidadMedida m3 = new UnidadMedida(3, "Cajetillas");
+        UnidadMedida m4 = new UnidadMedida(4, "Unidad");
+        unidadMedidaDao.create(m1);
+        unidadMedidaDao.create(m2);
+        unidadMedidaDao.create(m3);
+        unidadMedidaDao.create(m4);
     }
     private void productosRequest() {
         JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/productos/123456",
