@@ -1,10 +1,13 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,7 +97,35 @@ public class ListaMovil extends ActionBarActivity implements AdapterView.OnItemC
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_lista_movil, menu);
-        return true;
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint("Buscar");
+
+
+        SearchView.OnQueryTextListener textChangeListener = new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                // this is your adapter that will be filtered
+                adapter.getFilter().filter(newText);
+                System.out.println("on text change text: "+newText);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                // this is your adapter that will be filtered
+                adapter.getFilter().filter(query);
+                System.out.println("on query submit: "+query);
+                return true;
+            }
+        };
+        searchView.setOnQueryTextListener(textChangeListener);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

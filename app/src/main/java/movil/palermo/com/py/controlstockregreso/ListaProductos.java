@@ -1,9 +1,13 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +53,8 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
+        Log.d("CREATE", "ON CREATE");
+        Toast.makeText(this,"ONCREATE!!!",Toast.LENGTH_LONG).show();
 
 
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
@@ -84,6 +90,8 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.d("RESTART", "ON RESTART");
+        Toast.makeText(this,"ONRESTART!!!",Toast.LENGTH_LONG).show();
         recargaLista();
     }
 
@@ -92,9 +100,11 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
         pDialog.show();
+        Log.d("TAG", "Antes RECARGA LISTA " + controlActual);
 
         //Hago consulta nativa para sumar las cantidades
         int idControl = controlActual.getId();
+        Log.d("TAG", "Dentro RECARGA LISTA " + idControl);
 
 
         GenericRawResults<String[]> rawResults =
@@ -133,7 +143,35 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_lista_productos, menu);
-        return true;
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint("Buscar");
+
+
+        SearchView.OnQueryTextListener textChangeListener = new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                // this is your adapter that will be filtered
+                adapter.getFilter().filter(newText);
+                System.out.println("on text change text: "+newText);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                // this is your adapter that will be filtered
+                adapter.getFilter().filter(query);
+                System.out.println("on query submit: "+query);
+                return true;
+            }
+        };
+        searchView.setOnQueryTextListener(textChangeListener);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

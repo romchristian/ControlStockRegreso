@@ -24,32 +24,32 @@ import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 public class VendedorListAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Vendedor> vendedores;
-    private List<Vendedor> filteredVededores = null;
+    private List<Vendedor> fullVendedores;
+    private List<Vendedor> filteredVendedores = null;
     private LayoutInflater mInflater;
     private ItemFilter mFilter = new ItemFilter();
 
     public VendedorListAdapter(Activity activity, List<Vendedor> vendedores) {
         this.activity = activity;
-        this.vendedores = vendedores;
-        filteredVededores = vendedores;
+        this.fullVendedores = vendedores;
+        filteredVendedores = vendedores;
     }
 
 
 
     @Override
     public int getCount() {
-        return filteredVededores.size();
+        return filteredVendedores.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return filteredVededores.get(location);
+        return filteredVendedores.get(location);
     }
 
     @Override
     public long getItemId(int position) {
-        return filteredVededores.get(position) == null ? filteredVededores.get(position).getId() : position;
+        return filteredVendedores.get(position) == null ? filteredVendedores.get(position).getId() : position;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class VendedorListAdapter extends BaseAdapter implements Filterable {
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
         TextView conductor = (TextView) convertView.findViewById(R.id.conductor);
 
-        Vendedor v = filteredVededores.get(position);
+        Vendedor v = filteredVendedores.get(position);
         nombre.setText(v.getNombre());
         conductor.setText(v.getConductor() == null ? "Conductor: " + "No asignado" : "Conductor: " + v.getConductor().getNombre());
 
@@ -84,7 +84,7 @@ public class VendedorListAdapter extends BaseAdapter implements Filterable {
 
             FilterResults results = new FilterResults();
 
-            final List<Vendedor> list = vendedores;
+            final List<Vendedor> list = fullVendedores;
 
             int count = list.size();
             final ArrayList<Vendedor> nlist = new ArrayList<Vendedor>(count);
@@ -109,7 +109,7 @@ public class VendedorListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {
             if(results!=null) {
-                filteredVededores = (ArrayList<Vendedor>) results.values;
+                filteredVendedores = (ArrayList<Vendedor>) results.values;
                 notifyDataSetChanged();
             }
         }

@@ -19,7 +19,7 @@
         android:layout_height="80dp"
         android:src="@drawable/kentucky_10"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="8dp"/>
+        />
 
     <!-- Movie Title -->
     <TextView
@@ -28,68 +28,32 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:textSize="@dimen/title"
+        android:textSize="18dp"
+        android:layout_marginTop="20dp"
         android:text="KENTUKY 20"
         android:textStyle="bold" />
 
-    <!-- Rating -->
-    <TextView
-        android:id="@+id/tituloCajas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginTop="1dip"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="Cajas"
-        android:textSize="12sp"/>
 
     <TextView
         android:id="@+id/tituloGruesas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginTop="1dip"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/tituloCajas"
+        android:layout_alignTop="@id/nombre"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@+id/tituloCajetillas"
         android:text="Gruesas"
-        android:textSize="12sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/tituloCajetillas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
+        android:layout_alignTop="@id/nombre"
         android:layout_marginTop="1dip"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/tituloGruesas"
-        android:text="Cajetillas"
-        android:textSize="12sp"/>
-
-    <TextView
-        android:id="@+id/tituloUnidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginTop="1dip"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/tituloCajetillas"
-        android:text="Un"
-        android:textSize="12sp"/>
-
-
-    <TextView
-        android:id="@+id/cantCajas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tituloCajas"
-        android:layout_marginTop="1dip"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignRight="@+id/tituloCajas"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="120"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:text="Caje/Unid"
+        android:textSize="18sp"/>
 
 
     <TextView
@@ -103,7 +67,7 @@
         android:layout_alignLeft="@+id/tituloGruesas"
         android:gravity="center_horizontal|center_vertical"
         android:text="300"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:textStyle="bold"/>
 
 
@@ -117,22 +81,8 @@
         android:layout_alignRight="@+id/tituloCajetillas"
         android:layout_alignLeft="@+id/tituloCajetillas"
         android:gravity="center_horizontal|center_vertical"
-        android:text="50"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/cantUnidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tituloUnidad"
-        android:layout_marginTop="1dip"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignRight="@+id/tituloUnidad"
-        android:layout_alignLeft="@+id/tituloUnidad"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="0"
-        android:textSize="16sp"
+        android:text="500"
+        android:textSize="24sp"
         android:textStyle="bold"/>
 
 

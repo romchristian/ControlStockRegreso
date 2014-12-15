@@ -63,7 +63,7 @@ public class SplashActivity extends Activity {
         Log.d("FECHA_PREF","FECHA_PREF " + fecha );
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String fechaActual = sdf.format(new Date());
-        Log.d("FECHA_ACTUAL","FECHA_ACTUAL " + fechaActual );
+        Log.d("FECHA_ACTUAL","FECHA_ACTUAL " + fechaActual);
         if (fecha.compareTo(fechaActual) !=0){
             SharedPreferences pref_login = getSharedPreferences(PREF_LOGIN,MODE_PRIVATE);
             SharedPreferences.Editor editor = pref_login.edit();
@@ -119,26 +119,21 @@ public class SplashActivity extends Activity {
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
     }
     private void cargaDatos() {
-        unidadMedidaDao.executeRaw("DELETE FROM unidadmedida");
-        productoDao.executeRaw("DELETE FROM producto");
-        conductorDao.executeRaw("DELETE FROM conductor");
-        vendedorDao.executeRaw("DELETE FROM vendedor");
-        vehiculoDao.executeRaw("DELETE FROM vehiculo");
         vehiculoDao.executeRaw("DELETE FROM controldetalle");
         vehiculoDao.executeRaw("DELETE FROM control");
 
-        unidadMedidadMock();
+        /*unidadMedidadMock();
         productoMock();
         conductorMock();
         vendedorMock();
         vehiculoMock();
-        finalizarSplash();
+        finalizarSplash();*/
 
-        /*productosRequest();
+        productosRequest();
         conductorRequest();
         vendedorRequest();
         vehiculoRequest();
-        unidadMedidaRequest();*/
+        unidadMedidaRequest();
     }
 
 
@@ -321,7 +316,7 @@ public class SplashActivity extends Activity {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"))) == 1) {
+                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"),obj.getInt("nro"))) == 1) {
                                         actualizacionCorrecta = true;
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }

@@ -10,37 +10,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.R;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
+import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 
 
-public class ConductorListAdapter extends BaseAdapter {
+public class ConductorListAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Conductor> conductores;
+    private List<Conductor> fullConductores;
+    private List<Conductor> filteredConductores = null;
+    private LayoutInflater mInflater;
+    private ItemFilter mFilter = new ItemFilter();
 
     public ConductorListAdapter(Activity activity, List<Conductor> conductores) {
         this.activity = activity;
-        this.conductores = conductores;
+        this.fullConductores = conductores;
+        this.filteredConductores= conductores;
     }
 
     @Override
     public int getCount() {
-        return conductores.size();
+        return filteredConductores.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return conductores.get(location);
+        return filteredConductores.get(location);
     }
 
     @Override
     public long getItemId(int position) {
-        return conductores.get(position) == null ? conductores.get(position).getId() : position;
+        return fullConductores.get(position) == null ? filteredConductores.get(position).getId() : position;
     }
 
     @Override
@@ -55,11 +63,57 @@ public class ConductorListAdapter extends BaseAdapter {
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
         TextView ci = (TextView) convertView.findViewById(R.id.ci);
 
-        Conductor c = conductores.get(position);
+        Conductor c = filteredConductores.get(position);
         nombre.setText(c.getNombre());
         ci.setText("CI: "+c.getCi());
 
         return convertView;
     }
 
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<Conductor> list = fullConductores;
+
+            int count = list.size();
+            final ArrayList<Conductor> nlist = new ArrayList<Conductor>(count);
+
+            String filterableString ;
+
+            for (int i = 0; i < count; i++) {
+                Conductor c = list.get(i);
+                filterableString = c.getNombre();
+                if (filterableString.toLowerCase().contains(filterString)) {
+                    nlist.add(c);
+                }
+            }
+
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {
+            if(results!=null) {
+                filteredConductores = (ArrayList<Conductor>) results.values;
+                notifyDataSetChanged();
+            }
+        }
+
+
+    }
 }

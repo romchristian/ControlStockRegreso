@@ -116,7 +116,7 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
             {
                 // this is your adapter that will be filtered
                 adapter.getFilter().filter(newText);
-                System.out.println("on text chnge text: "+newText);
+                System.out.println("on text change text: "+newText);
                 return true;
             }
             @Override

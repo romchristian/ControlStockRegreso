@@ -10,39 +10,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
 import movil.palermo.com.py.controlstockregreso.R;
-import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.ProductoResumen;
 
 
-public class ProductoListAdapter extends BaseAdapter {
+public class ProductoListAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<ProductoResumen> productos;
+    private List<ProductoResumen> fullProductos;
+    private List<ProductoResumen> filteredProductos;
+    private ItemFilter mFilter = new ItemFilter();
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
     public ProductoListAdapter(Activity activity, List<ProductoResumen> productos) {
         this.activity = activity;
-        this.productos = productos;
+        this.fullProductos = productos;
+        this.filteredProductos=productos;
     }
 
     @Override
     public int getCount() {
-        return productos.size();
+        return filteredProductos.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return productos.get(location);
+        return filteredProductos.get(location);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ProductoListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row, null);
+            convertView = inflater.inflate(R.layout.list_row_producto, null);
 
         /*if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
@@ -67,12 +71,10 @@ public class ProductoListAdapter extends BaseAdapter {
         ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
         TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantGruesas);
-        TextView cantCajas = (TextView) convertView.findViewById(R.id.cantCajas);
         TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantCajetillas);
-        TextView cantUnidad = (TextView) convertView.findViewById(R.id.cantUnidad);
 
         // getting movie data for the row
-        ProductoResumen p = productos.get(position);
+        ProductoResumen p = filteredProductos.get(position);
 
         // thumbnail image
         /*thumbNail.setImageUrl(m.getImg(), imageLoader);*/
@@ -104,12 +106,56 @@ public class ProductoListAdapter extends BaseAdapter {
 
         thumbNail.setImageResource(img);
         nombre.setText(p.getNombre());
-        cantCajas.setText(""+p.getCantCajas());
         cantGruesas.setText(""+p.getCantGruesas());
         cantCajetillas.setText(""+p.getCantCajetillas());
-        cantUnidad.setText(""+p.getCantUnidad());
 
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<ProductoResumen> list = fullProductos;
+
+            int count = list.size();
+            final ArrayList<ProductoResumen> nlist = new ArrayList<ProductoResumen>(count);
+
+            String filterableString ;
+
+            for (int i = 0; i < count; i++) {
+                ProductoResumen v = list.get(i);
+                filterableString = v.getNombre();
+                if (filterableString.toLowerCase().contains(filterString)) {
+                    nlist.add(v);
+                }
+            }
+
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {
+            if(results!=null) {
+                filteredProductos = (ArrayList<ProductoResumen>) results.values;
+                notifyDataSetChanged();
+            }
+        }
+
+
     }
 
 }
