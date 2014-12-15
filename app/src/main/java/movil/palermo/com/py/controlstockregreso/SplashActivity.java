@@ -119,16 +119,20 @@ public class SplashActivity extends Activity {
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
     }
     private void cargaDatos() {
+     /*   vehiculoDao.executeRaw("DELETE FROM unidadmedida");
+        vehiculoDao.executeRaw("DELETE FROM producto");
+        vehiculoDao.executeRaw("DELETE FROM vendedor");
+        vehiculoDao.executeRaw("DELETE FROM conductor");
+        vehiculoDao.executeRaw("DELETE FROM vehiculo");*/
         vehiculoDao.executeRaw("DELETE FROM controldetalle");
         vehiculoDao.executeRaw("DELETE FROM control");
 
-        /*unidadMedidadMock();
+       /* unidadMedidadMock();
         productoMock();
         conductorMock();
         vendedorMock();
         vehiculoMock();
         finalizarSplash();*/
-
         productosRequest();
         conductorRequest();
         vendedorRequest();

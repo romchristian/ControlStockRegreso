@@ -28,8 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
+        android:layout_marginLeft="8dp"
         android:textSize="18dp"
-        android:layout_marginTop="20dp"
         android:text="KENTUKY 20"
         android:textStyle="bold" />
 
@@ -38,22 +38,21 @@
         android:id="@+id/tituloGruesas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/nombre"
+        android:layout_below="@id/nombre"
         android:layout_marginLeft="10dp"
         android:layout_toLeftOf="@+id/tituloCajetillas"
         android:text="Gruesas"
-        android:textSize="18sp"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/tituloCajetillas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/nombre"
-        android:layout_marginTop="1dip"
+        android:layout_below="@id/nombre"
         android:layout_marginLeft="10dp"
         android:layout_alignParentRight="true"
         android:text="Caje/Unid"
-        android:textSize="18sp"/>
+        android:textSize="16sp"/>
 
 
     <TextView
