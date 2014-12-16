@@ -106,7 +106,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        configuraActionBar();
+        //configuraActionBar();
         setContentView(R.layout.activity_main_crear_control);
         inicializarViews();
         asignarListeners();

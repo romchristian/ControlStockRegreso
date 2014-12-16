@@ -3,21 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainCrearControl"
-    android:background="#F6E3CE">
 
-    <TextView
+    android:layout_marginTop="?attr/actionBarSize">
+
+    <!--<TextView
         android:id="@+id/titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="NUEVO CONTROL"
         android:layout_marginTop="30dp"
         android:textSize="18sp"
-        android:textColor="#cc0000"
+        android:textColor="#444"
         android:textStyle="bold"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal" />-->
 
     <FrameLayout
-        android:layout_below="@+id/titulo"
+
         android:id="@+id/recuadroMovil"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
