@@ -2,34 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
-    tools:context=".MainCrearControl">
+    tools:context=".MainCrearControl"
+    android:background="#F6E3CE">
+
+    <TextView
+        android:id="@+id/titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NUEVO CONTROL"
+        android:layout_marginTop="30dp"
+        android:textSize="18sp"
+        android:textColor="#cc0000"
+        android:textStyle="bold"
+        android:gravity="center_horizontal" />
 
     <FrameLayout
+        android:layout_below="@+id/titulo"
         android:id="@+id/recuadroMovil"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recuadroChofer"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:background="@drawable/fondo_recuadro">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <movil.palermo.com.py.controlstockregreso.custom.RoundedImageView
-                android:id="@+id/thumbnailMovil"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/default_avatar" />
-
             <TextView
                 android:id="@+id/txtVwMovilTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/thumbnailMovil"
+
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:text="Movil: "
@@ -42,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtVwMovilTitulo"
                 android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/thumbnailMovil"
+
                 android:hint="Seleccione un movil"
                 android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
@@ -51,14 +58,11 @@
 
             <ImageView
                 android:id="@+id/search_movil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignTop="@+id/txtVwMovilValue"
-
-                android:padding="10dp"
-                android:src="@drawable/search" />
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_search_category_default" />
         </RelativeLayout>
 
     </FrameLayout>
@@ -67,27 +71,22 @@
         android:id="@+id/recuadroChofer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recuadroVendedor"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/recuadroMovil"
         android:background="@drawable/fondo_recuadro">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <movil.palermo.com.py.controlstockregreso.custom.RoundedImageView
-                android:id="@+id/thumbnailChofer"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/default_avatar" />
-
             <TextView
                 android:id="@+id/txtVwChoferTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/thumbnailChofer"
+
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:text="Conductor: "
@@ -100,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtVwChoferTitulo"
                 android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/thumbnailChofer"
+
                 android:hint="Seleccione un conductor"
                 android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
@@ -109,14 +108,11 @@
 
             <ImageView
                 android:id="@+id/search_chofer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignTop="@+id/txtVwChoferValue"
-
-                android:padding="10dp"
-                android:src="@drawable/search" />
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_search_category_default" />
         </RelativeLayout>
 
     </FrameLayout>
@@ -125,26 +121,23 @@
         android:id="@+id/recuadroVendedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/recuadroChofer"
         android:background="@drawable/fondo_recuadro">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <movil.palermo.com.py.controlstockregreso.custom.RoundedImageView
-                android:id="@+id/thumbnailVendedor"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/default_avatar" />
 
             <TextView
                 android:id="@+id/txtVwVendedorTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/thumbnailVendedor"
+
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:text="Vendedor: "
@@ -157,7 +150,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtVwVendedorTitulo"
                 android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/thumbnailVendedor"
                 android:hint="Seleccione un vendedor"
                 android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
@@ -166,62 +158,50 @@
 
             <ImageView
                 android:id="@+id/search_vendedor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignTop="@+id/txtVwVendedorValue"
-
-                android:padding="10dp"
-                android:src="@drawable/search" />
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_search_category_default" />
         </RelativeLayout>
 
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_below="@+id/recuadroMovil"
-        android:id="@+id/botonera"
-        android:layout_width="match_parent"
+
+    <Button
+        android:layout_below="@+id/recuadroVendedor"
+        android:id="@+id/bttnCargarProductos"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#ffE4EBCE">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:background="@drawable/fondo_boton_2"
+        android:enabled="false"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Empezar"
+        android:textColor="@drawable/boton_texto"
+        android:textStyle="bold" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <Button
-                android:id="@+id/bttnCargarProductos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="center_horizontal"
-
-
-                android:enabled="false"
-                android:paddingBottom="30dp"
-                android:paddingTop="30dp"
-
-                android:text="Cargar Productos"
-                android:textColor="@drawable/boton_texto"
-                android:textStyle="bold" />
-
-            <Button
-
-                android:id="@+id/bttnFinalizarControl"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="#1499FF"
-                android:padding="20dp"
-                android:text="Confirmar"
-                android:textColor="#fff"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-            </RelativeLayout>
-    </FrameLayout>
+    <Button
+        android:id="@+id/bttnFinalizarControl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bttnCargarProductos"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:background="@drawable/fondo_boton_2"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Finalizar"
+        android:textColor="@drawable/boton_texto"
+        android:textStyle="bold" />
 
 
     <ImageView

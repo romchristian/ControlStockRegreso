@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
@@ -103,6 +105,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        configuraActionBar();
         setContentView(R.layout.activity_main_crear_control);
         inicializarViews();
         asignarListeners();
@@ -132,6 +136,10 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     }
 
+    private void  configuraActionBar(){
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+    }
     public Control getControlActual() {
         if (controlActual == null) {
             controlActual = new Control();
@@ -462,34 +470,5 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
 
     }
-
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
-        switch (id) {
-            case R.id.action_actualizar:
-                if (estaConectado()) {
-                    cargaDatos();
-                }
-                break;
-            case R.id.action_settings:
-                return true;
-            case R.id.action_extraer_bd:
-               *//* databaseHelper.extraerBD(getPackageName());
-                okImg.setImageResource(R.drawable.check);
-                okImg.setVisibility(View.VISIBLE);
-                okImg.startAnimation(fadeOut);*//*
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }*/
-
 
 }
