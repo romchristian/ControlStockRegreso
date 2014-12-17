@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainCrearControl"
-
     android:layout_marginTop="?attr/actionBarSize">
 
     <!--<TextView
@@ -32,11 +31,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/thumbnailCar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_car2"/>
             <TextView
                 android:id="@+id/txtVwMovilTitulo"
+                android:layout_toRightOf="@+id/thumbnailCar"
+                android:layout_alignBaseline="@+id/thumbnailCar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+
 
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
@@ -50,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtVwMovilTitulo"
                 android:layout_marginTop="10dp"
-
+                android:layout_toRightOf="@+id/thumbnailCar"
                 android:hint="Seleccione un movil"
                 android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
@@ -59,11 +66,11 @@
 
             <ImageView
                 android:id="@+id/search_movil"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_search_category_default" />
+                android:src="@drawable/ic_action_arrow_right" />
         </RelativeLayout>
 
     </FrameLayout>
@@ -82,12 +89,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/thumbnailConductor"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_user5"/>
+
             <TextView
                 android:id="@+id/txtVwChoferTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-
+                android:layout_toRightOf="@+id/thumbnailConductor"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:text="Conductor: "
@@ -100,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtVwChoferTitulo"
                 android:layout_marginTop="10dp"
-
+                android:layout_toRightOf="@+id/thumbnailConductor"
                 android:hint="Seleccione un conductor"
                 android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
@@ -109,11 +123,11 @@
 
             <ImageView
                 android:id="@+id/search_chofer"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_search_category_default" />
+                android:src="@drawable/ic_action_arrow_right" />
         </RelativeLayout>
 
     </FrameLayout>
@@ -132,13 +146,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/thumbnailVendedor"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_user3"/>
 
             <TextView
                 android:id="@+id/txtVwVendedorTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-
+                android:layout_toRightOf="@+id/thumbnailVendedor"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:text="Vendedor: "
@@ -152,6 +172,7 @@
                 android:layout_below="@+id/txtVwVendedorTitulo"
                 android:layout_marginTop="10dp"
                 android:hint="Seleccione un vendedor"
+                android:layout_toRightOf="@+id/thumbnailVendedor"
                 android:paddingBottom="0dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="0dp"
@@ -159,11 +180,11 @@
 
             <ImageView
                 android:id="@+id/search_vendedor"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@android:drawable/ic_search_category_default" />
+                android:src="@drawable/ic_action_arrow_right" />
         </RelativeLayout>
 
     </FrameLayout>
