@@ -9,6 +9,7 @@ public class ProductoResumen implements Serializable{
 
     private int id;
     private String nombre;
+    private Integer kit;
     private int cantRemisionCajas;
     private int cantRemisionGruesas;
     private int cantRemisionCajetillas;
@@ -25,10 +26,11 @@ public class ProductoResumen implements Serializable{
     public ProductoResumen(String[] row) {
         this.id = Integer.valueOf(row[0]==null?"0":row[0]);
         this.nombre = row[1];
-        this.cantCajas = Integer.valueOf(row[2]==null?"0":row[2]);
-        this.cantGruesas = Integer.valueOf(row[3]==null?"0":row[3]);
-        this.cantCajetillas = Integer.valueOf(row[4]==null?"0":row[4]);
-        this.cantUnidad =  Integer.valueOf(row[5]==null?"0":row[5]);
+        this.kit = Integer.valueOf(row[2]==null?"0":row[2]);
+        this.cantCajas = Integer.valueOf(row[3]==null?"0":row[3]);
+        this.cantGruesas = Integer.valueOf(row[4]==null?"0":row[4]);
+        this.cantCajetillas = Integer.valueOf(row[5]==null?"0":row[5]);
+        this.cantUnidad =  Integer.valueOf(row[6]==null?"0":row[6]);
     }
 
 
@@ -84,6 +86,10 @@ public class ProductoResumen implements Serializable{
         return cantCajas;
     }
 
+    public int getGruesasPorCaja(){
+        return (getCantCajas()*50);
+    }
+
     public void setCantCajas(int cantCajas) {
         this.cantCajas = cantCajas;
     }
@@ -110,5 +116,13 @@ public class ProductoResumen implements Serializable{
 
     public void setCantUnidad(int cantUnidad) {
         this.cantUnidad = cantUnidad;
+    }
+
+    public Integer getKit() {
+        return kit;
+    }
+
+    public void setKit(Integer kit) {
+        this.kit = kit;
     }
 }

@@ -53,9 +53,6 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
-        Log.d("CREATE", "ON CREATE");
-        Toast.makeText(this,"ONCREATE!!!",Toast.LENGTH_LONG).show();
-
 
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
@@ -90,8 +87,6 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("RESTART", "ON RESTART");
-        Toast.makeText(this,"ONRESTART!!!",Toast.LENGTH_LONG).show();
         recargaLista();
     }
 
@@ -109,12 +104,12 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
 
         GenericRawResults<String[]> rawResults =
                 productoDao.queryRaw(
-                        "select p.id, p.nombre , " +
+                        "select p.id, p.nombre, p.kit, " +
                                 "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
                                 "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
                                 "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
                                 "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
-                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.nombre");
+                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden, p.nombre");
 
         productoList.clear();
 

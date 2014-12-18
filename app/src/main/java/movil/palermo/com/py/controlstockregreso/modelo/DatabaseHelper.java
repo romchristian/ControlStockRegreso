@@ -25,7 +25,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "stock.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private RuntimeExceptionDao<Vendedor, Integer> vendedorDao = null;
     private RuntimeExceptionDao<Conductor, Integer> conductorDao = null;
@@ -80,6 +80,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 case 2:
                    getVehiculoDao().executeRaw("Alter table vehiculo add column numero text");
                     break;
+                case 3:
+                    getProductoDao().executeRaw("Alter table producto add column orden int");
+                    getProductoDao().executeRaw("Alter table producto add column kit int");
                 default:
                     break;
             }

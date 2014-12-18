@@ -62,6 +62,7 @@ public class SplashActivity extends Activity {
         String fecha = pref.getString("FECHA","");
         Log.d("FECHA_PREF","FECHA_PREF " + fecha );
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        // Para forzar que se actualice new Date(1000 * 60 * 60 * 24)
         String fechaActual = sdf.format(new Date());
         Log.d("FECHA_ACTUAL","FECHA_ACTUAL " + fechaActual);
         if (fecha.compareTo(fechaActual) !=0){
@@ -198,7 +199,7 @@ public class SplashActivity extends Activity {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (productoDao.create(new Producto(obj.getInt("id"), obj.getString("nombre"), obj.getInt("unidadMedidadEstandar"), obj.getString("img"))) == 1) {
+                                    if (productoDao.create(new Producto(obj.getInt("id"), obj.getString("nombre"), obj.getInt("unidadMedidadEstandar"), obj.getString("img"), obj.getInt("productoKit"),obj.getInt("orden"))) == 1) {
                                         actualizacionCorrecta = true;
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }

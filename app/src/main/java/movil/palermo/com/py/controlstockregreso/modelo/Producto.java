@@ -18,6 +18,10 @@ public class Producto implements Serializable{
     private Integer unidadMedidadEstandar;
     @DatabaseField
     private String img;
+    @DatabaseField
+    private Integer kit;
+    @DatabaseField
+    private Integer orden;
 
     public Producto() {
     }
@@ -27,6 +31,14 @@ public class Producto implements Serializable{
         this.nombre = nombre;
         this.unidadMedidadEstandar = unidadMedidadEstandar;
         this.img = img;
+    }
+    public Producto(Integer id, String nombre, Integer unidadMedidadEstandar, String img, Integer kit, Integer orden) {
+        this.id = id;
+        this.nombre = nombre;
+        this.unidadMedidadEstandar = unidadMedidadEstandar;
+        this.img = img;
+        this.kit = kit;
+        this.orden=orden;
     }
 
     public Integer getId() {
@@ -59,5 +71,21 @@ public class Producto implements Serializable{
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
+    }
+
+    public Integer getKit() {
+        return kit;
+    }
+
+    public void setKit(Integer kit) {
+        this.kit = kit;
     }
 }

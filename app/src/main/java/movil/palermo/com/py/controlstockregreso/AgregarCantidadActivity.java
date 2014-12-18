@@ -174,6 +174,13 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     public void cargaSpinnerUnidadMedida() {
         unidadMedida = (Spinner) findViewById(R.id.spinner);
         listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
+        if (productoSeleccionado.getKit()>0){
+            listaUnidadMedida.remove(0);
+            listaUnidadMedida.remove(0);
+            listaUnidadMedida.remove(0);
+        }else{
+            listaUnidadMedida.remove(3);
+        }
         adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this, listaUnidadMedida);
         unidadMedida.setAdapter(adapterUnidadMedida);
     }

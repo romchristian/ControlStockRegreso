@@ -70,7 +70,9 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
 
         ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
+        TextView tituloGruesas=(TextView) convertView.findViewById(R.id.tituloGruesas);
         TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantGruesas);
+        TextView tituloCajetillas=(TextView) convertView.findViewById(R.id.tituloCajetillas);
         TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantCajetillas);
 
         // getting movie data for the row
@@ -106,8 +108,19 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
 
         thumbNail.setImageResource(img);
         nombre.setText(p.getNombre());
-        cantGruesas.setText(""+p.getCantGruesas());
-        cantCajetillas.setText(""+p.getCantCajetillas());
+
+        if(p.getKit()>0){
+            tituloGruesas.setVisibility(TextView.GONE);
+            cantGruesas.setVisibility(TextView.GONE);
+            tituloCajetillas.setText("Unidades");
+            cantCajetillas.setText(""+  p.getCantUnidad());
+        }else{
+            tituloGruesas.setVisibility(TextView.VISIBLE);
+            cantGruesas.setVisibility(TextView.VISIBLE);
+            cantGruesas.setText(""+(p.getCantGruesas() + p.getGruesasPorCaja()));
+            tituloCajetillas.setText("Cajetillas");
+            cantCajetillas.setText(""+ p.getCantCajetillas());
+        }
 
         return convertView;
     }
@@ -133,10 +146,10 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
             String filterableString ;
 
             for (int i = 0; i < count; i++) {
-                ProductoResumen v = list.get(i);
-                filterableString = v.getNombre();
+                ProductoResumen p = list.get(i);
+                filterableString = p.getNombre();
                 if (filterableString.toLowerCase().contains(filterString)) {
-                    nlist.add(v);
+                    nlist.add(p);
                 }
             }
 
