@@ -143,7 +143,7 @@ public class ListaChofer extends ActionBarActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Conductor item = conductorList.get(i);
+        Conductor item = (Conductor) adapterView.getItemAtPosition(i);
         datos = new Intent();
         datos.putExtra("RESULTADO",item);
         setResult(RESULT_OK,datos);
