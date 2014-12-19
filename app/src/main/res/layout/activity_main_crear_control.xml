@@ -17,13 +17,13 @@
         android:gravity="center_horizontal" />-->
 
     <FrameLayout
-
         android:id="@+id/recuadroMovil"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="20dp"
+        android:clickable="true"
         android:layout_marginLeft="20dp"
         android:background="@drawable/fondo_recuadro">
 
@@ -199,13 +199,13 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="center_horizontal"
         android:padding="10dp"
-        android:background="@drawable/fondo_boton_2"
+        android:background="@drawable/fondo_celeste"
         android:enabled="false"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:text="Empezar"
-        android:textColor="@drawable/boton_texto"
+        android:textColor="#ffffff"
         android:textStyle="bold" />
 
     <Button

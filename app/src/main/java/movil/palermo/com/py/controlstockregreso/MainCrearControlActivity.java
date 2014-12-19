@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -103,6 +104,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     private Sesion sesionActual;
     private Control controlActual;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -112,6 +114,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         asignarListeners();
         inicializarDaos();
         inicializaSesion();
+        configuraEfectos();
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
         Log.d("log1", "Antes del if" + obj);
@@ -136,10 +139,109 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     }
 
-    private void  configuraActionBar(){
+
+    private void configuraEfectos() {
+
+        final Context context = this;
+        View.OnTouchListener listenerMovil = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Animation anim = AnimationUtils.loadAnimation(context, R.anim.pulse2);
+                        anim.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                intentMain = new Intent(context, ListaMovil.class);
+                                startActivityForResult(intentMain, AGREGAR_MOVIL);
+                            }
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                            }
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        view.startAnimation(anim);
+                        break;
+                }
+
+                return false;
+            }
+        };
+
+        View.OnTouchListener listenerChofer = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Animation anim = AnimationUtils.loadAnimation(context, R.anim.pulse2);
+                        anim.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                intentMain = new Intent(context, ListaChofer.class);
+                                startActivityForResult(intentMain, AGREGAR_CHOFER);
+                            }
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                            }
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        view.startAnimation(anim);
+                        break;
+                }
+
+                return false;
+            }
+        };
+
+
+        View.OnTouchListener listenerVendedor = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Animation anim = AnimationUtils.loadAnimation(context, R.anim.pulse2);
+                        anim.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                intentMain = new Intent(context, ListaVendedor.class);
+                                startActivityForResult(intentMain, AGREGAR_VENDEDOR);
+                            }
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                            }
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        view.startAnimation(anim);
+                        break;
+                }
+
+                return false;
+            }
+        };
+
+        recuadroMovil.setOnTouchListener(listenerMovil);
+        recuadroChofer.setOnTouchListener(listenerChofer);
+        recuadroVendedor.setOnTouchListener(listenerVendedor);
+    }
+
+
+    private void configuraActionBar() {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
     }
+
     public Control getControlActual() {
         if (controlActual == null) {
             controlActual = new Control();
@@ -148,6 +250,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     private void inicializarViews() {
+
         recuadroVendedor = (FrameLayout) findViewById(R.id.recuadroVendedor);
         recuadroChofer = (FrameLayout) findViewById(R.id.recuadroChofer);
         recuadroMovil = (FrameLayout) findViewById(R.id.recuadroMovil);
@@ -199,9 +302,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     private void asignarListeners() {
-        searchVendedor.setOnClickListener(this);
-        searchChofer.setOnClickListener(this);
-        searchMovil.setOnClickListener(this);
+        recuadroMovil.setOnClickListener(this);
+        recuadroVendedor.setOnClickListener(this);
+        recuadroChofer.setOnClickListener(this);
         bttnCargarProductos.setOnClickListener(this);
         bttnFinalizarControl.setOnClickListener(this);
     }
@@ -275,18 +378,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.search_vendedor:
-                intentMain = new Intent(this, ListaVendedor.class);
-                startActivityForResult(intentMain, AGREGAR_VENDEDOR);
-                break;
-            case R.id.search_chofer:
-                intentMain = new Intent(this, ListaChofer.class);
-                startActivityForResult(intentMain, AGREGAR_CHOFER);
-                break;
-            case R.id.search_movil:
-                intentMain = new Intent(this, ListaMovil.class);
-                startActivityForResult(intentMain, AGREGAR_MOVIL);
-                break;
+
             case R.id.bttnCargarProductos:
                 getControlActual().setFechaControl(new Date());
                 getControlActual().setSesion(sesionActual);
@@ -320,13 +412,13 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
 
-    private void cargaDetalles(){
+    private void cargaDetalles() {
         try {
             getControlActual().getDetalles().clear();
-            List<ControlDetalle> lista =controlDetalleDao.queryBuilder()
-                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE,controlActual)
+            List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
+                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, controlActual)
                     .query();
-            if(lista != null) {
+            if (lista != null) {
                 getControlActual().getDetalles().addAll(lista);
             }
         } catch (SQLException e) {
@@ -334,6 +426,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
 
     }
+
     private void insertaRequest() throws JSONException {
 
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(getControlActual());
@@ -357,11 +450,11 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 Log.d("Respuesta1 ", "Respuesta1: " + jsonString);
                 try {
                     jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    Log.d("Respuesta2 ","Respuesta2: " + jsonString);
+                    Log.d("Respuesta2 ", "Respuesta2: " + jsonString);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Log.d("Respuesta3 ","Respuesta3: " + jsonString);
+                Log.d("Respuesta3 ", "Respuesta3: " + jsonString);
                 Control control = new GsonBuilder().create().fromJson(jsonString, Control.class);
                 Response<Control> result = Response.success(control, HttpHeaderParser.parseCacheHeaders(response));
                 return result;

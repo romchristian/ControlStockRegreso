@@ -81,7 +81,7 @@ public class SplashActivity extends Activity {
 
             // Simulate a long loading process on application startup.
             Timer timer = new Timer();
-            timer.schedule(task, 2000);
+            timer.schedule(task, 50);
         }
     }
 
