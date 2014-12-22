@@ -34,7 +34,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     Button button;
     EditText usuario;
     EditText password;
-    final static String PREFERENCIAS = "PREF_LOGIN";
+    public final static String PREFERENCIAS = "PREF_LOGIN";
     private Login login;
 
 

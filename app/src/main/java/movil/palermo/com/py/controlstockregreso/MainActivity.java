@@ -1,6 +1,7 @@
 package movil.palermo.com.py.controlstockregreso;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +15,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +68,7 @@ public class MainActivity extends ActionBarActivity
     private int numeroSeccion = 0;
     final static String PREFERENCIAS = "PREF_LOGIN";
     private boolean logueado;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,14 +128,37 @@ public class MainActivity extends ActionBarActivity
         numeroSeccion = position;
         switch (position) {
             case 0:
+                break;
+            case 1:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, ListaControlFragment.newInstance(position), "LISTA_CONTROL_FRAGMENT")
                         .commit();
                 break;
-            default:
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, ListaControlFragment.newInstance(position))
-                        .commit();
+            case 2:
+                break;
+            case 3:
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("Cerrar Sesión?");
+                dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences pref = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean("LOGUEADO", false);
+                        editor.commit();
+                        finish();
+                    }
+                });
+
+                dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                dialog.show();
+                break;
 
         }
     }
@@ -139,10 +166,10 @@ public class MainActivity extends ActionBarActivity
     //
     public void onSectionAttached(int number) {
         switch (number) {
-            case 0:
-                mTitle = "Listado Controles";
-                break;
             case 1:
+                mTitle = "Recepciones";
+                break;
+            case 2:
                 mTitle = "Reposiciones";
                 break;
         }
@@ -177,6 +204,9 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
+
         int id = item.getItemId();
         switch (id) {
             case R.id.action_actualizar:
