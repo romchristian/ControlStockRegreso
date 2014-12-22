@@ -8,18 +8,21 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -92,10 +95,23 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     }
 
     //region Metodos privados
-    private void configuraTecladoNumerico(){
-        cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
+    private void configuraTecladoNumerico() {
+        //cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
+
+        cantidad.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    agregaDetalle();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
     }
-    private void configuraPanelSlideUp(){
+
+    private void configuraPanelSlideUp() {
         final float density = getResources().getDisplayMetrics().density;
         SlidingUpPaneLayout slidingUpPaneLayout = (SlidingUpPaneLayout) findViewById(R.id.sliding_up_layout);
         slidingUpPaneLayout.setParallaxDistance((int) (200 * density));
@@ -104,7 +120,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
     }
 
-    private void configuraEfectos(){
+    private void configuraEfectos() {
 
         final Context context = this;
         btnMas.setOnTouchListener(new View.OnTouchListener() {
@@ -138,7 +154,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             }
         });
     }
-    private  void cargaExtras(){
+
+    private void cargaExtras() {
         Object obj = getIntent().getSerializableExtra("PRODUCTO");
         if (obj != null && obj instanceof Producto) {
             productoSeleccionado = (Producto) obj;
@@ -155,14 +172,15 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             cargaDetalles();
         }
     }
-    private void cargaDetalles(){
+
+    private void cargaDetalles() {
         try {
             detalles.clear();
-            List<ControlDetalle> lista =controlDetalleDao.queryBuilder()
-                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE,controlActual)
-                    .and().eq(ControlDetalle.COL_PRODUCTO_NOMBRE,productoSeleccionado)
+            List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
+                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, controlActual)
+                    .and().eq(ControlDetalle.COL_PRODUCTO_NOMBRE, productoSeleccionado)
                     .query();
-            if(lista != null) {
+            if (lista != null) {
                 detalles.addAll(lista);
                 adapter.notifyDataSetChanged();
             }
@@ -171,19 +189,21 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         }
 
     }
+
     public void cargaSpinnerUnidadMedida() {
         unidadMedida = (Spinner) findViewById(R.id.spinner);
         listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
-        if (productoSeleccionado.getKit()>0){
+        if (productoSeleccionado.getKit() > 0) {
             listaUnidadMedida.remove(0);
             listaUnidadMedida.remove(0);
             listaUnidadMedida.remove(0);
-        }else{
+        } else {
             listaUnidadMedida.remove(3);
         }
         adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this, listaUnidadMedida);
         unidadMedida.setAdapter(adapterUnidadMedida);
     }
+
     private void configuraActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(productoSeleccionado.getNombre());
@@ -229,7 +249,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
     @Override
@@ -249,52 +269,55 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.imgPlus:
+                agregaDetalle();
+                break;
+        }
+    }
+
+    private int agregaDetalle() {
+
         int cantActual = 0;
         String texto = cantidad.getText() == null ? "0" : cantidad.getText().toString();
 
-        switch (view.getId()) {
-            case R.id.imgPlus:
+        if (cantidad.getText() == null || cantidad.getText().toString().compareToIgnoreCase("0") == 0 || cantidad.getText().toString().compareToIgnoreCase("") == 0) {
+            Toast.makeText(this, "No hay cantidad", Toast.LENGTH_LONG).show();
+            return 0;
+        }
+
+        if (productoSeleccionado != null) {
+            ControlDetalle d = new ControlDetalle();
+            UnidadMedida um = null;
+
+            if (unidadMedida.getSelectedItem() instanceof UnidadMedida) {
+                um = (UnidadMedida) unidadMedida.getSelectedItem();
+            }
+
+            d.setControl(controlActual);
+            d.setUnidadMedida(um);
+            d.setCantidad(Integer.valueOf(cantidad.getText().toString()));
+            d.setProducto(productoSeleccionado);
+            detalles.add(d);
+            adapter.notifyDataSetChanged();
+            controlDetalleDao.create(d);
 
 
-                if (cantidad.getText() == null || cantidad.getText().toString().compareToIgnoreCase("0") == 0 || cantidad.getText().toString().compareToIgnoreCase("") == 0) {
-                    Toast.makeText(this, "No hay cantidad", Toast.LENGTH_LONG).show();
-                    break;
-                }
+            cantidad.setText("");
 
-                if (productoSeleccionado != null) {
-                    ControlDetalle d = new ControlDetalle();
-                    UnidadMedida um = null;
-
-                    if (unidadMedida.getSelectedItem() instanceof UnidadMedida) {
-                        um = (UnidadMedida) unidadMedida.getSelectedItem();
-                    }
-
-                    d.setControl(controlActual);
-                    d.setUnidadMedida(um);
-                    d.setCantidad(Integer.valueOf(cantidad.getText().toString()));
-                    d.setProducto(productoSeleccionado);
-                    detalles.add(d);
-                    adapter.notifyDataSetChanged();
-                    controlDetalleDao.create(d);
-
-
-                    cantidad.setText("");
-
-                    okImg.setVisibility(View.VISIBLE);
-                    okImg.startAnimation(fadeOut);
-
-                }
-                break;
+            okImg.setVisibility(View.VISIBLE);
+            okImg.startAnimation(fadeOut);
 
         }
 
+        return 1;
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
         //controlDetalleDao.deleteById(Long.valueOf(id).intValue());
-        final int  pos = position;
+        final int pos = position;
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle("Advertencia!");
         dialog.setMessage("Desea eliminar este control?");

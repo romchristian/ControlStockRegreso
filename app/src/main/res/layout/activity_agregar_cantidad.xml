@@ -49,6 +49,7 @@
             android:layout_alignRight="@+id/spinner"
             android:inputType="number"
             android:gravity="center"
+            android:imeOptions="actionDone"
             android:textSize="30sp"
             android:textStyle="bold" />
 
