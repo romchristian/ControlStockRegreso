@@ -33,6 +33,16 @@
         android:text="KENTUKY 20"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/tituloCajas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nombre"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@+id/tituloGruesas"
+        android:text="Cajas"
+        android:textSize="16sp"/>
+
 
     <TextView
         android:id="@+id/tituloGruesas"
@@ -53,6 +63,19 @@
         android:layout_alignParentRight="true"
         android:text="Caje/Unid"
         android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/cantCajas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tituloCajas"
+        android:layout_marginTop="1dip"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignLeft="@+id/tituloCajas"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="300"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
 
 
     <TextView

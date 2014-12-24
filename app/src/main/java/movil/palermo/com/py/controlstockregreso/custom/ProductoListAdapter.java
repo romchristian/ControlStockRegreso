@@ -70,6 +70,8 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
 
         ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
+        TextView tituloCajas=(TextView) convertView.findViewById(R.id.tituloCajas);
+        TextView cantCajas = (TextView) convertView.findViewById(R.id.cantCajas);
         TextView tituloGruesas=(TextView) convertView.findViewById(R.id.tituloGruesas);
         TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantGruesas);
         TextView tituloCajetillas=(TextView) convertView.findViewById(R.id.tituloCajetillas);
@@ -110,14 +112,19 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
         nombre.setText(p.getNombre());
 
         if(p.getKit()>0){
+            tituloCajas.setVisibility(TextView.GONE);
+            cantCajas.setVisibility(TextView.GONE);
             tituloGruesas.setVisibility(TextView.GONE);
             cantGruesas.setVisibility(TextView.GONE);
             tituloCajetillas.setText("Unidades");
             cantCajetillas.setText(""+  p.getCantUnidad());
         }else{
+            tituloCajas.setVisibility(TextView.VISIBLE);
+            cantCajas.setVisibility(TextView.VISIBLE);
             tituloGruesas.setVisibility(TextView.VISIBLE);
             cantGruesas.setVisibility(TextView.VISIBLE);
-            cantGruesas.setText(""+(p.getCantGruesas() + p.getGruesasPorCaja()));
+            cantCajas.setText(""+ (p.getCantCajas()));
+            cantGruesas.setText(""+(p.getCantGruesas()));
             tituloCajetillas.setText("Cajetillas");
             cantCajetillas.setText(""+ p.getCantCajetillas());
         }
