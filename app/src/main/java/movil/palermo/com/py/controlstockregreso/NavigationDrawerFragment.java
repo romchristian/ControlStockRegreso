@@ -94,6 +94,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         View headerView =  inflater.inflate(R.layout.drawer_header, null, false);
         View footerView =  inflater.inflate(R.layout.drawer_footer, null, false);
+
         mDrawerListView.addHeaderView(headerView,null,false);
         mDrawerListView.addFooterView(footerView);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

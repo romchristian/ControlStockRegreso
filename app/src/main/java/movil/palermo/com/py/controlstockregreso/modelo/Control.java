@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Control implements Serializable {
 
+
     @DatabaseField(generatedId = true)
     private Integer id;
     @DatabaseField(foreign = true, columnName = "sesion_id", canBeNull = false, foreignAutoCreate = true, foreignAutoRefresh = true)
@@ -28,6 +29,8 @@ public class Control implements Serializable {
     private Integer km;
     @DatabaseField
     private Date fechaControl;
+    @DatabaseField
+    private String estado;
     private List<ControlDetalle> detalles;
 
 
@@ -42,6 +45,7 @@ public class Control implements Serializable {
         this.vehiculoChapa = vehiculoChapa;
         this.km = km;
         this.fechaControl = sesion != null ? sesion.getFechaControl() != null ? sesion.getFechaControl() : new Date() : new Date();
+        this.estado = EstadoControl.NUEVO.toString();
     }
 
     public Integer getId() {
