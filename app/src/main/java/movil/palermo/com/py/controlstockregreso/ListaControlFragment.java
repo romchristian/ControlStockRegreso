@@ -2,6 +2,7 @@ package movil.palermo.com.py.controlstockregreso;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -24,6 +28,7 @@ import java.util.List;
 import movil.palermo.com.py.controlstockregreso.custom.ControlListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
+import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 
 
 public class ListaControlFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemLongClickListener {
@@ -144,9 +149,55 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
+                // Create Object of Dialog class
+                final Dialog login = new Dialog(rootView.getContext());
+                // Set GUI of login screen
+                login.setContentView(R.layout.dialog_login);
+                login.setTitle("Autorizar modificación");
+                Button btnLogin = (Button) login.findViewById(R.id.btnLogin);
+                Button btnCancel = (Button) login.findViewById(R.id.btnCancel);
+                final EditText txtUsername = (EditText)login.findViewById(R.id.txtUsername);
+                final EditText txtPassword = (EditText)login.findViewById(R.id.txtPassword);
+
+                // Attached listener for login GUI button
+                btnLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(txtUsername.getText().toString().trim().length() > 0 && txtPassword.getText().toString().trim().length() > 0)
+                        {
+                            // Validate Your login credential here than display message
+                            Toast.makeText(rootView.getContext(),"Login Exitoso!!!", Toast.LENGTH_SHORT).show();
+                            Control controlSeleccionado = (Control) parent.getItemAtPosition(pos);
+                            controlSeleccionado.setEstado(EstadoControl.AUTORIZADO.toString());
+                            Toast.makeText(rootView.getContext(),"Estado del control:" + controlSeleccionado.getEstado(), Toast.LENGTH_SHORT).show();
+
+                            Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
+                            i.putExtra("CONTROL", controlSeleccionado);
+                            startActivity(i);
+                            login.dismiss();
+                        }
+                        else
+                        {
+                            Toast.makeText(rootView.getContext(),
+                                    "Por favor ingrese su usuario y contraseña", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        login.dismiss();
+                    }
+                });
+
+                // Make dialog box visible.
+                login.show();
+
+
+               /* Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
                 i.putExtra("CONTROL", (Control) parent.getItemAtPosition(pos));
-                startActivity(i);
+                startActivity(i);*/
             }
         });
         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {

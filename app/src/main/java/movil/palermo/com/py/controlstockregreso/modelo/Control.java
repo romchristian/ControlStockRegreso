@@ -35,6 +35,7 @@ public class Control implements Serializable {
 
 
     public Control() {
+        this.estado = EstadoControl.NUEVO.toString();
     }
 
     public Control(Sesion sesion, Vendedor vendedor, Conductor conductor, Vehiculo vehiculo, String vehiculoChapa, Integer km) {
@@ -121,5 +122,13 @@ public class Control implements Serializable {
 
     public void setDetalles(List<ControlDetalle> detalles) {
         this.detalles = detalles;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

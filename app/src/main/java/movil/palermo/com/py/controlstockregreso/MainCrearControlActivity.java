@@ -54,6 +54,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
+import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
@@ -391,6 +392,15 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             case R.id.bttnFinalizarControl:
                 controlDao.update(getControlActual());
                 enviarDatos();
+                if (getControlActual().getEstado().equalsIgnoreCase(EstadoControl.NUEVO.toString())){
+                    getControlActual().setEstado(EstadoControl.CONFIRMADO.toString());
+                    Toast.makeText(this,"Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
+                }else{
+                    if(getControlActual().getEstado().equalsIgnoreCase(EstadoControl.AUTORIZADO.toString())){
+                        getControlActual().setEstado(EstadoControl.MODIFICADO.toString());
+                        Toast.makeText(this,"Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 finish();
                 break;
