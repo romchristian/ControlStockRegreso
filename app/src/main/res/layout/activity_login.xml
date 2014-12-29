@@ -16,19 +16,30 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_tabacos"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="INGRESO"
+            android:textStyle="bold"
+            android:textColor="#666666"
             android:id="@+id/textView"
+            android:layout_marginBottom="20dp"
             android:layout_gravity="center_horizontal" />
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Usuario"
-            android:id="@+id/editText_usuario" />
+            android:id="@+id/editText_usuario"
+            android:imeOptions="actionNext"/>
 
         <EditText
             android:layout_width="fill_parent"
@@ -36,12 +47,16 @@
             android:inputType="textPassword"
             android:ems="10"
             android:hint="Contraseña"
-            android:id="@+id/editText_pass" />
+            android:id="@+id/editText_pass"
+            android:imeOptions="actionDone"/>
 
         <Button
+            android:layout_marginTop="30dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="ACEPTAR"
-            android:id="@+id/button_login" />
+            android:textColor="#ffffff"
+            android:id="@+id/button_login"
+            android:background="@drawable/fondo_boton_2"/>
     </LinearLayout>
 </RelativeLayout>
