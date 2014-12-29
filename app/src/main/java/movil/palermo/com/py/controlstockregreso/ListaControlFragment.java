@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,13 +30,16 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.vividcode.android.zxing.CaptureActivity;
+import info.vividcode.android.zxing.CaptureActivityIntents;
+import info.vividcode.android.zxing.CaptureResult;
 import movil.palermo.com.py.controlstockregreso.custom.ControlListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 
 
-public class ListaControlFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemLongClickListener {
+public class ListaControlFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaControl;
@@ -43,6 +51,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     private ProgressDialog pDialog;
     private TextView txtVwNuevoControl;
     private ImageView imgVwflecha;
+    private Control controlSeleccionado;
 
 
     View rootView;
@@ -74,22 +83,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         imgVwflecha = (ImageView) rootView.findViewById(R.id.imgFlecha);
 
         adapter = new ControlListAdapter(getActivity(), controlList);
-        listaControl.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-
-                Log.d("OnClick","Hola 1");
-                Control control = (Control)  adapterView.getItemAtPosition(pos);
-                Log.d("OnClick2","Hola 2");
-                Intent i = new Intent(rootView.getContext(), ListaProductos.class);
-                Log.d("OnClick3","Hola 3");
-                i.putExtra("CONTROL",control);
-                Log.d("OnClick4","Hola 4");
-                startActivity(i);
-                Log.d("OnClick5","Hola 5");
-            }
-        });
-        listaControl.setOnItemLongClickListener(this);
+        listaControl.setOnItemClickListener(this);
 
         listaControl.setAdapter(adapter);
 
@@ -100,8 +94,6 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
 
         return rootView;
     }
-
-
 
     public void recargaLista() {
         pDialog = new ProgressDialog(getActivity());
@@ -139,60 +131,21 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     }
 
     @Override
-    public boolean onItemLongClick(final AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(final AdapterView<?> adapterView, View view, final int position, long l) {
 
-        //controlDetalleDao.deleteById(Long.valueOf(id).intValue());
-        final int  pos = position;
-        AlertDialog dialog = new AlertDialog.Builder(rootView.getContext()).create();
+        controlSeleccionado = (Control) adapterView.getItemAtPosition(position);
+
+        AlertDialog dialog = new AlertDialog.Builder(view.getContext()).create();
         dialog.setTitle("Advertencia!");
         dialog.setMessage("Desea editar este control?");
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Create Object of Dialog class
-                final Dialog login = new Dialog(rootView.getContext());
-                // Set GUI of login screen
-                login.setContentView(R.layout.dialog_login);
-                login.setTitle("Autorizar modificación");
-                Button btnLogin = (Button) login.findViewById(R.id.btnLogin);
-                Button btnCancel = (Button) login.findViewById(R.id.btnCancel);
-                final EditText txtUsername = (EditText)login.findViewById(R.id.txtUsername);
-                final EditText txtPassword = (EditText)login.findViewById(R.id.txtPassword);
+                Intent captureIntent = new Intent(rootView.getContext(),CaptureActivity.class);
+                //captureIntent.putExtra("CONTROL", (Control) adapterView.getItemAtPosition(position));
+                CaptureActivityIntents.setPromptMessage(captureIntent, "Escaneando código de autorización...");
+                startActivityForResult(captureIntent, 1);
 
-                // Attached listener for login GUI button
-                btnLogin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(txtUsername.getText().toString().trim().length() > 0 && txtPassword.getText().toString().trim().length() > 0)
-                        {
-                            // Validate Your login credential here than display message
-                            Toast.makeText(rootView.getContext(),"Login Exitoso!!!", Toast.LENGTH_SHORT).show();
-                            Control controlSeleccionado = (Control) parent.getItemAtPosition(pos);
-                            controlSeleccionado.setEstado(EstadoControl.AUTORIZADO.toString());
-                            Toast.makeText(rootView.getContext(),"Estado del control:" + controlSeleccionado.getEstado(), Toast.LENGTH_SHORT).show();
-
-                            Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
-                            i.putExtra("CONTROL", controlSeleccionado);
-                            startActivity(i);
-                            login.dismiss();
-                        }
-                        else
-                        {
-                            Toast.makeText(rootView.getContext(),
-                                    "Por favor ingrese su usuario y contraseña", Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                });
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        login.dismiss();
-                    }
-                });
-
-                // Make dialog box visible.
-                login.show();
 
 
                /* Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
@@ -200,6 +153,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
                 startActivity(i);*/
             }
         });
+
         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -207,7 +161,39 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
             }
         });
         dialog.show();
-        return true;
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == CaptureActivity.RESULT_OK) {
+                CaptureResult res = CaptureResult.parseResultIntent(data);
+                try {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(rootView.getContext(), notification);
+                    r.play();
+                    Vibrator v = (Vibrator) rootView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+                    v.vibrate(1000);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //Toast.makeText(rootView.getContext(), res.getContents() + " (" + res.getFormatName() + ")", Toast.LENGTH_LONG).show();
+                if(res.getContents().toString().equalsIgnoreCase("ventastp2014")){
+
+                    Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
+                    i.putExtra("CONTROL", controlSeleccionado);
+                    startActivity(i);
+                }else
+                {
+                    Toast.makeText(rootView.getContext(),"Código de verificación incorrecto", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+
+                // Process comes here when “back” button was clicked for instance.
+            }
+        }
     }
 }

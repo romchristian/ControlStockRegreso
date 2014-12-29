@@ -573,5 +573,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
 
     }
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Debe de terminar de cargar el control", Toast.LENGTH_SHORT).show();
+    }
 
 }

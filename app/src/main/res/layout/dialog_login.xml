@@ -5,16 +5,9 @@
     android:background="#fff" android:layout_width="match_parent"
     android:paddingTop="10dp">
 
-    <EditText android:layout_height="wrap_content" android:id="@+id/txtUsername"
-        android:hint="Usuario"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent">
-        <requestFocus></requestFocus>
-    </EditText>
-
     <EditText android:layout_height="wrap_content"
         android:inputType="textPassword" android:id="@+id/txtPassword"
-        android:hint="Contraseña"
+        android:hint="Código de autorización"
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent">
     </EditText>
@@ -23,7 +16,7 @@
         android:layout_height="wrap_content" android:id="@+id/linearLayout1">
         <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_weight="0.5"
-            android:id="@+id/btnLogin" android:text="Login"></Button>
+            android:id="@+id/btnLogin" android:text="Aceptar"></Button>
         <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_weight="0.5"
             android:id="@+id/btnCancel" android:text="Cancelar"></Button>

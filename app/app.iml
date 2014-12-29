@@ -86,10 +86,12 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="ormlite-core-4.45" level="project" />
+    <orderEntry type="library" exported="" name="core-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="ormlite-android-4.45" level="project" />
     <orderEntry type="library" exported="" name="library-1.0.7" level="project" />
+    <orderEntry type="library" exported="" name="capture-activity-2.3.0-1.2" level="project" />
   </component>
 </module>
 
