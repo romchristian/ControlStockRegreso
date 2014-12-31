@@ -31,14 +31,18 @@ public class Control implements Serializable {
     private Date fechaControl;
     @DatabaseField
     private String estado;
+    @DatabaseField
+    private String estadoDescarga;
     private List<ControlDetalle> detalles;
 
 
     public Control() {
         this.estado = EstadoControl.NUEVO.toString();
+        this.estadoDescarga = "N";
     }
 
     public Control(Sesion sesion, Vendedor vendedor, Conductor conductor, Vehiculo vehiculo, String vehiculoChapa, Integer km) {
+        this();
         this.sesion = sesion;
         this.vendedor = vendedor;
         this.conductor = conductor;
@@ -46,7 +50,7 @@ public class Control implements Serializable {
         this.vehiculoChapa = vehiculoChapa;
         this.km = km;
         this.fechaControl = sesion != null ? sesion.getFechaControl() != null ? sesion.getFechaControl() : new Date() : new Date();
-        this.estado = EstadoControl.NUEVO.toString();
+
     }
 
     public Integer getId() {
@@ -130,5 +134,13 @@ public class Control implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getEstadoDescarga() {
+        return estadoDescarga;
+    }
+
+    public void setEstadoDescarga(String estadoDescarga) {
+        this.estadoDescarga = estadoDescarga;
     }
 }

@@ -56,6 +56,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
@@ -441,32 +442,37 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(getControlActual());
 
-        Request req = new JsonRequest<Control>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", body,
-                new Response.Listener<Control>() {
+        Request req = new JsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", body,
+                new Response.Listener<ResponseControl>() {
                     @Override
-                    public void onResponse(Control response) {
-                        Toast.makeText(getApplicationContext(), "Control" + response.getId(), Toast.LENGTH_LONG).show();
+                    public void onResponse(ResponseControl response) {
+                        Toast.makeText(getApplicationContext(),"Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
+
+                        if(response.isExito()) {
+                            Control c = controlDao.queryForId(response.getControlId());
+                            c.setEstadoDescarga("S");
+                            controlDao.update(c);
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(getApplicationContext(),"Error al insertar " + error.getMessage(),Toast.LENGTH_LONG).show();
             }
         }) {
 
             @Override
-            protected Response<Control> parseNetworkResponse(NetworkResponse response) {
+            protected Response<ResponseControl> parseNetworkResponse(NetworkResponse response) {
                 String jsonString = null;
-                Log.d("Respuesta1 ", "Respuesta1: " + jsonString);
                 try {
                     jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    Log.d("Respuesta2 ", "Respuesta2: " + jsonString);
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Log.d("Respuesta3 ", "Respuesta3: " + jsonString);
-                Control control = new GsonBuilder().create().fromJson(jsonString, Control.class);
-                Response<Control> result = Response.success(control, HttpHeaderParser.parseCacheHeaders(response));
+
+                ResponseControl resp = new GsonBuilder().create().fromJson(jsonString, ResponseControl.class);
+                Response<ResponseControl> result = Response.success(resp, HttpHeaderParser.parseCacheHeaders(response));
                 return result;
             }
         };
