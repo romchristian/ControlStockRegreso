@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:hint="Usuario"
             android:id="@+id/editText_usuario"
+            android:inputType="text"
             android:imeOptions="actionNext"/>
 
         <EditText

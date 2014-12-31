@@ -1,9 +1,11 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
@@ -35,7 +37,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends ActionBarActivity {
     ImageView logo;
     TextView mensaje;
     final static String TAG = "SPLASH";
@@ -52,8 +54,8 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+        getSupportActionBar().hide();
         logo = (ImageView) findViewById(R.id.logo);
         mensaje = (TextView) findViewById(R.id.mensaje);
         logo.startAnimation(AnimationUtils.loadAnimation(this,R.anim.pulse_splash));

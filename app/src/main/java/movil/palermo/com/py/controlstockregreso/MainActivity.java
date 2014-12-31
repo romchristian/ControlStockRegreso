@@ -137,27 +137,7 @@ public class MainActivity extends ActionBarActivity
             case 2:
                 break;
             case 3:
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("Cerrar Sesión?");
-                dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        SharedPreferences pref = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putBoolean("LOGUEADO", false);
-                        editor.commit();
-                        finish();
-                    }
-                });
-
-                dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-
-                dialog.show();
+                logOut();
                 break;
 
         }
@@ -222,6 +202,35 @@ public class MainActivity extends ActionBarActivity
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        logOut();
+    }
+
+    public void logOut(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Cerrar Sesión?");
+        dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SharedPreferences pref = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("LOGUEADO", false);
+                editor.commit();
+                finish();
+            }
+        });
+
+        dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog.show();
     }
 
 

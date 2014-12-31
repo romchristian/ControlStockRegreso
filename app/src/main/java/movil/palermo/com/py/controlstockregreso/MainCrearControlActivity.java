@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -25,30 +24,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
@@ -413,24 +403,30 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     private void enviarDatos() {
         if (estaConectado()) {
             try {
-
-                cargaDetalles();
-                insertaRequest();
+                List<Control> lista = controlDao.queryBuilder().where().eq(Control.COL_ESTADO_DESCARGA, "N").query();
+                if (lista != null) {
+                    for (Control c : lista) {
+                        cargaDetalles(c);
+                        insertaRequest(c);
+                    }
+                }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
 
 
-    private void cargaDetalles() {
+    private void cargaDetalles(Control c) {
         try {
-            getControlActual().getDetalles().clear();
+            c.getDetalles().clear();
             List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
-                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, controlActual)
+                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, c)
                     .query();
             if (lista != null) {
-                getControlActual().getDetalles().addAll(lista);
+                c.getDetalles().addAll(lista);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -438,9 +434,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     }
 
-    private void insertaRequest() throws JSONException {
+    private void insertaRequest(final Control c) throws JSONException {
 
-        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(getControlActual());
+        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(c);
 
         Request req = new JsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", body,
                 new Response.Listener<ResponseControl>() {
@@ -449,7 +445,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                         Toast.makeText(getApplicationContext(),"Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
 
                         if(response.isExito()) {
-                            Control c = controlDao.queryForId(response.getControlId());
+                            //Control c = controlDao.queryForId(response.getControlId());
                             c.setEstadoDescarga("S");
                             controlDao.update(c);
                         }

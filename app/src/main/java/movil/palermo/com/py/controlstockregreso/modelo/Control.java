@@ -11,6 +11,7 @@ import java.util.List;
  * Created by cromero on 24/11/2014.
  */
 public class Control implements Serializable {
+    public final static String COL_ESTADO_DESCARGA = "estadoDescarga";
 
 
     @DatabaseField(generatedId = true)
