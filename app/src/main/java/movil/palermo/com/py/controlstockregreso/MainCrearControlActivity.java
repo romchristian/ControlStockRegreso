@@ -330,11 +330,23 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     public void inicializaSesion() {
-        sesionActual = new Sesion();
-        sesionActual.setFechaControl(new Date());
         SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
-        sesionActual.setResponsable(sp.getString("USER",""));
-        sesionDao.create(sesionActual);
+        String responsable = sp.getString("USER", "");
+        Sesion actual;
+        try {
+            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA,new Date()).and().eq(Sesion.COL_RESPONSABLE,responsable).queryForFirst();
+        } catch (SQLException e) {
+            actual = null;
+            e.printStackTrace();
+        }
+        if(actual == null) {
+            sesionActual = new Sesion();
+            sesionActual.setFechaControl(new Date());
+            sesionActual.setResponsable(responsable);
+            sesionDao.create(sesionActual);
+        }else{
+            sesionActual = actual;
+        }
     }
 
     /*private void esconderBotonFinalzar() {
