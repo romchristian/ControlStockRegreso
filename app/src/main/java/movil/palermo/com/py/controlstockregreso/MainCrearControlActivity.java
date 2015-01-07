@@ -6,12 +6,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -100,18 +100,18 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //configuraActionBar();
+        configuraActionBar();
         setContentView(R.layout.activity_main_crear_control);
         inicializarViews();
         asignarListeners();
         inicializarDaos();
         inicializaSesion();
         configuraEfectos();
+        bttnCargarProductos.setEnabled(false);
+        bttnFinalizarControl.setEnabled(false);
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
-        Log.d("log1", "Antes del if" + obj);
         if (obj != null && obj instanceof Control) {
-            Log.d("log2", "despues del if" + obj);
             controlActual = (Control) obj;
             vendedorSeleccionado = controlActual.getVendedor();
             conductorSeleccionado = controlActual.getConductor();
@@ -123,12 +123,29 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             txtMovilValue.setText(vehiculoSeleccionado.getMarca() + " Chapa: " + vehiculoSeleccionado.getChapa());
             recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
             bttnCargarProductos.setEnabled(sePuedeCargarProductos());
-            mostrarBotonFinalzar();
+            bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
         } else {
-            esconderBotonFinalzar();
+            bttnFinalizarControl.setEnabled(false);
         }
 
+    }
 
+    private boolean sePuedeFinalizarControl(Control c) {
+        try {
+            List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
+                    .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, c)
+                    .query();
+            if (lista != null && !(lista.isEmpty())) {
+                return true;
+            }
+            else{
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
@@ -231,7 +248,11 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     private void configuraActionBar() {
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle("Nueva Recepción");
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+        actionBar.setSubtitle(sp.getString("NOMBRE",""));
+        //actionBar.hide();
     }
 
     public Control getControlActual() {
@@ -311,11 +332,12 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     public void inicializaSesion() {
         sesionActual = new Sesion();
         sesionActual.setFechaControl(new Date());
-        sesionActual.setResponsable("Christian Romero");
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+        sesionActual.setResponsable(sp.getString("USER",""));
         sesionDao.create(sesionActual);
     }
 
-    private void esconderBotonFinalzar() {
+    /*private void esconderBotonFinalzar() {
         Animation a = AnimationUtils.loadAnimation(this, R.anim.hide);
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -334,9 +356,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             }
         });
         bttnFinalizarControl.startAnimation(a);
-    }
+    }*/
 
-    private void mostrarBotonFinalzar() {
+    /*private void mostrarBotonFinalizar() {
         Animation a = AnimationUtils.loadAnimation(this, R.anim.show);
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -355,7 +377,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             }
         });
         bttnFinalizarControl.startAnimation(a);
-    }
+    }*/
 
     private boolean sePuedeCargarProductos() {
         if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
@@ -526,7 +548,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         txtMovilValue.setText("");
         recuadroMovil.setBackgroundResource(R.drawable.recuadro);
         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
-        esconderBotonFinalzar();
+        bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
     }
 
     @Override
@@ -565,7 +587,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     break;
                 case CARGAR_PRODUCTOS:
                     //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
-                    mostrarBotonFinalzar();
+                    bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
                     break;
             }
         } else {

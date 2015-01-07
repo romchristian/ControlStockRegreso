@@ -96,7 +96,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
     //region Metodos privados
     private void configuraTecladoNumerico() {
-        //cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
+        /*cantidad.setRawInputType(Configuration.KEYBOARD_12KEY);
 
         cantidad.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -108,7 +108,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                 }
                 return handled;
             }
-        });
+        });*/
     }
 
     private void configuraPanelSlideUp() {
@@ -169,6 +169,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         Object obj2 = getIntent().getSerializableExtra("CONTROL");
         if (obj2 != null && obj2 instanceof Control) {
             controlActual = (Control) obj2;
+            ActionBar ab = getSupportActionBar();
+            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString());
             cargaDetalles();
         }
     }

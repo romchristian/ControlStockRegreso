@@ -1,5 +1,6 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -54,6 +55,8 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
 
+
+
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
 
@@ -66,10 +69,13 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
         productoDao = databaseHelper.getProductoDao();
 
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle("Seleccione el producto");
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
         if(obj != null && obj instanceof Control){
             controlActual = (Control)obj;
+            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString());
         }
         recargaLista();
 

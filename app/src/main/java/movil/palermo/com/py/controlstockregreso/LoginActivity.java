@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.Login;
+import movil.palermo.com.py.controlstockregreso.modelo.ResponseLogin;
 import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 
@@ -103,15 +104,17 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(login);
 
-        Request req = new JsonRequest<String>(Request.Method.POST, UtilJson.PREF_URL + "/login", body,
-                new Response.Listener<String>() {
+        Request req = new JsonRequest<ResponseLogin>(Request.Method.POST, UtilJson.PREF_URL + "/login", body,
+                new Response.Listener<ResponseLogin>() {
                     @Override
-                    public void onResponse(String response) {
-                        if (response.compareToIgnoreCase("true")==0){
+                    public void onResponse(ResponseLogin response) {
+                        if (response.isExito()){
                             Toast.makeText(getApplicationContext(),"Login exitoso!",Toast.LENGTH_LONG).show();
                             SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putBoolean("LOGUEADO", true);
+                            editor.putString("USER", usuario.getText().toString());
+                            editor.putString("NOMBRE", response.getNombre());
                             editor.commit();
                             Intent i;
                             i = new Intent(getApplicationContext(),MainActivity.class);
@@ -130,16 +133,17 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         }) {
 
             @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+            protected Response<ResponseLogin> parseNetworkResponse(NetworkResponse response) {
                 String jsonString = null;
-                Log.d("Respuesta1 ", "Respuesta1: " + jsonString);
                 try {
                     jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                    Log.d("Respuesta2 ","Respuesta2: " + jsonString);
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                Response<String> result = Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));
+
+                ResponseLogin resp = new GsonBuilder().create().fromJson(jsonString, ResponseLogin.class);
+                Response<ResponseLogin> result = Response.success(resp, HttpHeaderParser.parseCacheHeaders(response));
                 return result;
             }
         };

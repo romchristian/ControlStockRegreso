@@ -75,9 +75,10 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = "Nuevo Control";//getTitle();
+        mTitle = "Nueva Recepción";//getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -161,7 +162,8 @@ public class MainActivity extends ActionBarActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-        actionBar.setSubtitle("Resp: Christian Romero");
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+        actionBar.setSubtitle(sp.getString("NOMBRE",""));
     }
 
 

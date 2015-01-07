@@ -29,8 +29,8 @@
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
         android:layout_marginLeft="8dp"
-        android:textSize="18dp"
-        android:text="KENTUKY 20"
+        android:textSize="16dp"
+        android:text="SAN MARINO AT. BOX 20S"
         android:textStyle="bold" />
 
     <TextView
