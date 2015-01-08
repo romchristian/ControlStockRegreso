@@ -1,7 +1,10 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
@@ -87,12 +91,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     login = new Login();
                     login.setUsuario(usuario.getText().toString());
                     login.setPassword(password.getText().toString());
-                    try {
-                        loginRequest(login);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+                    enviarDatos(login);
                 }else{
                     Toast.makeText(this,"Debe ingresar Usuario y Contraseña",Toast.LENGTH_LONG).show();
                 }
@@ -100,7 +99,81 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         }
     }
 
-    private void loginRequest(Login login) throws JSONException {
+    private void enviarDatos(Login login) {
+        if (estaConectado()) {
+            probarServicio(login);
+        }
+    }
+    //region Metodos para verificar conexion
+    protected Boolean estaConectado() {
+        if (conectadoWifi()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+    private void probarServicio(final Login login) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,UtilJson.PREF_URL + "/test" ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        if(response!= null && response.compareTo("true") ==0){
+                            try {
+                                loginRequest(login);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
+                String user_nombre = pref.getString("NOMBRE_"+login.getUsuario(),"");
+                String user = pref.getString("USER_"+login.getUsuario(),"");
+                String pass = pref.getString("PASS_"+login.getUsuario(),"");
+                if(user_nombre.length() > 0 && user.length() > 0 && pass.length() >0
+                        && user.compareTo(login.getUsuario()) == 0 && pass.compareTo(login.getPassword())==0){
+                    logea(login,user_nombre);
+                }else {
+                    Toast.makeText(getApplicationContext(),"Usuario y/o contraseña incorrectos",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        AppController.getInstance().addToRequestQueue(stringRequest);
+    }
+
+    private void logea(Login login, String nombre){
+        SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("LOGUEADO", true);
+        editor.putString("USER", login.getUsuario());
+        editor.putString("USER_"+login.getUsuario(), login.getUsuario());
+        editor.putString("PASS_"+login.getUsuario(), login.getPassword());
+        editor.putString("NOMBRE_"+login.getUsuario(), nombre);
+        editor.putString("NOMBRE", nombre);
+        editor.commit();
+        Intent i;
+        i = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+    private void loginRequest(final Login login) throws JSONException {
 
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(login);
 
@@ -109,17 +182,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     @Override
                     public void onResponse(ResponseLogin response) {
                         if (response.isExito()){
-                            Toast.makeText(getApplicationContext(),"Login exitoso!",Toast.LENGTH_LONG).show();
-                            SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putBoolean("LOGUEADO", true);
-                            editor.putString("USER", usuario.getText().toString());
-                            editor.putString("NOMBRE", response.getNombre());
-                            editor.commit();
-                            Intent i;
-                            i = new Intent(getApplicationContext(),MainActivity.class);
-                            startActivity(i);
-                            finish();
+                            logea(login,response.getNombre());
                         }else{
                             Toast.makeText(getApplicationContext(),"Usuario y/o contraseña incorrectos",Toast.LENGTH_LONG).show();
                         }

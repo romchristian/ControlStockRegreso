@@ -29,7 +29,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -137,8 +139,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     .query();
             if (lista != null && !(lista.isEmpty())) {
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
 
@@ -164,10 +165,12 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                                 intentMain = new Intent(context, ListaMovil.class);
                                 startActivityForResult(intentMain, AGREGAR_MOVIL);
                             }
+
                             @Override
                             public void onAnimationEnd(Animation animation) {
 
                             }
+
                             @Override
                             public void onAnimationRepeat(Animation animation) {
 
@@ -193,10 +196,12 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                                 intentMain = new Intent(context, ListaChofer.class);
                                 startActivityForResult(intentMain, AGREGAR_CHOFER);
                             }
+
                             @Override
                             public void onAnimationEnd(Animation animation) {
 
                             }
+
                             @Override
                             public void onAnimationRepeat(Animation animation) {
 
@@ -223,10 +228,12 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                                 intentMain = new Intent(context, ListaVendedor.class);
                                 startActivityForResult(intentMain, AGREGAR_VENDEDOR);
                             }
+
                             @Override
                             public void onAnimationEnd(Animation animation) {
 
                             }
+
                             @Override
                             public void onAnimationRepeat(Animation animation) {
 
@@ -250,8 +257,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle("Nueva Recepción");
-        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
-        actionBar.setSubtitle(sp.getString("NOMBRE",""));
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS, MODE_PRIVATE);
+        actionBar.setSubtitle(sp.getString("NOMBRE", ""));
         //actionBar.hide();
     }
 
@@ -330,21 +337,21 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     public void inicializaSesion() {
-        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS, MODE_PRIVATE);
         String responsable = sp.getString("USER", "");
         Sesion actual;
         try {
-            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA,new Date()).and().eq(Sesion.COL_RESPONSABLE,responsable).queryForFirst();
+            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA, new Date()).and().eq(Sesion.COL_RESPONSABLE, responsable).queryForFirst();
         } catch (SQLException e) {
             actual = null;
             e.printStackTrace();
         }
-        if(actual == null) {
+        if (actual == null) {
             sesionActual = new Sesion();
             sesionActual.setFechaControl(new Date());
             sesionActual.setResponsable(responsable);
             sesionDao.create(sesionActual);
-        }else{
+        } else {
             sesionActual = actual;
         }
     }
@@ -400,7 +407,6 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -417,13 +423,13 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             case R.id.bttnFinalizarControl:
                 controlDao.update(getControlActual());
                 enviarDatos();
-                if (getControlActual().getEstado().equalsIgnoreCase(EstadoControl.NUEVO.toString())){
+                if (getControlActual().getEstado().equalsIgnoreCase(EstadoControl.NUEVO.toString())) {
                     getControlActual().setEstado(EstadoControl.CONFIRMADO.toString());
-                    Toast.makeText(this,"Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
-                }else{
-                    if(getControlActual().getEstado().equalsIgnoreCase(EstadoControl.AUTORIZADO.toString())){
+                    Toast.makeText(this, "Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (getControlActual().getEstado().equalsIgnoreCase(EstadoControl.AUTORIZADO.toString())) {
                         getControlActual().setEstado(EstadoControl.MODIFICADO.toString());
-                        Toast.makeText(this,"Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -436,22 +442,45 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     private void enviarDatos() {
         if (estaConectado()) {
-            try {
-                List<Control> lista = controlDao.queryBuilder().where().eq(Control.COL_ESTADO_DESCARGA, "N").query();
-                if (lista != null) {
-                    for (Control c : lista) {
-                        cargaDetalles(c);
-                        insertaRequest(c);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            probarServicio();
         }
     }
 
+    private void guardaDatos(){
+        try {
+            List<Control> lista = controlDao.queryBuilder().where().eq(Control.COL_ESTADO_DESCARGA, "N").query();
+            if (lista != null) {
+                for (Control c : lista) {
+                    cargaDetalles(c);
+                    insertaRequest(c);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void probarServicio() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,UtilJson.PREF_URL + "/test" ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                       if(response!= null && response.compareTo("true") ==0){
+                           guardaDatos();
+                       }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        AppController.getInstance().addToRequestQueue(stringRequest);
+    }
 
     private void cargaDetalles(Control c) {
         try {
@@ -476,9 +505,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 new Response.Listener<ResponseControl>() {
                     @Override
                     public void onResponse(ResponseControl response) {
-                        Toast.makeText(getApplicationContext(),"Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
 
-                        if(response.isExito()) {
+                        if (response.isExito()) {
                             //Control c = controlDao.queryForId(response.getControlId());
                             c.setEstadoDescarga("S");
                             controlDao.update(c);
@@ -487,7 +516,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),"Error al insertar " + error.getMessage(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Error al insertar " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         }) {
 
@@ -519,6 +548,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             return false;
         }
     }
+
 
     protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -607,8 +637,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 Toast.makeText(this, "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
+
     @Override
     public void onBackPressed() {
         Toast.makeText(this, "Debe de terminar de cargar el control", Toast.LENGTH_SHORT).show();
