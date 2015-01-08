@@ -1,10 +1,19 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -15,12 +24,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -57,6 +73,9 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private ImageView thumbnail;
+    private SharedPreferences pref;
+    File lastSavedFile;
 
     public NavigationDrawerFragment() {
     }
@@ -95,6 +114,30 @@ public class NavigationDrawerFragment extends Fragment {
         View headerView =  inflater.inflate(R.layout.drawer_header, null, false);
         View footerView =  inflater.inflate(R.layout.drawer_footer, null, false);
 
+        TextView nombre = (TextView) headerView.findViewById(R.id.nombre);
+        thumbnail = (ImageView) headerView.findViewById(R.id.thumbnail);
+
+
+        pref = getActivity().getSharedPreferences(LoginActivity.PREFERENCIAS, Context.MODE_PRIVATE);
+        nombre.setText(pref.getString("NOMBRE","Desconocido"));
+        String uri = pref.getString("URI_"+pref.getString("USER",""),"");
+
+        if(uri.length() > 0) {
+            thumbnail.setImageURI(Uri.parse(uri));
+        }
+
+        thumbnail.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                            imagePickerDialog();
+                        break;
+                }
+                return false;
+            }
+        });
+
         mDrawerListView.addHeaderView(headerView,null,false);
         mDrawerListView.addFooterView(footerView);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,8 +151,7 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        "Recepciones",
-                        "Reposiciones",
+                        "Recepciones"
 
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -118,6 +160,76 @@ public class NavigationDrawerFragment extends Fragment {
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    }
+
+
+
+
+    public void imagePickerDialog()
+    {
+        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(getActivity());
+        myAlertDialog.setTitle("Pictures Option");
+        myAlertDialog.setMessage("Select Picture Mode");
+
+        myAlertDialog.setPositiveButton("Gallery", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface arg0, int arg1)
+            {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto , 1);
+            }
+        });
+
+        myAlertDialog.setNegativeButton("Camera", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface arg0, int arg1)
+            {
+                lastSavedFile = getTempFile();
+                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePicture.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(lastSavedFile));
+                startActivityForResult(takePicture, 0);//zero can be replaced with any action code
+            }
+        });
+        myAlertDialog.show();
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private File getTempFile() {
+        // Create an image file name
+        String timeStamp =  new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "barfile_" + timeStamp + ".jpg";
+
+        return new File(Environment.getExternalStorageDirectory(), imageFileName);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+            case 0:
+                if(resultCode == Activity.RESULT_OK){
+                    Uri selectedImage = Uri.fromFile(lastSavedFile);
+                    thumbnail.setImageURI(selectedImage);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("URI_"+pref.getString("USER",""),selectedImage.toString());
+                    editor.commit();
+                }
+
+                break;
+            case 1:
+                if(resultCode == Activity.RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    thumbnail.setImageURI(selectedImage);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("URI_" + pref.getString("USER", ""), selectedImage.toString());
+                    editor.commit();
+                }
+                break;
+        }
+
     }
 
     /**

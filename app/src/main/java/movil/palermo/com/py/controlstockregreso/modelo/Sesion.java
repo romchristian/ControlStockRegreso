@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class Sesion implements Serializable{
     public final static  String COL_ID = "id";
-    public final static  String COL_FECHA = "fecha";
+    public final static  String COL_FECHA = "fechaControl";
     public final static  String COL_RESPONSABLE = "responsable";
 
     @DatabaseField(generatedId = true)

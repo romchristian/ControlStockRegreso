@@ -128,19 +128,19 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         numeroSeccion = position;
         switch (position) {
-            case 0:
-                break;
             case 1:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, ListaControlFragment.newInstance(position), "LISTA_CONTROL_FRAGMENT")
                         .commit();
                 break;
             case 2:
-                break;
-            case 3:
                 logOut();
                 break;
 
+            default:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, ListaControlFragment.newInstance(position), "LISTA_CONTROL_FRAGMENT")
+                        .commit();
         }
     }
 
