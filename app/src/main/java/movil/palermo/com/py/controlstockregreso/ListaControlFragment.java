@@ -185,6 +185,8 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
 
                     Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
                     i.putExtra("CONTROL", controlSeleccionado);
+                    controlSeleccionado.setEstadoDescarga("N");
+                    controlSeleccionado.setEstado(EstadoControl.MODIFICADO.toString());
                     startActivity(i);
                 }else
                 {

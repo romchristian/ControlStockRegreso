@@ -341,14 +341,14 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         String responsable = sp.getString("USER", "");
         Sesion actual;
         try {
-            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA, new Date()).and().eq(Sesion.COL_RESPONSABLE, responsable).queryForFirst();
+            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA,MainActivity.removeTime( new Date())).and().eq(Sesion.COL_RESPONSABLE, responsable).queryForFirst();
         } catch (SQLException e) {
             actual = null;
             e.printStackTrace();
         }
         if (actual == null) {
             sesionActual = new Sesion();
-            sesionActual.setFechaControl(new Date());
+            sesionActual.setFechaControl(MainActivity.removeTime( new Date()));
             sesionActual.setResponsable(responsable);
             sesionDao.create(sesionActual);
         } else {
@@ -412,7 +412,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         switch (view.getId()) {
 
             case R.id.bttnCargarProductos:
-                getControlActual().setFechaControl(new Date());
+                getControlActual().setFechaControl(MainActivity.removeTime( new Date()));
                 getControlActual().setSesion(sesionActual);
                 getControlActual().setKm(0);//falta el input
                 controlDao.createOrUpdate(getControlActual());
