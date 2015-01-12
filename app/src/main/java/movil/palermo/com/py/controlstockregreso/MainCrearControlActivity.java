@@ -2,6 +2,7 @@ package movil.palermo.com.py.controlstockregreso;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -611,7 +612,30 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Debe de terminar de cargar el control", Toast.LENGTH_SHORT).show();
+        if (sePuedeFinalizarControl(controlActual)){
+            Toast.makeText(this, "Debe de terminar de cargar el control", Toast.LENGTH_SHORT).show();
+        }else{
+            cancelar();
+        }
+    }
+    public void cancelar(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Desea cancelar la recepción?");
+        dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+
+        dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog.show();
     }
 
 }
