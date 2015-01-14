@@ -356,48 +356,6 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
     }
 
-    /*private void esconderBotonFinalzar() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.hide);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                bttnFinalizarControl.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        bttnFinalizarControl.startAnimation(a);
-    }*/
-
-    /*private void mostrarBotonFinalizar() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.show);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                bttnFinalizarControl.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        bttnFinalizarControl.startAnimation(a);
-    }*/
-
     private boolean sePuedeCargarProductos() {
         if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
             bttnCargarProductos.requestFocus();
