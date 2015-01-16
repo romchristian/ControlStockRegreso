@@ -13,16 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
@@ -72,7 +76,7 @@ public class SplashActivity extends ActionBarActivity {
             SharedPreferences.Editor editor = pref_login.edit();
             editor.putBoolean("LOGUEADO",false);
             inicializarDaos();
-            cargaDatos();
+            probarServicio();
         }else{
             TimerTask task = new TimerTask() {
                 @Override
@@ -121,28 +125,60 @@ public class SplashActivity extends ActionBarActivity {
         vehiculoDao = databaseHelper.getVehiculoDao();
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
     }
+
+    private void probarServicio() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,UtilJson.PREF_URL + "/test" ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        if(response!= null && response.compareTo("true") ==0){
+                            cargaDatos();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                vehiculoDao.executeRaw("DELETE FROM controldetalle");
+                vehiculoDao.executeRaw("DELETE FROM control");
+
+                try {
+                    UpdateBuilder<Vehiculo,Integer> ubVehiculo = vehiculoDao.updateBuilder();
+                    ubVehiculo.updateColumnValue("estado", "N");
+                    ubVehiculo.where().eq("estado","U");
+                    ubVehiculo.update();
+
+
+                    UpdateBuilder<Vendedor,Integer> ubVendedor = vendedorDao.updateBuilder();
+                    ubVendedor.updateColumnValue("estado", "N");
+                    ubVendedor.where().eq("estado","U");
+                    ubVendedor.update();
+
+                    UpdateBuilder<Conductor,Integer> ubConductor = conductorDao.updateBuilder();
+                    ubConductor.updateColumnValue("estado", "N");
+                    ubConductor.where().eq("estado","U");
+                    ubConductor.update();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        AppController.getInstance().addToRequestQueue(stringRequest);
+    }
+
     private void cargaDatos() {
-     /*   vehiculoDao.executeRaw("DELETE FROM unidadmedida");
-        vehiculoDao.executeRaw("DELETE FROM producto");
-        vehiculoDao.executeRaw("DELETE FROM vendedor");
-        vehiculoDao.executeRaw("DELETE FROM conductor");
-        vehiculoDao.executeRaw("DELETE FROM vehiculo");*/
+
         vehiculoDao.executeRaw("DELETE FROM controldetalle");
         vehiculoDao.executeRaw("DELETE FROM control");
 
-       /* unidadMedidadMock();
-        productoMock();
-        conductorMock();
-        vendedorMock();
-        vehiculoMock();
-        finalizarSplash();*/
         productosRequest();
         conductorRequest();
         vendedorRequest();
         vehiculoRequest();
         unidadMedidaRequest();
     }
-
 
 
     private void productoMock() {

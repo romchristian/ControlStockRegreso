@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,9 +80,18 @@ public class ListaChofer extends ActionBarActivity implements AdapterView.OnItem
         pDialog.setMessage("Loading...");
         pDialog.show();
         conductorList.clear();
-        conductorList.addAll(conductorDao.queryForAll());
-        adapter.notifyDataSetChanged();
-        hidePDialog();
+        try {
+            List<Conductor> lista = conductorDao.queryBuilder()
+                    .orderBy("nombre",true)
+                    .where().eq("estado","N")
+                    .query();
+            conductorList.addAll(lista);
+            adapter.notifyDataSetChanged();
+            hidePDialog();
+        } catch (SQLException e) {
+            hidePDialog();
+            e.printStackTrace();
+        }
     }
 
     private void hidePDialog() {
@@ -97,7 +107,6 @@ public class ListaChofer extends ActionBarActivity implements AdapterView.OnItem
         getMenuInflater().inflate(R.menu.menu_lista_chofer, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("Buscar");

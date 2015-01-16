@@ -78,7 +78,6 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = "Nueva Recepción";//getTitle();
@@ -190,9 +189,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
-
         int id = item.getItemId();
         switch (id) {
             case R.id.action_actualizar:

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import movil.palermo.com.py.controlstockregreso.custom.ProductoListAdapter;
 import movil.palermo.com.py.controlstockregreso.custom.VendedorListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
 
 
@@ -83,8 +85,19 @@ public class ListaVendedor extends ActionBarActivity implements AdapterView.OnIt
     private void recargaLista() {
 
         vendedorList.clear();
-        vendedorList.addAll(vendedorDao.queryForAll());
-        adapter.notifyDataSetChanged();
+        try {
+            List<Vendedor> lista = vendedorDao.queryBuilder()
+                    .orderBy("nombre",true)
+                    .where().eq("estado","N")
+                    .query();
+            vendedorList.addAll(lista);
+            adapter.notifyDataSetChanged();
+            hidePDialog();
+        } catch (SQLException e) {
+            hidePDialog();
+            e.printStackTrace();
+        }
+
 
     }
 

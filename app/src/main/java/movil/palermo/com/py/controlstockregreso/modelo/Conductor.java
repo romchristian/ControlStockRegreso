@@ -14,6 +14,8 @@ public class Conductor implements Serializable{
     private String nombre;
     @DatabaseField
     private Integer ci;
+    @DatabaseField
+    private String estado;
 
     public Conductor() {
     }
@@ -22,6 +24,7 @@ public class Conductor implements Serializable{
         this.id = id;
         this.nombre = nombre;
         this.ci = ci;
+        this.estado = "N";
     }
 
     public Integer getId() {
@@ -46,5 +49,13 @@ public class Conductor implements Serializable{
 
     public void setCi(Integer ci) {
         this.ci = ci;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

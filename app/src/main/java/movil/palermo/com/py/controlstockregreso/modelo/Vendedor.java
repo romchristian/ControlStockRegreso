@@ -18,6 +18,8 @@ public class Vendedor implements Serializable{
     private Integer depositoId;
     @DatabaseField(foreign = true,columnName = "conductor_id",canBeNull = true,foreignAutoCreate = true,foreignAutoRefresh = true)
     private Conductor conductor;
+    @DatabaseField
+    private String estado;
 
     public Vendedor() {
     }
@@ -27,6 +29,7 @@ public class Vendedor implements Serializable{
         this.nombre = nombre;
         this.depositoId = depositoId;
         this.conductor = conductor;
+        this.estado = "N";
     }
 
     public Integer getId() {
@@ -59,5 +62,13 @@ public class Vendedor implements Serializable{
 
     public void setConductor(Conductor conductor) {
         this.conductor = conductor;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
