@@ -35,6 +35,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
@@ -74,7 +77,6 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -167,6 +169,7 @@ public class MainActivity extends ActionBarActivity
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -186,9 +189,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
-
         int id = item.getItemId();
         switch (id) {
             case R.id.action_actualizar:
@@ -196,6 +196,7 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 return true;
             case R.id.action_extraer_bd:
+                databaseHelper.extraerBD("hola");
                 break;
             case R.id.action_nuevo:
                 Intent i = new Intent(this, MainCrearControlActivity.class);
@@ -235,5 +236,15 @@ public class MainActivity extends ActionBarActivity
         dialog.show();
     }
 
+
+    public static Date removeTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 
 }

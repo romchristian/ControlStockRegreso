@@ -4,5 +4,7 @@
 
     <item android:id="@+id/action_nuevo" android:title="Nuevo"
         android:orderInCategory="100" app:showAsAction="always" />
+    <!--item android:id="@+id/action_extraer_bd" android:title="Extraer BD"
+        android:orderInCategory="200" app:showAsAction="never" /-->
 
 </menu>

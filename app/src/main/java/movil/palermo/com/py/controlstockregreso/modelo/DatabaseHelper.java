@@ -25,16 +25,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "stock.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
-    private RuntimeExceptionDao<Vendedor, Integer> vendedorDao = null;
-    private RuntimeExceptionDao<Conductor, Integer> conductorDao = null;
-    private RuntimeExceptionDao<Vehiculo, Integer> vehiculoDao = null;
-    private RuntimeExceptionDao<UnidadMedida, Integer> unidadMedidaDao = null;
-    private RuntimeExceptionDao<Producto, Integer> productoDao = null;
-    private RuntimeExceptionDao<Control, Integer> controlDao = null;
-    private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao = null;
-    private RuntimeExceptionDao<Sesion, Integer> sesionDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -72,87 +64,49 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
-
-
-            switch (newVersion) {
-                case 2:
-                   getVehiculoDao().executeRaw("Alter table vehiculo add column numero text");
-                    break;
-                case 3:
-                    getProductoDao().executeRaw("Alter table producto add column orden int");
-                    getProductoDao().executeRaw("Alter table producto add column kit int");
-                default:
-                    break;
-            }
-
-
     }
 
 
     public RuntimeExceptionDao<Producto, Integer> getProductoDao() {
-        if (productoDao == null) {
-            productoDao = getRuntimeExceptionDao(Producto.class);
-        }
-        return productoDao;
+        return getRuntimeExceptionDao(Producto.class);
     }
 
 
     public RuntimeExceptionDao<Vehiculo, Integer> getVehiculoDao() {
-        if (vehiculoDao == null) {
-            vehiculoDao = getRuntimeExceptionDao(Vehiculo.class);
-        }
-        return vehiculoDao;
+        return getRuntimeExceptionDao(Vehiculo.class);
     }
 
     public RuntimeExceptionDao<Vendedor, Integer> getVendedorDao() {
-        if (vehiculoDao == null)
-            vendedorDao = getRuntimeExceptionDao(Vendedor.class);
-        return vendedorDao;
+        return getRuntimeExceptionDao(Vendedor.class);
     }
 
+
+
     public RuntimeExceptionDao<Conductor, Integer> getConductorDao() {
-        if(conductorDao == null)
-            conductorDao = getRuntimeExceptionDao(Conductor.class);
-        return conductorDao;
+        return getRuntimeExceptionDao(Conductor.class);
     }
 
     public RuntimeExceptionDao<UnidadMedida, Integer> getUnidadMedidaDao() {
-        if(unidadMedidaDao == null)
-            unidadMedidaDao = getRuntimeExceptionDao(UnidadMedida.class);
-        return unidadMedidaDao;
+        return getRuntimeExceptionDao(UnidadMedida.class);
     }
 
     public RuntimeExceptionDao<Control, Integer> getControlDao() {
-        if(controlDao == null)
-            controlDao = getRuntimeExceptionDao(Control.class);
-        return controlDao;
+        return getRuntimeExceptionDao(Control.class);
     }
 
     public RuntimeExceptionDao<ControlDetalle, Integer> getControlDetalleDao() {
-        if(controlDetalleDao == null)
-            controlDetalleDao = getRuntimeExceptionDao(ControlDetalle.class);
-        return controlDetalleDao;
+
+        return getRuntimeExceptionDao(ControlDetalle.class);
     }
 
     public RuntimeExceptionDao<Sesion, Integer> getSesionDao() {
-        if (sesionDao == null)
-            sesionDao = getRuntimeExceptionDao(Sesion.class);
-        return sesionDao;
+        return getRuntimeExceptionDao(Sesion.class);
     }
 
     @Override
     public void close() {
         super.close();
-        vendedorDao = null;
-        conductorDao = null;
-        vehiculoDao = null;
-        productoDao = null;
-        unidadMedidaDao = null;
-        controlDao = null;
-        controlDetalleDao = null;
-        sesionDao = null;
     }
 
 

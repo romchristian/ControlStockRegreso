@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -335,6 +336,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         sesionDao = databaseHelper.getSesionDao();
         controlDao = databaseHelper.getControlDao();
         controlDetalleDao = databaseHelper.getControlDetalleDao();
+        vehiculoDao = databaseHelper.getVehiculoDao();
+        vendedorDao = databaseHelper.getVendedorDao();
+        conductorDao = databaseHelper.getConductorDao();
     }
 
     public void inicializaSesion() {
@@ -342,62 +346,20 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         String responsable = sp.getString("USER", "");
         Sesion actual;
         try {
-            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA, new Date()).and().eq(Sesion.COL_RESPONSABLE, responsable).queryForFirst();
+            actual = sesionDao.queryBuilder().where().eq(Sesion.COL_FECHA, MainActivity.removeTime(new Date())).and().eq(Sesion.COL_RESPONSABLE, responsable).queryForFirst();
         } catch (SQLException e) {
             actual = null;
             e.printStackTrace();
         }
         if (actual == null) {
             sesionActual = new Sesion();
-            sesionActual.setFechaControl(new Date());
+            sesionActual.setFechaControl(MainActivity.removeTime(new Date()));
             sesionActual.setResponsable(responsable);
             sesionDao.create(sesionActual);
         } else {
             sesionActual = actual;
         }
     }
-
-    /*private void esconderBotonFinalzar() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.hide);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                bttnFinalizarControl.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        bttnFinalizarControl.startAnimation(a);
-    }*/
-
-    /*private void mostrarBotonFinalizar() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.show);
-        a.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                bttnFinalizarControl.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        bttnFinalizarControl.startAnimation(a);
-    }*/
 
     private boolean sePuedeCargarProductos() {
         if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
@@ -408,12 +370,19 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
     }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        inicializarDaos();
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.bttnCargarProductos:
-                getControlActual().setFechaControl(new Date());
+                getControlActual().setFechaControl(MainActivity.removeTime(new Date()));
                 getControlActual().setSesion(sesionActual);
                 getControlActual().setKm(0);//falta el input
                 controlDao.createOrUpdate(getControlActual());
@@ -422,18 +391,28 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
             case R.id.bttnFinalizarControl:
-                controlDao.update(getControlActual());
-                enviarDatos();
-                if (getControlActual().getEstado().equalsIgnoreCase(EstadoControl.NUEVO.toString())) {
-                    getControlActual().setEstado(EstadoControl.CONFIRMADO.toString());
-                    Toast.makeText(this, "Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (getControlActual().getEstado().equalsIgnoreCase(EstadoControl.AUTORIZADO.toString())) {
-                        getControlActual().setEstado(EstadoControl.MODIFICADO.toString());
-                        Toast.makeText(this, "Estado del control:" + getControlActual().getEstado(), Toast.LENGTH_SHORT).show();
-                    }
+
+                Control c = getControlActual();
+
+                if (c.getEstado() != null && c.getEstado().equalsIgnoreCase(EstadoControl.NUEVO.toString())) {
+                    c.setEstado(EstadoControl.CONFIRMADO.toString());
+                    Toast.makeText(this, "Estado del control:" + c.getEstado(), Toast.LENGTH_SHORT).show();
+                } else if (c.getEstado() != null && c.getEstado().equalsIgnoreCase(EstadoControl.AUTORIZADO.toString())) {
+                    c.setEstado(EstadoControl.MODIFICADO.toString());
+                    Toast.makeText(this, "Estado del control:" + c.getEstado(), Toast.LENGTH_SHORT).show();
                 }
 
+                //Actualizo los estado a usados
+                c.getVehiculo().setEstado("U");
+                c.getVendedor().setEstado("U");
+                c.getConductor().setEstado("U");
+
+                controlDao.update(c);
+                vehiculoDao.update(c.getVehiculo());
+                vendedorDao.update(c.getVendedor());
+                conductorDao.update(c.getConductor());
+
+                enviarDatos();
                 finish();
                 break;
             default:
@@ -447,7 +426,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         }
     }
 
-    private void guardaDatos(){
+    private void guardaDatos() {
         try {
             List<Control> lista = controlDao.queryBuilder().where().eq(Control.COL_ESTADO_DESCARGA, "N").query();
             if (lista != null) {
@@ -464,14 +443,14 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     private void probarServicio() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,UtilJson.PREF_URL + "/test" ,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, UtilJson.PREF_URL + "/test",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                       if(response!= null && response.compareTo("true") ==0){
-                           guardaDatos();
-                       }
+                        if (response != null && response.compareTo("true") == 0) {
+                            guardaDatos();
+                        }
                     }
 
                 }, new Response.ErrorListener() {
@@ -629,7 +608,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     }
                     break;
                 case CARGAR_PRODUCTOS:
-                    //Toast.makeText(this, "Resultado: " + dato, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Control Actual Vendedor: " + getControlActual().getVendedor(), Toast.LENGTH_SHORT).show();
+
                     bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
                     break;
             }
@@ -648,6 +628,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             cancelar();
         }
     }
+
     public void cancelar(){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Desea cancelar la recepción?");

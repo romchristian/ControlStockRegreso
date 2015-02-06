@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,9 +81,19 @@ public class ListaMovil extends ActionBarActivity implements AdapterView.OnItemC
         pDialog.setMessage("Loading...");
         pDialog.show();
         vehiculoList.clear();
-        vehiculoList.addAll(vehiculoDao.queryForAll());
-        adapter.notifyDataSetChanged();
-        hidePDialog();
+        try {
+            List<Vehiculo> lista = vehiculoDao.queryBuilder()
+                    .orderBy("numero",true)
+                    .where().eq("estado","N")
+                    .query();
+            vehiculoList.addAll(lista);
+            adapter.notifyDataSetChanged();
+            hidePDialog();
+        } catch (SQLException e) {
+            hidePDialog();
+            e.printStackTrace();
+        }
+
     }
 
     private void hidePDialog() {
