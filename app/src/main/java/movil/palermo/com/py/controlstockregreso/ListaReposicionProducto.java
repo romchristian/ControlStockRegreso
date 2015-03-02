@@ -1,12 +1,12 @@
 package movil.palermo.com.py.controlstockregreso;
 
-import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -25,34 +24,34 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import movil.palermo.com.py.controlstockregreso.R;
 import movil.palermo.com.py.controlstockregreso.custom.ProductoListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.ReposicionListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.ProductoResumen;
+import movil.palermo.com.py.controlstockregreso.modelo.Reposicion;
 
-
-public class ListaProductos extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ListaReposicionProducto extends ActionBarActivity implements  AdapterView.OnItemClickListener {
     public static final int CONTAR_PRODUCTOS = 201;
 
 
     private ListView lstVwProductos;
 
-    private List<ProductoResumen> productoList = new ArrayList<ProductoResumen>();
-    private ProductoListAdapter adapter;
+    private List<Reposicion> productoList = new ArrayList<Reposicion>();
+    private ReposicionListAdapter adapter;
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Producto, Integer> productoDao;
     private ProgressDialog pDialog;
     private Intent datos;
-
-    private ArrayAdapter<String> adaptador;
 
     private Control controlActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_productos);
+        setContentView(R.layout.activity_lista_reposicion_producto);
 
 
 
@@ -60,7 +59,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         lstVwProductos.setOnItemClickListener(this);
 
         //Seteo el custom adapter
-        adapter = new ProductoListAdapter(this, productoList);
+        adapter = new ReposicionListAdapter(this, productoList);
         lstVwProductos.setAdapter(adapter);
 
         //instancio la BD y cargo mi lista
@@ -121,7 +120,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         try {
             List<String[]> results = rawResults.getResults();
             for (String[] row : results) {
-                productoList.add(new ProductoResumen(row));
+                productoList.add(new Reposicion(row));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,7 +141,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_lista_productos, menu);
+        getMenuInflater().inflate(R.menu.menu_lista_reposicion_producto, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
@@ -190,22 +189,11 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     }
 
     @Override
-    public void onClick(View view) {
-        /*if (view.getId()== R.id.bttnFinalizarConteo){
-            intentDetalleProducto = new Intent();
-            intentDetalleProducto.putExtra("RESULTADO","PRODUCTOS CARGADOS CORRECTAMENTE");
-            setResult(RESULT_OK, intentDetalleProducto);
-            finish();
-        }*/
-
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(this, AgregarCantidadActivity.class);
-        ProductoResumen pr = (ProductoResumen) adapterView.getItemAtPosition(i);
-        productoDao.queryForId(pr.getId());
-        intent.putExtra("PRODUCTO", productoDao.queryForId(pr.getId()));
+        Intent intent = new Intent(this, AgregarReposicionActivity.class);
+        Reposicion rep = (Reposicion) adapterView.getItemAtPosition(i);
+        productoDao.queryForId(rep.getId());
+        intent.putExtra("PRODUCTO", productoDao.queryForId(rep.getId()));
         intent.putExtra("CONTROL", controlActual);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);

@@ -32,46 +32,63 @@
         android:textSize="16dp"
         android:text="SAN MARINO AT. BOX 20S"
         android:textStyle="bold" />
-
     <TextView
-        android:id="@+id/tituloCajas"
+        android:id="@+id/stock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginLeft="10dp"
-        android:layout_toLeftOf="@+id/tituloGruesas"
-        android:text="Cajas"
-        android:textSize="16sp"/>
-
-
-    <TextView
-        android:id="@+id/tituloGruesas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginLeft="10dp"
-        android:layout_toLeftOf="@+id/tituloUnidades"
-        android:text="Gruesas"
-        android:textSize="16sp"/>
+        android:layout_below="@+id/nombre"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:textSize="14sp"
+        android:text="Stock regreso:"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tituloUnidades"
+        android:id="@+id/reposicion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nombre"
-        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/nombre"
         android:layout_alignParentRight="true"
-        android:text="Caje/Unid"
-        android:textSize="16sp"/>
+        android:layout_marginRight="8dp"
+        android:textSize="14sp"
+        android:text="Reposición:"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/cantCajas"
+        android:id="@+id/tituloRegGruesas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tituloCajas"
+        android:layout_below="@id/stock"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Gruesas"
+        android:textSize="14sp"/>
+
+
+    <TextView
+        android:id="@+id/tituloRegUnidades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stock"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/tituloRegGruesas"
+        android:text="Cajetillas"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tituloRepoGruesas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reposicion"
+        android:layout_alignLeft="@+id/reposicion"
+        android:text="Gruesas"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/cantRegGruesas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tituloRegGruesas"
         android:layout_marginTop="1dip"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignLeft="@+id/tituloCajas"
+        android:layout_alignLeft="@+id/tituloRegGruesas"
         android:gravity="center_horizontal|center_vertical"
         android:text="300"
         android:textSize="24sp"
@@ -79,14 +96,13 @@
 
 
     <TextView
-        android:id="@+id/cantUnidades"
+        android:id="@+id/cantRegCajetillas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tituloUnidades"
+        android:layout_below="@id/tituloRegUnidades"
         android:layout_marginTop="1dip"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignRight="@+id/tituloUnidades"
-        android:layout_alignLeft="@+id/tituloUnidades"
+        android:layout_alignRight="@+id/tituloRegUnidades"
+        android:layout_alignLeft="@+id/tituloRegUnidades"
         android:gravity="center_horizontal|center_vertical"
         android:text="300"
         android:textSize="24sp"
@@ -94,14 +110,13 @@
 
 
     <TextView
-        android:id="@+id/cantGruesas"
+        android:id="@+id/cantRepoGruesas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tituloGruesas"
+        android:layout_below="@id/tituloRepoGruesas"
         android:layout_marginTop="1dip"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignRight="@+id/tituloGruesas"
-        android:layout_alignLeft="@+id/tituloGruesas"
+        android:layout_alignRight="@+id/tituloRepoGruesas"
+        android:layout_alignLeft="@+id/tituloRepoGruesas"
         android:gravity="center_horizontal|center_vertical"
         android:text="500"
         android:textSize="24sp"

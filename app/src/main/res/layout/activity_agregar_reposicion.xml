@@ -1,0 +1,133 @@
+<movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sliding_up_layoutRepo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize">
+
+    <RelativeLayout
+        android:id="@+id/bottom_viewRepo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF">
+
+        <TextView
+            android:id="@+id/tituloUnidaMedidaRepo"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unidad de Medida"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinnerRepo"
+            android:layout_below="@+id/tituloUnidaMedidaRepo"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignLeft="@+id/tituloUnidaMedidaRepo"
+            android:layout_marginRight="50dp"
+            android:layout_gravity="center_horizontal" />
+
+
+        <TextView
+            android:id="@+id/tituloCantidadRepo"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/spinnerRepo"
+            android:layout_alignLeft="@+id/spinnerRepo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cantidad"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/editTextCantidadRepo"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/tituloCantidadRepo"
+            android:layout_height="80dp"
+            android:layout_alignLeft="@+id/spinnerRepo"
+            android:layout_alignRight="@+id/spinnerRepo"
+            android:inputType="number"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:id="@+id/imgPlusRepo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/plus"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp" />
+
+        <ImageView
+            android:id="@+id/ok_imgRepo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/flecha_verde"
+            android:visibility="invisible"
+            android:background="#00ffffff"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/top_viewRepo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ddd"
+        android:orientation="vertical"
+        android:layout_margin="0dp"
+        android:padding="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="0dp"
+            android:paddingRight="10dp"
+            android:background="#1E90FF">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/tituloDetallesRepo"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Detalles"
+                    android:textSize="16sp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"/>
+
+                <ImageView
+
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/thumbnailDetallesRepo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/detalle"/>
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/detalleRepo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/botoneraRepo"
+            android:layout_below="@+id/btnAgregarRepo"
+            android:background="#ddd" />
+
+    </LinearLayout>
+</movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout>

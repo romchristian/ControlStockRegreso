@@ -137,8 +137,8 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
 
         AlertDialog dialog = new AlertDialog.Builder(view.getContext()).create();
         dialog.setTitle("Advertencia!");
-        dialog.setMessage("Desea editar este control?");
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
+        dialog.setMessage("Seleccione la acción a realizar?");
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Editar Control", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent captureIntent = new Intent(rootView.getContext(),CaptureActivity.class);
@@ -153,8 +153,17 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
                 startActivity(i);*/
             }
         });
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Reposición", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
+                Intent i = new Intent(rootView.getContext(),ListaReposicionProducto.class);
+                i.putExtra("CONTROL", (Control) controlSeleccionado);
+                startActivity(i);
+            }
+        });
+
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

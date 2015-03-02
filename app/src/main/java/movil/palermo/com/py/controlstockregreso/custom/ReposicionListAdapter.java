@@ -1,9 +1,5 @@
 package movil.palermo.com.py.controlstockregreso.custom;
 
-/**
- * Created by cromero on 14/11/2014.
- */
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -22,18 +18,20 @@ import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
 import movil.palermo.com.py.controlstockregreso.R;
-import movil.palermo.com.py.controlstockregreso.modelo.ProductoResumen;
+import movil.palermo.com.py.controlstockregreso.modelo.Reposicion;
 
-
-public class ProductoListAdapter extends BaseAdapter implements Filterable {
+/**
+ * Created by jcolman on 12/02/2015.
+ */
+public class ReposicionListAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<ProductoResumen> fullProductos;
-    private List<ProductoResumen> filteredProductos;
+    private List<Reposicion> fullProductos;
+    private List<Reposicion> filteredProductos;
     private ItemFilter mFilter = new ItemFilter();
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public ProductoListAdapter(Activity activity, List<ProductoResumen> productos) {
+    public ReposicionListAdapter(Activity activity, List<Reposicion> productos) {
         this.activity = activity;
         this.fullProductos = productos;
         this.filteredProductos=productos;
@@ -61,7 +59,7 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row_producto, null);
+            convertView = inflater.inflate(R.layout.list_row_reposicion_producto, parent,false);
 
         /*if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
@@ -70,15 +68,15 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
 
         ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
-        TextView tituloCajas=(TextView) convertView.findViewById(R.id.tituloCajas);
-        TextView cantCajas = (TextView) convertView.findViewById(R.id.cantCajas);
-        TextView tituloGruesas=(TextView) convertView.findViewById(R.id.tituloGruesas);
-        TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantGruesas);
-        TextView tituloCajetillas=(TextView) convertView.findViewById(R.id.tituloUnidades);
-        TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantUnidades);
+        TextView tituloGruesas=(TextView) convertView.findViewById(R.id.tituloRegGruesas);
+        TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantRegGruesas);
+        TextView tituloUnidades=(TextView) convertView.findViewById(R.id.tituloRegUnidades);
+        TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantRegCajetillas);
+        TextView tituloRepoGruesas=(TextView) convertView.findViewById(R.id.tituloRepoGruesas);
+        TextView cantRepoGruesas = (TextView) convertView.findViewById(R.id.cantRepoGruesas);
 
         // getting movie data for the row
-        ProductoResumen p = filteredProductos.get(position);
+        Reposicion p = filteredProductos.get(position);
 
         // thumbnail image
         /*thumbNail.setImageUrl(m.getImg(), imageLoader);*/
@@ -112,21 +110,22 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
         nombre.setText(p.getNombre());
 
         if(p.getKit()>0){
-            tituloCajas.setVisibility(TextView.GONE);
-            cantCajas.setVisibility(TextView.GONE);
-            tituloGruesas.setVisibility(TextView.GONE);
-            cantGruesas.setVisibility(TextView.GONE);
-            tituloCajetillas.setText("Unidades");
-            cantCajetillas.setText(""+  p.getCantUnidad());
+            tituloUnidades.setVisibility(TextView.GONE);
+            cantCajetillas.setVisibility(TextView.GONE);
+            tituloGruesas.setText("Unidades");
+            cantGruesas.setText("" + p.getCantUnidad());
+            tituloRepoGruesas.setText("Unidades");
+            cantRepoGruesas.setText("" + p.getCantUnidad());
         }else{
-            tituloCajas.setVisibility(TextView.VISIBLE);
-            cantCajas.setVisibility(TextView.VISIBLE);
             tituloGruesas.setVisibility(TextView.VISIBLE);
             cantGruesas.setVisibility(TextView.VISIBLE);
-            cantCajas.setText(""+ (p.getCantCajas()));
-            cantGruesas.setText(""+(p.getCantGruesas()));
-            tituloCajetillas.setText("Cajetillas");
-            cantCajetillas.setText(""+ p.getCantCajetillas());
+            tituloUnidades.setVisibility(TextView.VISIBLE);
+            cantCajetillas.setVisibility(TextView.VISIBLE);
+            tituloGruesas.setText("Gruesas");
+            cantGruesas.setText("" + (p.getCantGruesas()));
+            cantCajetillas.setText("" + (p.getCantCajetillas()));
+            tituloRepoGruesas.setText("Gruesas");
+            cantRepoGruesas.setText("" + p.getCantGruesas());
         }
 
         return convertView;
@@ -145,15 +144,15 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
 
             FilterResults results = new FilterResults();
 
-            final List<ProductoResumen> list = fullProductos;
+            final List<Reposicion> list = fullProductos;
 
             int count = list.size();
-            final ArrayList<ProductoResumen> nlist = new ArrayList<ProductoResumen>(count);
+            final ArrayList<Reposicion> nlist = new ArrayList<Reposicion>(count);
 
             String filterableString ;
 
             for (int i = 0; i < count; i++) {
-                ProductoResumen p = list.get(i);
+                Reposicion p = list.get(i);
                 filterableString = p.getNombre();
                 if (filterableString.toLowerCase().contains(filterString)) {
                     nlist.add(p);
@@ -170,7 +169,7 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {
             if(results!=null) {
-                filteredProductos = (ArrayList<ProductoResumen>) results.values;
+                filteredProductos = (ArrayList<Reposicion>) results.values;
                 notifyDataSetChanged();
             }
         }
