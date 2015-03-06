@@ -29,12 +29,14 @@ import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.R;
 import movil.palermo.com.py.controlstockregreso.custom.ControlDetalleListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.ReposicionDetalleListAdapter;
 import movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout;
 import movil.palermo.com.py.controlstockregreso.custom.UnidadMedidaSpinnerAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 
 public class AgregarReposicionActivity extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener {
@@ -43,13 +45,15 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
     private ImageView btnMas;
     private EditText cantidad;
     private ListView listaDetalle;
-    private List<ControlDetalle> detalles = new ArrayList<ControlDetalle>();
-    private ControlDetalleListAdapter adapter;
+    //private List<ControlDetalle> detalles = new ArrayList<ControlDetalle>();
+    private List<ReposicionDetalle> detalles = new ArrayList<ReposicionDetalle>();
+    private ReposicionDetalleListAdapter adapter;
     private UnidadMedidaSpinnerAdapter adapterUnidadMedida;
     private Producto productoSeleccionado;
     private RuntimeExceptionDao<UnidadMedida, Integer> unidadMedidaDao;
     private RuntimeExceptionDao<Control, Integer> controlDao;
-    private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
+    //private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
+    private RuntimeExceptionDao<ReposicionDetalle, Integer> reposicionDetalleDao;
     private RelativeLayout bottom;
     private Spinner unidadMedida;
     private List<UnidadMedida> listaUnidadMedida = new ArrayList<UnidadMedida>();
@@ -73,9 +77,10 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
         databaseHelper = new DatabaseHelper(this);
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
         controlDao = databaseHelper.getControlDao();
-        controlDetalleDao = databaseHelper.getControlDetalleDao();
+        //controlDetalleDao = databaseHelper.getControlDetalleDao();
+        reposicionDetalleDao = databaseHelper.getReposicionDetalleDao();
 
-        adapter = new ControlDetalleListAdapter(this, detalles);
+        adapter = new ReposicionDetalleListAdapter(this, detalles);
         listaDetalle.setAdapter(adapter);
         listaDetalle.setOnItemLongClickListener(this);
 
@@ -174,7 +179,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
     private void cargaDetalles() {
         try {
             detalles.clear();
-            List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
+            List<ReposicionDetalle> lista = reposicionDetalleDao.queryBuilder()
                     .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, controlActual)
                     .and().eq(ControlDetalle.COL_PRODUCTO_NOMBRE, productoSeleccionado)
                     .query();
@@ -196,7 +201,9 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
             listaUnidadMedida.remove(0);
             listaUnidadMedida.remove(0);
         } else {
-            listaUnidadMedida.remove(3);
+            listaUnidadMedida.remove(1);
+            listaUnidadMedida.remove(1);
+            listaUnidadMedida.remove(1);
         }
         adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this, listaUnidadMedida);
         unidadMedida.setAdapter(adapterUnidadMedida);
@@ -285,7 +292,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
         }
 
         if (productoSeleccionado != null) {
-            ControlDetalle d = new ControlDetalle();
+            ReposicionDetalle d = new ReposicionDetalle();
             UnidadMedida um = null;
 
             if (unidadMedida.getSelectedItem() instanceof UnidadMedida) {
@@ -298,7 +305,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
             d.setProducto(productoSeleccionado);
             detalles.add(d);
             adapter.notifyDataSetChanged();
-            controlDetalleDao.create(d);
+            reposicionDetalleDao.create(d);
 
 
             cantidad.setText("");
@@ -322,7 +329,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                controlDetalleDao.delete(detalles.get(pos));
+                reposicionDetalleDao.delete(detalles.get(pos));
                 detalles.remove(pos);
                 adapter.notifyDataSetChanged();
             }

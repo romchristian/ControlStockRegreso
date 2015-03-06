@@ -52,6 +52,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.i(DatabaseHelper.class.getName(), "Tabla Control creada!");
             TableUtils.createTable(connectionSource, ControlDetalle.class);
             Log.i(DatabaseHelper.class.getName(), "Tabla ControlDetalle creada!");
+            TableUtils.createTable(connectionSource, ReposicionDetalle.class);
+            Log.i(DatabaseHelper.class.getName(), "Tabla ReposicionDetalle creada!");
 
 
         } catch (SQLException e) {
@@ -98,6 +100,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public RuntimeExceptionDao<ControlDetalle, Integer> getControlDetalleDao() {
 
         return getRuntimeExceptionDao(ControlDetalle.class);
+    }
+
+    public RuntimeExceptionDao<ReposicionDetalle, Integer> getReposicionDetalleDao() {
+
+        return getRuntimeExceptionDao(ReposicionDetalle.class);
     }
 
     public RuntimeExceptionDao<Sesion, Integer> getSesionDao() {

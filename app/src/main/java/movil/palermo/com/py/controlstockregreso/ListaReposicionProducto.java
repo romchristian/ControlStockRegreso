@@ -13,8 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.j256.ormlite.dao.GenericRawResults;
@@ -24,14 +22,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import movil.palermo.com.py.controlstockregreso.R;
-import movil.palermo.com.py.controlstockregreso.custom.ProductoListAdapter;
 import movil.palermo.com.py.controlstockregreso.custom.ReposicionListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
-import movil.palermo.com.py.controlstockregreso.modelo.ProductoResumen;
-import movil.palermo.com.py.controlstockregreso.modelo.Reposicion;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoReposicion;
 
 public class ListaReposicionProducto extends ActionBarActivity implements  AdapterView.OnItemClickListener {
     public static final int CONTAR_PRODUCTOS = 201;
@@ -39,10 +34,10 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
 
     private ListView lstVwProductos;
 
-    private List<Reposicion> productoList = new ArrayList<Reposicion>();
+    private List<ProductoReposicion> productoList = new ArrayList<ProductoReposicion>();
     private ReposicionListAdapter adapter;
     private DatabaseHelper databaseHelper;
-    private RuntimeExceptionDao<Producto, Integer> productoDao;
+    private RuntimeExceptionDao<Producto, Integer> reposicionDao;
     private ProgressDialog pDialog;
     private Intent datos;
 
@@ -65,7 +60,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         //instancio la BD y cargo mi lista
 
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
-        productoDao = databaseHelper.getProductoDao();
+        reposicionDao = databaseHelper.getProductoDao();
 
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Seleccione el producto");
@@ -107,20 +102,23 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
 
 
         GenericRawResults<String[]> rawResults =
-                productoDao.queryRaw(
+                reposicionDao.queryRaw(
                         "select p.id, p.nombre, p.kit, " +
                                 "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
                                 "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
                                 "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
-                                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
-                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden, p.nombre");
+                                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad, " +
+                                "     sum(case when r.unidad_medida_id = 15 and r.control_id = " + idControl + " then r.cantidad else 0 end) as gruesas, " +
+                                "     sum(case when r.unidad_medida_id = 29 and r.control_id = " + idControl + " then r.cantidad else 0 end) as unidad " +
+                                " from (producto p left join controldetalle d  on d.producto_id = p.id) left join reposiciondetalle r on r.producto_id = p.id " +
+                                " group by p.id,p.nombre order by p.orden, p.nombre");
 
         productoList.clear();
 
         try {
             List<String[]> results = rawResults.getResults();
             for (String[] row : results) {
-                productoList.add(new Reposicion(row));
+                productoList.add(new ProductoReposicion(row));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -191,9 +189,9 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(this, AgregarReposicionActivity.class);
-        Reposicion rep = (Reposicion) adapterView.getItemAtPosition(i);
-        productoDao.queryForId(rep.getId());
-        intent.putExtra("PRODUCTO", productoDao.queryForId(rep.getId()));
+        ProductoReposicion rep = (ProductoReposicion) adapterView.getItemAtPosition(i);
+        reposicionDao.queryForId(rep.getId());
+        intent.putExtra("PRODUCTO", reposicionDao.queryForId(rep.getId()));
         intent.putExtra("CONTROL", controlActual);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);

@@ -18,7 +18,7 @@ import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
 import movil.palermo.com.py.controlstockregreso.R;
-import movil.palermo.com.py.controlstockregreso.modelo.Reposicion;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoReposicion;
 
 /**
  * Created by jcolman on 12/02/2015.
@@ -26,25 +26,25 @@ import movil.palermo.com.py.controlstockregreso.modelo.Reposicion;
 public class ReposicionListAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Reposicion> fullProductos;
-    private List<Reposicion> filteredProductos;
+    private List<ProductoReposicion> fullProductosRepo;
+    private List<ProductoReposicion> filteredProductosRepo;
     private ItemFilter mFilter = new ItemFilter();
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public ReposicionListAdapter(Activity activity, List<Reposicion> productos) {
+    public ReposicionListAdapter(Activity activity, List<ProductoReposicion> productosRepo) {
         this.activity = activity;
-        this.fullProductos = productos;
-        this.filteredProductos=productos;
+        this.fullProductosRepo = productosRepo;
+        this.filteredProductosRepo = productosRepo;
     }
 
     @Override
     public int getCount() {
-        return filteredProductos.size();
+        return filteredProductosRepo.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return filteredProductos.get(location);
+        return filteredProductosRepo.get(location);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
         TextView cantRepoGruesas = (TextView) convertView.findViewById(R.id.cantRepoGruesas);
 
         // getting movie data for the row
-        Reposicion p = filteredProductos.get(position);
+        ProductoReposicion p = filteredProductosRepo.get(position);
 
         // thumbnail image
         /*thumbNail.setImageUrl(m.getImg(), imageLoader);*/
@@ -115,17 +115,17 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
             tituloGruesas.setText("Unidades");
             cantGruesas.setText("" + p.getCantUnidad());
             tituloRepoGruesas.setText("Unidades");
-            cantRepoGruesas.setText("" + p.getCantUnidad());
+            cantRepoGruesas.setText("" + p.getCantReposicionUnidad());
         }else{
             tituloGruesas.setVisibility(TextView.VISIBLE);
             cantGruesas.setVisibility(TextView.VISIBLE);
             tituloUnidades.setVisibility(TextView.VISIBLE);
             cantCajetillas.setVisibility(TextView.VISIBLE);
             tituloGruesas.setText("Gruesas");
-            cantGruesas.setText("" + (p.getCantGruesas()));
+            cantGruesas.setText("" + (p.getGruesasPorCaja() + p.getCantGruesas()));
             cantCajetillas.setText("" + (p.getCantCajetillas()));
             tituloRepoGruesas.setText("Gruesas");
-            cantRepoGruesas.setText("" + p.getCantGruesas());
+            cantRepoGruesas.setText("" + p.getCantReposicionGruesas());
         }
 
         return convertView;
@@ -144,15 +144,15 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
 
             FilterResults results = new FilterResults();
 
-            final List<Reposicion> list = fullProductos;
+            final List<ProductoReposicion> list = fullProductosRepo;
 
             int count = list.size();
-            final ArrayList<Reposicion> nlist = new ArrayList<Reposicion>(count);
+            final ArrayList<ProductoReposicion> nlist = new ArrayList<ProductoReposicion>(count);
 
             String filterableString ;
 
             for (int i = 0; i < count; i++) {
-                Reposicion p = list.get(i);
+                ProductoReposicion p = list.get(i);
                 filterableString = p.getNombre();
                 if (filterableString.toLowerCase().contains(filterString)) {
                     nlist.add(p);
@@ -169,7 +169,7 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, android.widget.Filter.FilterResults results) {
             if(results!=null) {
-                filteredProductos = (ArrayList<Reposicion>) results.values;
+                filteredProductosRepo = (ArrayList<ProductoReposicion>) results.values;
                 notifyDataSetChanged();
             }
         }

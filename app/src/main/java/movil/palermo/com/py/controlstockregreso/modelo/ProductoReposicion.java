@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by jcolman on 12/02/2015.
  */
-public class Reposicion implements Serializable {
+public class ProductoReposicion implements Serializable {
 
     private int id;
     private String nombre;
@@ -19,11 +19,11 @@ public class Reposicion implements Serializable {
     private int cantCajetillas;
     private int cantUnidad;
 
-    public Reposicion() {
+    public ProductoReposicion() {
 
     }
 
-    public Reposicion(String[] row) {
+    public ProductoReposicion(String[] row) {
         this.id = Integer.valueOf(row[0]==null?"0":row[0]);
         this.nombre = row[1];
         this.kit = Integer.valueOf(row[2]==null?"0":row[2]);
@@ -31,6 +31,8 @@ public class Reposicion implements Serializable {
         this.cantGruesas = Integer.valueOf(row[4]==null?"0":row[4]);
         this.cantCajetillas = Integer.valueOf(row[5]==null?"0":row[5]);
         this.cantUnidad =  Integer.valueOf(row[6]==null?"0":row[6]);
+        this.cantReposicionGruesas = Integer.valueOf(row[7]==null?"0":row[7]);
+        this.cantReposicionUnidad = Integer.valueOf(row[8]==null?"0":row[8]);
     }
 
 
@@ -89,6 +91,8 @@ public class Reposicion implements Serializable {
     public int getGruesasPorCaja(){
         return (getCantCajas()*50);
     }
+
+
 
     public void setCantCajas(int cantCajas) {
         this.cantCajas = cantCajas;
