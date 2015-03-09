@@ -44,6 +44,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import movil.palermo.com.py.controlstockregreso.custom.GsonRequest;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
@@ -481,45 +482,26 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(c);
 
-        Request req = new JsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", body,
-                new Response.Listener<ResponseControl>() {
-                    @Override
-                    public void onResponse(ResponseControl response) {
-                        Toast.makeText(getApplicationContext(), "Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
-
-                        if (response.isExito()) {
-                            //Control c = controlDao.queryForId(response.getControlId());
-                            c.setEstadoDescarga("S");
-                            controlDao.update(c);
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        Response.Listener<ResponseControl> listenerExito = new Response.Listener<ResponseControl>() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Error al insertar " + error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }) {
-
-            @Override
-            protected Response<ResponseControl> parseNetworkResponse(NetworkResponse response) {
-                String jsonString = null;
-                try {
-                    jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            public void onResponse(ResponseControl response) {
+                Toast.makeText(getApplicationContext(), "Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
+                if (response.isExito()) {
+                    //Control c = controlDao.queryForId(response.getControlId());
+                    c.setEstadoDescarga("S");
+                    controlDao.update(c);
                 }
-
-                ResponseControl resp = new GsonBuilder().create().fromJson(jsonString, ResponseControl.class);
-                Response<ResponseControl> result = Response.success(resp, HttpHeaderParser.parseCacheHeaders(response));
-                return result;
             }
         };
+
+        GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", ResponseControl.class, body, listenerExito, this);
         AppController.getInstance().addToRequestQueue(req);
+
     }
 
 
     //region Metodos para verificar conexion
+
     protected Boolean estaConectado() {
         if (conectadoWifi()) {
             return true;
@@ -622,24 +604,24 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     @Override
     public void onBackPressed() {
-        if (sePuedeFinalizarControl(controlActual)){
+        if (sePuedeFinalizarControl(controlActual)) {
             Toast.makeText(this, "Debe de terminar de cargar el control", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             cancelar();
         }
     }
 
-    public void cancelar(){
+    public void cancelar() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Desea cancelar la recepción?");
-        dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finish();
             }
         });
 
-        dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 

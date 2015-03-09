@@ -35,6 +35,7 @@ import java.util.TimerTask;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoUM;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
@@ -53,6 +54,7 @@ public class SplashActivity extends ActionBarActivity {
     private RuntimeExceptionDao<Producto, Integer> productoDao;
     private RuntimeExceptionDao<Vehiculo, Integer> vehiculoDao;
     private RuntimeExceptionDao<UnidadMedida, Integer> unidadMedidaDao;
+    private RuntimeExceptionDao<ProductoUM, Integer> productoUMDao;
     private boolean  actualizacionCorrecta;
 
     @Override
@@ -124,6 +126,7 @@ public class SplashActivity extends ActionBarActivity {
         vendedorDao = databaseHelper.getVendedorDao();
         vehiculoDao = databaseHelper.getVehiculoDao();
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
+        productoUMDao = databaseHelper.getProductoUMDao();
     }
 
     private void probarServicio() {
@@ -178,6 +181,7 @@ public class SplashActivity extends ActionBarActivity {
         vendedorRequest();
         vehiculoRequest();
         unidadMedidaRequest();
+        productoUMRequest();
     }
 
 
@@ -359,7 +363,7 @@ public class SplashActivity extends ActionBarActivity {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"),obj.getInt("nro"))) == 1) {
+                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"),obj.getInt("nro"),obj.getInt("idMarca"))) == 1) {
                                         actualizacionCorrecta = true;
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
@@ -401,6 +405,50 @@ public class SplashActivity extends ActionBarActivity {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
                                     if (unidadMedidaDao.create(new UnidadMedida(obj.getInt("id"), obj.getString("nombre"))) == 1) {
+                                        actualizacionCorrecta = true;
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+                                    actualizacionCorrecta = false;
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            finalizarSplash();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                onErrorSplash();
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+
+
+    private void productoUMRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/productosum/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            productoUMDao.executeRaw("delete from productoum");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (productoUMDao.create(new ProductoUM(obj.getInt("productoId"), obj.getInt("unidadMedidaId"),obj.getInt("cantidad"))) == 1) {
                                         actualizacionCorrecta = true;
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }

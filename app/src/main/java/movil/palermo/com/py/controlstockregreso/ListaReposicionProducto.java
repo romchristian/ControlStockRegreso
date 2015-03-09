@@ -100,18 +100,41 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         int idControl = controlActual.getId();
         Log.d("TAG", "Dentro RECARGA LISTA " + idControl);
 
+        String consulta = "select p.id, \n" +
+                "       p.nombre, \n" +
+                "       p.kit, \n" +
+                "       resumen.cajas,\n" +
+                "       resumen.gruesas,\n" +
+                "       resumen.cajetillas,\n" +
+                "       resumen.unidad,\n" +
+                "       resumen.gruesasRepo,\n" +
+                "       resumen.unidadRepo\n" +
+                "from  producto p \n" +
+                "left outer join \n" +
+                "(select z.cid, z.pid,\n" +
+                "sum(case when z.uid = 16  then z.cant else 0 end) as cajas, \n" +
+                "sum(case when z.uid = 15  then z.cant else 0 end) as gruesas, \n" +
+                "sum(case when z.uid = 25  then z.cant else 0 end) as cajetillas, \n" +
+                "sum(case when z.uid = 29  then z.cant else 0 end) as unidad, \n" +
+                "sum(case when z.uid = 15  then z.cantrepo else 0 end) as gruesasRepo, \n" +
+                "sum(case when z.uid = 29  then z.cantrepo else 0 end) as unidadRepo\n" +
+                "from \n" +
+                "(select cd.cid as cid, cd.pid as pid, cd.uid as uid, sum(cd.cant) as cant, sum(rd.cant) as cantrepo from (select control_id as cid,  producto_id as pid,unidad_medida_id as uid, sum(cantidad) as cant  from  controldetalle\n" +
+                "where control_id = " + idControl +"\n"+
+                "group by  control_id, producto_id,unidad_medida_id) cd\n" +
+                "left join \n" +
+                "(select control_id as cid, producto_id as pid,unidad_medida_id as uid, 2 as tipo, sum(cantidad) as cant from reposiciondetalle\n" +
+                "where control_id = " + idControl +"\n"+
+                "group by  control_id, producto_id,unidad_medida_id) rd\n" +
+                "on cd.cid = rd.cid and cd.pid = rd.pid and cd.uid = rd.uid\n" +
+                "where cd.cid = " + idControl +"\n"+
+                "group by cd.cid, cd.pid, cd.uid) z\n" +
+                "group by z.cid, z.pid) resumen \n" +
+                "on p.id = resumen.pid \n" +
+                "order by p.orden, p.nombre";
 
         GenericRawResults<String[]> rawResults =
-                reposicionDao.queryRaw(
-                        "select p.id, p.nombre, p.kit, " +
-                                "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
-                                "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
-                                "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
-                                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad, " +
-                                "     sum(case when r.unidad_medida_id = 15 and r.control_id = " + idControl + " then r.cantidad else 0 end) as gruesas, " +
-                                "     sum(case when r.unidad_medida_id = 29 and r.control_id = " + idControl + " then r.cantidad else 0 end) as unidad " +
-                                " from (producto p left join controldetalle d  on d.producto_id = p.id) left join reposiciondetalle r on r.producto_id = p.id " +
-                                " group by p.id,p.nombre order by p.orden, p.nombre");
+                reposicionDao.queryRaw(consulta);
 
         productoList.clear();
 
