@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -213,11 +214,15 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(this, AgregarReposicionActivity.class);
         ProductoReposicion rep = (ProductoReposicion) adapterView.getItemAtPosition(i);
-        reposicionDao.queryForId(rep.getId());
-        intent.putExtra("PRODUCTO", reposicionDao.queryForId(rep.getId()));
-        intent.putExtra("CONTROL", controlActual);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+        if(rep.getCantCajas()==0 && rep.getCantGruesas()==0 && rep.getCantCajetillas()==0 && rep.getCantUnidad() ==0){
+            Toast.makeText(this, "Este producto no cuenta con stock de regreso", Toast.LENGTH_LONG).show();
+        }else{
+            reposicionDao.queryForId(rep.getId());
+            intent.putExtra("PRODUCTO", reposicionDao.queryForId(rep.getId()));
+            intent.putExtra("CONTROL", controlActual);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+        }
     }
 
     @Override
