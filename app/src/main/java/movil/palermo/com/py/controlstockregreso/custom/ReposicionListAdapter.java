@@ -12,13 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
 import movil.palermo.com.py.controlstockregreso.R;
+import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.ProductoReposicion;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoUM;
 
 /**
  * Created by jcolman on 12/02/2015.
@@ -109,7 +112,9 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
         thumbNail.setImageResource(img);
         nombre.setText(p.getNombre());
 
+
         if(p.getKit()>0){
+
             tituloUnidades.setVisibility(TextView.GONE);
             cantCajetillas.setVisibility(TextView.GONE);
             tituloGruesas.setText("Unidades");
@@ -123,7 +128,7 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
             cantCajetillas.setVisibility(TextView.VISIBLE);
             tituloGruesas.setText("Gruesas");
             cantGruesas.setText("" + (p.getGruesasPorCaja() + p.getCantGruesas()));
-            cantCajetillas.setText("" + (p.getCantCajetillas()));
+            cantCajetillas.setText("" + (p.getCantCajetillas() + p.getCajetillasPorCaja()+p.getCajetillasPorGruesa()));
             tituloRepoGruesas.setText("Gruesas");
             cantRepoGruesas.setText("" + p.getCantReposicionGruesas());
         }

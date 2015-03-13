@@ -28,17 +28,21 @@ import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.ProductoReposicion;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoUM;
 
 public class ListaReposicionProducto extends ActionBarActivity implements  AdapterView.OnItemClickListener {
     public static final int CONTAR_PRODUCTOS = 201;
 
 
     private ListView lstVwProductos;
-
+    private GenericRawResults<String[]> cajetillasXCajaRaw;
+    private String[] cajetillasXCajaRow;
+    private String productoID;
     private List<ProductoReposicion> productoList = new ArrayList<ProductoReposicion>();
     private ReposicionListAdapter adapter;
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Producto, Integer> reposicionDao;
+    private RuntimeExceptionDao<ProductoUM, Integer> productoUMDao;
     private ProgressDialog pDialog;
     private Intent datos;
 
@@ -62,6 +66,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
 
         databaseHelper = new DatabaseHelper(this.getApplicationContext());
         reposicionDao = databaseHelper.getProductoDao();
+        productoUMDao = databaseHelper.getProductoUMDao();
 
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Seleccione el producto");
@@ -142,7 +147,14 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         try {
             List<String[]> results = rawResults.getResults();
             for (String[] row : results) {
-                productoList.add(new ProductoReposicion(row));
+                Log.d("CONSULTA", "FILA RESULTADO DE CONSULTA " + row[0].toString());
+                productoID = row[0].toString();
+                cajetillasXCajaRaw = productoUMDao.queryRaw("select productoum.cantidad from productoum where productoum.productoId = "+ productoID +" and productoum.unidadMedidaId = 16");
+                //Log.d("RAW", "FILA RESULTADO DE CONSULTA " + cajetillasXCajaRaw.toString());
+                cajetillasXCajaRow = cajetillasXCajaRaw.getFirstResult();
+                //Log.d("MULTIPLO", "FILA RESULTADO DE CONSULTA " + cajetillasXCajaRow);
+
+                productoList.add(new ProductoReposicion(row,cajetillasXCajaRow));
             }
         } catch (SQLException e) {
             e.printStackTrace();
