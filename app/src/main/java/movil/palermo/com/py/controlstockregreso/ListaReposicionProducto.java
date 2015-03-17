@@ -1,9 +1,12 @@
 package movil.palermo.com.py.controlstockregreso;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -81,13 +84,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     }
 
 
-    @Override
-    public void onBackPressed() {
-        datos = new Intent();
-        datos.putExtra("RESULTADO", new Producto());
-        setResult(RESULT_OK,datos);
-        super.onBackPressed();
-    }
+
 
     @Override
     protected void onRestart() {
@@ -251,6 +248,32 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
                 Toast.makeText(this, "No se seleccionó un vendedor", Toast.LENGTH_SHORT).show();
             }
         }*/
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Finalizar Reposicion?");
+        dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                datos = new Intent();
+                datos.putExtra("RESULTADO", controlActual);
+                setResult(RESULT_OK,datos);
+                finish();
+            }
+        });
+
+        dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog.show();
+
     }
 
 }

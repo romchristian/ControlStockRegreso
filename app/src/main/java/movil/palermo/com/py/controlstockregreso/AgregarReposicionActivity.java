@@ -292,17 +292,13 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
         }
 
         if (productoSeleccionado != null) {
-            ReposicionDetalle d = new ReposicionDetalle();
             UnidadMedida um = null;
-
             if (unidadMedida.getSelectedItem() instanceof UnidadMedida) {
                 um = (UnidadMedida) unidadMedida.getSelectedItem();
             }
 
-            d.setControl(controlActual);
-            d.setUnidadMedida(um);
-            d.setCantidad(Integer.valueOf(cantidad.getText().toString()));
-            d.setProducto(productoSeleccionado);
+            ReposicionDetalle d = new ReposicionDetalle(controlActual,1,productoSeleccionado,um,Integer.valueOf(cantidad.getText().toString()));
+
             detalles.add(d);
             adapter.notifyDataSetChanged();
             reposicionDetalleDao.create(d);

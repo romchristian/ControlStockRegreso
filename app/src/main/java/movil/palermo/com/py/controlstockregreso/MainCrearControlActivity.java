@@ -51,6 +51,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
@@ -87,6 +88,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     private RuntimeExceptionDao<Sesion, Integer> sesionDao;
     private RuntimeExceptionDao<Control, Integer> controlDao;
     private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
+    private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
 
 
     private ImageView okImg;
@@ -340,6 +342,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         vehiculoDao = databaseHelper.getVehiculoDao();
         vendedorDao = databaseHelper.getVendedorDao();
         conductorDao = databaseHelper.getConductorDao();
+        reposcionDetalleDao = databaseHelper.getReposicionDetalleDao();
     }
 
     public void inicializaSesion() {
@@ -412,8 +415,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 vehiculoDao.update(c.getVehiculo());
                 vendedorDao.update(c.getVendedor());
                 conductorDao.update(c.getConductor());
-
                 enviarDatos();
+
                 finish();
                 break;
             default:
@@ -434,6 +437,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 for (Control c : lista) {
                     cargaDetalles(c);
                     insertaRequest(c);
+
                 }
             }
         } catch (JSONException e) {
@@ -498,6 +502,9 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         AppController.getInstance().addToRequestQueue(req);
 
     }
+
+
+
 
 
     //region Metodos para verificar conexion

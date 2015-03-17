@@ -25,8 +25,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import org.json.JSONException;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +42,18 @@ import info.vividcode.android.zxing.CaptureActivity;
 import info.vividcode.android.zxing.CaptureActivityIntents;
 import info.vividcode.android.zxing.CaptureResult;
 import movil.palermo.com.py.controlstockregreso.custom.ControlListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.GsonRequest;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
+import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
+import movil.palermo.com.py.controlstockregreso.modelo.ReposicionSimple;
+import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
+import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 
 public class ListaControlFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
+
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaControl;
@@ -52,6 +66,8 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     private TextView txtVwNuevoControl;
     private ImageView imgVwflecha;
     private Control controlSeleccionado;
+    public static final int REPOSICION = 101;
+    private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
 
 
     View rootView;
@@ -90,6 +106,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
 
         databaseHelper = new DatabaseHelper(getActivity());
         controlDao = databaseHelper.getControlDao();
+        reposcionDetalleDao = databaseHelper.getReposicionDetalleDao();
         recargaLista();
 
         return rootView;
@@ -103,12 +120,11 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         controlList.clear();
         controlList.addAll(controlDao.queryForAll());
         adapter.notifyDataSetChanged();
-        if (adapter.getCount()>0) {
+        if (adapter.getCount() > 0) {
             listaControl.setVisibility(View.VISIBLE);
             txtVwNuevoControl.setVisibility(View.GONE);
             imgVwflecha.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             listaControl.setVisibility(View.GONE);
             txtVwNuevoControl.setVisibility(View.VISIBLE);
             imgVwflecha.setVisibility(View.VISIBLE);
@@ -123,11 +139,11 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         }
     }
 
-  @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((MainActivity) activity).onSectionAttached(
+                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
@@ -141,7 +157,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Editar Control", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent captureIntent = new Intent(rootView.getContext(),CaptureActivity.class);
+                Intent captureIntent = new Intent(rootView.getContext(), CaptureActivity.class);
                 //captureIntent.putExtra("CONTROL", (Control) adapterView.getItemAtPosition(position));
                 CaptureActivityIntents.setPromptMessage(captureIntent, "Escaneando código de autorización...");
                 startActivityForResult(captureIntent, 1);
@@ -157,9 +173,9 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent i = new Intent(rootView.getContext(),ListaReposicionProducto.class);
+                Intent i = new Intent(rootView.getContext(), ListaReposicionProducto.class);
                 i.putExtra("CONTROL", (Control) controlSeleccionado);
-                startActivity(i);
+                startActivityForResult(i, REPOSICION);
             }
         });
 
@@ -173,38 +189,125 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == CaptureActivity.RESULT_OK) {
-                CaptureResult res = CaptureResult.parseResultIntent(data);
-                try {
-                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Ringtone r = RingtoneManager.getRingtone(rootView.getContext(), notification);
-                    r.play();
-                    Vibrator v = (Vibrator) rootView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
-                    v.vibrate(1000);
+        if (resultCode == CaptureActivity.RESULT_OK) {
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //Toast.makeText(rootView.getContext(), res.getContents() + " (" + res.getFormatName() + ")", Toast.LENGTH_LONG).show();
-                if(res.getContents().toString().equalsIgnoreCase("ventastp2014")){
+            switch (requestCode) {
+                case REPOSICION:
+                    Object obj = data.getSerializableExtra("RESULTADO");
+                    Toast.makeText(rootView.getContext(), "Envio datos 1", Toast.LENGTH_SHORT).show();
+                    if(obj != null && obj instanceof Control){
+                        Toast.makeText(rootView.getContext(), "Envio datos 2", Toast.LENGTH_SHORT).show();
+                        //envio reposiciones
+                        Control c = (Control) obj;
+                        enviarDatos(c);
+                    }
+                    break;
+                case 1:
+                    CaptureResult res = CaptureResult.parseResultIntent(data);
+                    try {
+                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                        Ringtone r = RingtoneManager.getRingtone(rootView.getContext(), notification);
+                        r.play();
+                        Vibrator v = (Vibrator) rootView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
-                    Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
-                    i.putExtra("CONTROL", controlSeleccionado);
-                    controlSeleccionado.setEstadoDescarga("N");
-                    controlSeleccionado.setEstado(EstadoControl.MODIFICADO.toString());
-                    startActivity(i);
-                }else
-                {
-                    Toast.makeText(rootView.getContext(),"Código de verificación incorrecto", Toast.LENGTH_SHORT).show();
-                }
-            } else {
+                        v.vibrate(1000);
 
-                // Process comes here when “back” button was clicked for instance.
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //Toast.makeText(rootView.getContext(), res.getContents() + " (" + res.getFormatName() + ")", Toast.LENGTH_LONG).show();
+                    if (res.getContents().toString().equalsIgnoreCase("ventastp2014")) {
+
+                        Intent i = new Intent(rootView.getContext(), MainCrearControlActivity.class);
+                        i.putExtra("CONTROL", controlSeleccionado);
+                        controlSeleccionado.setEstadoDescarga("N");
+                        controlSeleccionado.setEstado(EstadoControl.MODIFICADO.toString());
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(rootView.getContext(), "Código de verificación incorrecto", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
             }
+
         }
+
+    }
+
+
+    private void enviarDatos(Control c) {
+        UtilJson util = new UtilJson((Activity)rootView.getContext());
+        if (util.estaConectado()) {
+            probarServicio(c);
+        }
+    }
+
+    private void probarServicio(final Control c) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, UtilJson.PREF_URL + "/test",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        if (response != null && response.compareTo("true") == 0) {
+                            try{
+                                insertaReposicion(c);
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        AppController.getInstance().addToRequestQueue(stringRequest);
+    }
+
+
+    private void insertaReposicion(final Control c) throws JSONException {
+
+        List<ReposicionDetalle> lista = null;
+        try {
+            lista = reposcionDetalleDao.queryBuilder()
+                    .where().eq(ReposicionDetalle.COL_CONTROL, c)
+                    .query();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (lista != null && !lista.isEmpty()) {
+
+            List<ReposicionSimple> lista2 = new ArrayList<>();
+            for(ReposicionDetalle r : lista){
+                ReposicionSimple rs = new ReposicionSimple(r.getUuid(),r.getControl().getSesion().getId(),r.getControl().getId(),r.getProducto().getId(),r.getUnidadMedida().getId(),r.getCantidad());
+                lista2.add(rs);
+            }
+
+            final String body = new GsonBuilder().setPrettyPrinting().create().toJson(lista2);
+
+            Response.Listener<ResponseControl> listenerExito = new Response.Listener<ResponseControl>() {
+                @Override
+                public void onResponse(ResponseControl response) {
+
+                    if (response.isExito()) {
+                        Toast.makeText(rootView.getContext().getApplicationContext(), "Exito: ", Toast.LENGTH_LONG).show();
+                        //Control c = controlDao.queryForId(response.getControlId());
+                        //c.setEstadoDescarga("S");
+                        //controlDao.update(c);
+                    }
+                }
+            };
+
+            GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/insertaReposicion", ResponseControl.class, body, listenerExito, rootView.getContext());
+            AppController.getInstance().addToRequestQueue(req);
+        }
+
     }
 }

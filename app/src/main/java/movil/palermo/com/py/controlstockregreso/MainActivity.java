@@ -25,22 +25,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import movil.palermo.com.py.controlstockregreso.custom.GsonRequest;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
+import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
+import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
@@ -71,6 +79,7 @@ public class MainActivity extends ActionBarActivity
     private int numeroSeccion = 0;
     final static String PREFERENCIAS = "PREF_LOGIN";
     private boolean logueado;
+    private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
 
 
     @Override
@@ -121,6 +130,7 @@ public class MainActivity extends ActionBarActivity
         vendedorDao = databaseHelper.getVendedorDao();
         vehiculoDao = databaseHelper.getVehiculoDao();
         unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
+        reposcionDetalleDao = databaseHelper.getReposicionDetalleDao();
     }
 
 
@@ -246,5 +256,6 @@ public class MainActivity extends ActionBarActivity
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
+
 
 }

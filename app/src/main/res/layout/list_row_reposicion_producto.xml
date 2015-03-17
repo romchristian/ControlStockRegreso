@@ -60,6 +60,7 @@
         android:layout_below="@id/stock"
         android:layout_toRightOf="@+id/thumbnail"
         android:text="Gruesas"
+        android:visibility="gone"
         android:textSize="14sp"/>
 
 
@@ -70,7 +71,7 @@
         android:layout_below="@id/stock"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/tituloRegGruesas"
-        android:text="Cajetillas"
+        android:text="En Cajetillas"
         android:textSize="14sp"/>
 
     <TextView
@@ -91,6 +92,7 @@
         android:layout_alignLeft="@+id/tituloRegGruesas"
         android:gravity="center_horizontal|center_vertical"
         android:text="300"
+        android:visibility="gone"
         android:textSize="24sp"
         android:textStyle="bold"/>
 
