@@ -26,9 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -48,12 +50,14 @@ import movil.palermo.com.py.controlstockregreso.custom.GsonRequest;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
+import movil.palermo.com.py.controlstockregreso.modelo.ControlSimple;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
 import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
 import movil.palermo.com.py.controlstockregreso.modelo.Sesion;
+import movil.palermo.com.py.controlstockregreso.modelo.SesionSimple;
 import movil.palermo.com.py.controlstockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.controlstockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
@@ -433,12 +437,18 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     private void guardaDatos() {
         try {
             List<Control> lista = controlDao.queryBuilder().where().eq(Control.COL_ESTADO_DESCARGA, "N").query();
+
             if (lista != null) {
+
+                 Toast.makeText(this,"LISTA SIZE: " + lista.size(),Toast.LENGTH_LONG).show();
+                int contador = 1;
                 for (Control c : lista) {
+                    Toast.makeText(this,"Contador: " + contador,Toast.LENGTH_LONG).show();
+                    contador++;
                     cargaDetalles(c);
                     insertaRequest(c);
-
                 }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -484,21 +494,29 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     private void insertaRequest(final Control c) throws JSONException {
 
-        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(c);
+        SesionSimple s = new SesionSimple(c.getSesion());
+        ControlSimple cs = new ControlSimple(c);
+        s.setControlSimple(cs);
+        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(s);
 
         Response.Listener<ResponseControl> listenerExito = new Response.Listener<ResponseControl>() {
             @Override
             public void onResponse(ResponseControl response) {
-                Toast.makeText(getApplicationContext(), "Exito: " + response.isExito() + ", ControlId: " + response.getControlId(), Toast.LENGTH_LONG).show();
                 if (response.isExito()) {
-                    //Control c = controlDao.queryForId(response.getControlId());
-                    c.setEstadoDescarga("S");
-                    controlDao.update(c);
+                    Control ct = controlDao.queryForId(response.getControlId());
+                    ct.setEstadoDescarga("S");
+                    controlDao.update(ct);
+                    Toast.makeText(getApplicationContext(),"Se envió con exito, controlId: " + ct.getId(), Toast.LENGTH_LONG).show();
                 }
             }
         };
 
         GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", ResponseControl.class, body, listenerExito, this);
+
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
+
         AppController.getInstance().addToRequestQueue(req);
 
     }

@@ -306,6 +306,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
             };
 
             GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/insertaReposicion", ResponseControl.class, body, listenerExito, rootView.getContext());
+
             AppController.getInstance().addToRequestQueue(req);
         }
 
