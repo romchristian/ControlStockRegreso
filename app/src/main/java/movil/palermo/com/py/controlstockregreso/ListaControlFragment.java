@@ -30,10 +30,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import org.json.JSONException;
 
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.EstadoControl;
 import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.ReposicionSimple;
 import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
+import movil.palermo.com.py.controlstockregreso.modelo.ResponseReposicion;
 import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 
@@ -276,6 +279,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         try {
             lista = reposcionDetalleDao.queryBuilder()
                     .where().eq(ReposicionDetalle.COL_CONTROL, c)
+                    //.and().eq(ReposicionDetalle.COL_ESTADO_DESCARGA, "N")
                     .query();
 
         } catch (SQLException e) {
@@ -292,20 +296,18 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
 
             final String body = new GsonBuilder().setPrettyPrinting().create().toJson(lista2);
 
-            Response.Listener<ResponseControl> listenerExito = new Response.Listener<ResponseControl>() {
+            Response.Listener<ResponseReposicion> listenerExito = new Response.Listener<ResponseReposicion>() {
                 @Override
-                public void onResponse(ResponseControl response) {
+                public void onResponse(ResponseReposicion response) {
 
                     if (response.isExito()) {
                         Toast.makeText(rootView.getContext().getApplicationContext(), "Exito: ", Toast.LENGTH_LONG).show();
-                        //Control c = controlDao.queryForId(response.getControlId());
-                        //c.setEstadoDescarga("S");
-                        //controlDao.update(c);
+
                     }
                 }
             };
 
-            GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/insertaReposicion", ResponseControl.class, body, listenerExito, rootView.getContext());
+            GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, UtilJson.PREF_URL + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, rootView.getContext());
 
             AppController.getInstance().addToRequestQueue(req);
         }

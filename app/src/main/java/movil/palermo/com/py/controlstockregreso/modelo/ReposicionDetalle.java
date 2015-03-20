@@ -10,6 +10,7 @@ import java.util.UUID;
  */
 public class ReposicionDetalle implements Serializable {
    public static final String COL_CONTROL = "control_id";
+    public static final String COL_ESTADO_DESCARGA = "estadoDescarga";
 
     @DatabaseField(generatedId = true)
     private Integer id;
@@ -23,9 +24,6 @@ public class ReposicionDetalle implements Serializable {
     private UnidadMedida unidadMedida;
     @DatabaseField
     private Integer cantidad;
-    @DatabaseField
-    private String uuid;
-
 
     public ReposicionDetalle() {
 
@@ -37,8 +35,6 @@ public class ReposicionDetalle implements Serializable {
         this.producto = producto;
         this.unidadMedida = unidadMedida;
         this.cantidad = cantidad;
-        String key = control.getSesion().getId()+""+ control.getId()+""+id+""+control.getSesion().getResponsable()+""+control.getSesion().getFechaControl()+""+producto.getId()+""+unidadMedida.getId()+"";
-        this.uuid = UUID.nameUUIDFromBytes(key.getBytes()).toString();
     }
 
     public Integer getId() {
@@ -89,11 +85,4 @@ public class ReposicionDetalle implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 }
