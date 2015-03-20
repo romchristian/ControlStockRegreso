@@ -12,16 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
 import movil.palermo.com.py.controlstockregreso.R;
-import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.ProductoReposicion;
-import movil.palermo.com.py.controlstockregreso.modelo.ProductoUM;
 
 /**
  * Created by jcolman on 12/02/2015.
@@ -73,7 +70,7 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
         TextView tituloGruesas=(TextView) convertView.findViewById(R.id.tituloRegGruesas);
         TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantRegGruesas);
-        TextView tituloUnidades=(TextView) convertView.findViewById(R.id.tituloRegUnidades);
+        TextView tituloCajetillas=(TextView) convertView.findViewById(R.id.tituloRegCajetillas);
         TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantRegCajetillas);
         TextView tituloRepoGruesas=(TextView) convertView.findViewById(R.id.tituloRepoGruesas);
         TextView cantRepoGruesas = (TextView) convertView.findViewById(R.id.cantRepoGruesas);
@@ -115,18 +112,18 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
 
         if(p.getKit()>0){
 
-            tituloUnidades.setVisibility(TextView.GONE);
-            cantCajetillas.setVisibility(TextView.GONE);
-            tituloGruesas.setText("Unidades");
-            cantGruesas.setText("" + p.getCantUnidad());
+            tituloGruesas.setVisibility(TextView.GONE);
+            cantGruesas.setVisibility(TextView.GONE);
+            tituloCajetillas.setText("En Unidades");
+            cantCajetillas.setText("" + p.getCantUnidad());
             tituloRepoGruesas.setText("Unidades");
             cantRepoGruesas.setText("" + p.getCantReposicionUnidad());
         }else{
-            tituloGruesas.setVisibility(TextView.VISIBLE);
-            cantGruesas.setVisibility(TextView.VISIBLE);
-            tituloUnidades.setVisibility(TextView.VISIBLE);
-            cantCajetillas.setVisibility(TextView.VISIBLE);
-            tituloGruesas.setText("Gruesas");
+            tituloGruesas.setVisibility(TextView.GONE);
+            cantGruesas.setVisibility(TextView.GONE);
+            //tituloCajetillas.setVisibility(TextView.VISIBLE);
+            //cantCajetillas.setVisibility(TextView.VISIBLE);
+            tituloCajetillas.setText("En Cajetillas");
             cantGruesas.setText("" + (p.getGruesasPorCaja() + p.getCantGruesas()));
             cantCajetillas.setText("" + (p.getCantCajetillas() + p.getCajetillasPorCaja()+p.getCajetillasPorGruesa()));
             tituloRepoGruesas.setText("Gruesas");

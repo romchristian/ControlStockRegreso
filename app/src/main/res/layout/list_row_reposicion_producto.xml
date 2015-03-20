@@ -65,7 +65,7 @@
 
 
     <TextView
-        android:id="@+id/tituloRegUnidades"
+        android:id="@+id/tituloRegCajetillas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/stock"
@@ -101,10 +101,10 @@
         android:id="@+id/cantRegCajetillas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tituloRegUnidades"
+        android:layout_below="@id/tituloRegCajetillas"
         android:layout_marginTop="1dip"
-        android:layout_alignRight="@+id/tituloRegUnidades"
-        android:layout_alignLeft="@+id/tituloRegUnidades"
+        android:layout_alignRight="@+id/tituloRegCajetillas"
+        android:layout_alignLeft="@+id/tituloRegCajetillas"
         android:gravity="center_horizontal|center_vertical"
         android:text="300"
         android:textSize="24sp"
