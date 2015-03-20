@@ -286,7 +286,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
 
             List<ReposicionSimple> lista2 = new ArrayList<>();
             for(ReposicionDetalle r : lista){
-                ReposicionSimple rs = new ReposicionSimple(r.getUuid(),r.getControl().getSesion().getId(),r.getControl().getId(),r.getProducto().getId(),r.getUnidadMedida().getId(),r.getCantidad());
+                ReposicionSimple rs = new ReposicionSimple(r);
                 lista2.add(rs);
             }
 

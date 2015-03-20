@@ -1,23 +1,34 @@
 package movil.palermo.com.py.controlstockregreso.modelo;
 
+import java.util.UUID;
+
 /**
  * Created by cromero on 17/03/2015.
  */
 public class ReposicionSimple {
     private String uuid;
-    private Integer sesionId;
-    private Integer controlId;
+    private String controluuid;
     private Integer productoId;
     private Integer unidadmedidaId;
     private Integer cantidad;
+    private Integer id;
+    private Integer controlid;
 
-    public ReposicionSimple(String uuid, Integer sesionId, Integer controlId, Integer productoId, Integer unidadmedidaId, Integer cantidad) {
-        this.uuid = uuid;
-        this.sesionId = sesionId;
-        this.controlId = controlId;
-        this.productoId = productoId;
-        this.unidadmedidaId = unidadmedidaId;
-        this.cantidad = cantidad;
+    public ReposicionSimple(ReposicionDetalle rd) {
+        Control c = rd.getControl();
+        Sesion s = c.getSesion();
+        String skey = s.getId() + "" + s.getFechaControl() + "" + s.getResponsable();
+        String ckey = skey+""+c.getId()+""+c.getVendedor().getId()+""+c.getConductor().getId()+""+c.getVehiculo().getId()+""+c.getFechaControl();
+        this.productoId = rd.getProducto().getId();
+        this.unidadmedidaId = rd.getUnidadMedida().getId();
+        this.cantidad = rd.getCantidad();
+
+        String key = ckey+""+rd.getId()+""+productoId+""+unidadmedidaId;
+
+        this.controluuid = UUID.nameUUIDFromBytes(ckey.getBytes()).toString();
+        this.uuid = UUID.nameUUIDFromBytes(key.getBytes()).toString();
+        this.id = rd.getId();
+        this.controlid = rd.getControl().getId();
     }
 
     public String getUuid() {
@@ -26,22 +37,6 @@ public class ReposicionSimple {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public Integer getSesionId() {
-        return sesionId;
-    }
-
-    public void setSesionId(Integer sesionId) {
-        this.sesionId = sesionId;
-    }
-
-    public Integer getControlId() {
-        return controlId;
-    }
-
-    public void setControlId(Integer controlId) {
-        this.controlId = controlId;
     }
 
     public Integer getProductoId() {
@@ -66,5 +61,29 @@ public class ReposicionSimple {
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getControluuid() {
+        return controluuid;
+    }
+
+    public void setControluuid(String controluuid) {
+        this.controluuid = controluuid;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getControlid() {
+        return controlid;
+    }
+
+    public void setControlid(Integer controlid) {
+        this.controlid = controlid;
     }
 }
