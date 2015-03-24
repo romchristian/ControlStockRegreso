@@ -26,15 +26,15 @@ public class ProductoReposicion implements Serializable {
 
 
 
-    public ProductoReposicion(String[] row, String[] cajetillasXCajaRow) {
+    public ProductoReposicion(String[] row) {
         this.id = Integer.valueOf(row[0]==null?"0":row[0]);
         this.nombre = row[1];
         this.kit = Integer.valueOf(row[2]==null?"0":row[2]);
-        this.cantCajas = Integer.valueOf(row[3]==null?"0":row[3]);
-        this.cantGruesas = Integer.valueOf(row[4]==null?"0":row[4]);
-        this.cantCajetillas = Integer.valueOf(row[5]==null?"0":row[5]);
-        this.cantUnidad =  Integer.valueOf(row[6]==null?"0":row[6]);
-        this.cantReposicionGruesas = Integer.valueOf(row[7]==null?"0":row[7]);
+        this.cantReposicionCajas = Integer.valueOf(row[3]==null?"0":row[3]);
+        this.cantReposicionGruesas = Integer.valueOf(row[4]==null?"0":row[4]);
+        this.cantReposicionCajetillas = Integer.valueOf(row[5]==null?"0":row[5]);
+        this.cantReposicionUnidad =  Integer.valueOf(row[6]==null?"0":row[6]);
+        /*this.cantReposicionGruesas = Integer.valueOf(row[7]==null?"0":row[7]);
         this.cantReposicionUnidad = Integer.valueOf(row[8]==null?"0":row[8]);
         this.cajetillasPorCaja = Integer.valueOf(cajetillasXCajaRow==null?"1":cajetillasXCajaRow[0]) * this.cantCajas;
         //Log.d("CajetillasXCaja", "FILA RESULTADO DE CONSULTA " + cajetillasPorCaja);
@@ -42,7 +42,7 @@ public class ProductoReposicion implements Serializable {
         //Log.d("GruesasXCaja", "FILA RESULTADO DE CONSULTA " + gruesasPorCaja);
         //this.cajetillasPorGruesa= (this.cantCajas * this.cajetillasPorCaja)/(this.cantGruesas *this.gruesasPorCaja);
         this.cajetillasPorGruesa= this.cantGruesas * (Integer.valueOf(cajetillasXCajaRow==null?"1":cajetillasXCajaRow[0])/50);
-        //Log.d("CajetillasXGruesa", "FILA RESULTADO DE CONSULTA " + cajetillasPorGruesa);
+        //Log.d("CajetillasXGruesa", "FILA RESULTADO DE CONSULTA " + cajetillasPorGruesa);*/
     }
 
 

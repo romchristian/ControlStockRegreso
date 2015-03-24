@@ -103,7 +103,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         int idControl = controlActual.getId();
         Log.d("TAG", "Dentro RECARGA LISTA " + idControl);
 
-        String consulta = "select p.id, \n" +
+        /*String consulta = "select p.id, \n" +
                 "       p.nombre, \n" +
                 "       p.kit, \n" +
                 "       resumen.cajas,\n" +
@@ -134,7 +134,14 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
                 "group by cd.cid, cd.pid, cd.uid) z\n" +
                 "group by z.cid, z.pid) resumen \n" +
                 "on p.id = resumen.pid \n" +
-                "order by p.orden, p.nombre";
+                "order by p.orden, p.nombre";*/
+        String consulta =    "select p.id, p.nombre, p.kit, " +
+                "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
+                "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
+                "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
+                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
+                " from producto p left join reposiciondetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden, p.nombre";
+
 
         GenericRawResults<String[]> rawResults =
                 reposicionDao.queryRaw(consulta);
@@ -144,14 +151,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         try {
             List<String[]> results = rawResults.getResults();
             for (String[] row : results) {
-                Log.d("CONSULTA", "FILA RESULTADO DE CONSULTA " + row[0].toString());
-                productoID = row[0].toString();
-                cajetillasXCajaRaw = productoUMDao.queryRaw("select productoum.cantidad from productoum where productoum.productoId = "+ productoID +" and productoum.unidadMedidaId = 16");
-                //Log.d("RAW", "FILA RESULTADO DE CONSULTA " + cajetillasXCajaRaw.toString());
-                cajetillasXCajaRow = cajetillasXCajaRaw.getFirstResult();
-                //Log.d("MULTIPLO", "FILA RESULTADO DE CONSULTA " + cajetillasXCajaRow);
-
-                productoList.add(new ProductoReposicion(row,cajetillasXCajaRow));
+                productoList.add(new ProductoReposicion(row));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -223,15 +223,11 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(this, AgregarReposicionActivity.class);
         ProductoReposicion rep = (ProductoReposicion) adapterView.getItemAtPosition(i);
-        if(rep.getCantCajas()==0 && rep.getCantGruesas()==0 && rep.getCantCajetillas()==0 && rep.getCantUnidad() ==0){
-            Toast.makeText(this, "Este producto no cuenta con stock de regreso", Toast.LENGTH_LONG).show();
-        }else{
-            reposicionDao.queryForId(rep.getId());
-            intent.putExtra("PRODUCTO", reposicionDao.queryForId(rep.getId()));
-            intent.putExtra("CONTROL", controlActual);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-        }
+        reposicionDao.queryForId(rep.getId());
+        intent.putExtra("PRODUCTO", reposicionDao.queryForId(rep.getId()));
+        intent.putExtra("CONTROL", controlActual);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 
     @Override

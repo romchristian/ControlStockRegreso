@@ -201,9 +201,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
             listaUnidadMedida.remove(0);
             listaUnidadMedida.remove(0);
         } else {
-            listaUnidadMedida.remove(1);
-            listaUnidadMedida.remove(1);
-            listaUnidadMedida.remove(1);
+            listaUnidadMedida.remove(3);
         }
         adapterUnidadMedida = new UnidadMedidaSpinnerAdapter(this, listaUnidadMedida);
         unidadMedida.setAdapter(adapterUnidadMedida);

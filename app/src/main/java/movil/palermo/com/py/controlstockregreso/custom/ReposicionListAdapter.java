@@ -68,10 +68,10 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
 
         ImageView thumbNail = (ImageView) convertView.findViewById(R.id.thumbnail);
         TextView nombre = (TextView) convertView.findViewById(R.id.nombre);
-        TextView tituloGruesas=(TextView) convertView.findViewById(R.id.tituloRegGruesas);
-        TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantRegGruesas);
-        TextView tituloCajetillas=(TextView) convertView.findViewById(R.id.tituloRegCajetillas);
-        TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantRegCajetillas);
+        TextView tituloRepoCajas=(TextView) convertView.findViewById(R.id.tituloRepoCajas);
+        TextView cantRepoCajas = (TextView) convertView.findViewById(R.id.cantRepoCajas);
+        TextView tituloRepoCajetillas=(TextView) convertView.findViewById(R.id.tituloRepoCajetillas);
+        TextView cantRepoCajetillas = (TextView) convertView.findViewById(R.id.cantRepoCajetillas);
         TextView tituloRepoGruesas=(TextView) convertView.findViewById(R.id.tituloRepoGruesas);
         TextView cantRepoGruesas = (TextView) convertView.findViewById(R.id.cantRepoGruesas);
 
@@ -111,23 +111,22 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
 
 
         if(p.getKit()>0){
+            tituloRepoCajas.setVisibility(TextView.GONE);
+            cantRepoCajas.setVisibility(TextView.GONE);
+            tituloRepoGruesas.setVisibility(TextView.GONE);
+            cantRepoGruesas.setVisibility(TextView.GONE);
+            tituloRepoCajetillas.setText("Unidades");
+            cantRepoCajetillas.setText("" + p.getCantReposicionUnidad());
 
-            tituloGruesas.setVisibility(TextView.GONE);
-            cantGruesas.setVisibility(TextView.GONE);
-            tituloCajetillas.setText("En Unidades");
-            cantCajetillas.setText("" + p.getCantUnidad());
-            tituloRepoGruesas.setText("Unidades");
-            cantRepoGruesas.setText("" + p.getCantReposicionUnidad());
         }else{
-            tituloGruesas.setVisibility(TextView.GONE);
-            cantGruesas.setVisibility(TextView.GONE);
-            //tituloCajetillas.setVisibility(TextView.VISIBLE);
-            //cantCajetillas.setVisibility(TextView.VISIBLE);
-            tituloCajetillas.setText("En Cajetillas");
-            cantGruesas.setText("" + (p.getGruesasPorCaja() + p.getCantGruesas()));
-            cantCajetillas.setText("" + (p.getCantCajetillas() + p.getCajetillasPorCaja()+p.getCajetillasPorGruesa()));
-            tituloRepoGruesas.setText("Gruesas");
+            tituloRepoCajas.setVisibility(TextView.VISIBLE);
+            cantRepoCajas.setVisibility(TextView.VISIBLE);
+            tituloRepoGruesas.setVisibility(TextView.VISIBLE);
+            cantRepoGruesas.setVisibility(TextView.VISIBLE);
+            tituloRepoCajetillas.setText("Cajetillas");
             cantRepoGruesas.setText("" + p.getCantReposicionGruesas());
+            cantRepoCajetillas.setText("" + p.getCantReposicionCajetillas());
+            cantRepoCajas.setText("" + p.getCantReposicionCajas());
         }
 
         return convertView;
