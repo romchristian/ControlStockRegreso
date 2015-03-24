@@ -208,6 +208,10 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_extraer_bd:
                 databaseHelper.extraerBD("hola");
                 break;
+            case R.id.action_enviar:
+                UtilJson util = new UtilJson(this);
+                util.enviarDatos();
+                break;
             case R.id.action_nuevo:
                 Intent i = new Intent(this, MainCrearControlActivity.class);
                 startActivity(i);

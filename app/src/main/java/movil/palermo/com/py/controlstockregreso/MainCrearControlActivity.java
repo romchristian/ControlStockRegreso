@@ -440,11 +440,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
             if (lista != null) {
 
-                 Toast.makeText(this,"LISTA SIZE: " + lista.size(),Toast.LENGTH_LONG).show();
-                int contador = 1;
                 for (Control c : lista) {
-                    Toast.makeText(this,"Contador: " + contador,Toast.LENGTH_LONG).show();
-                    contador++;
                     cargaDetalles(c);
                     insertaRequest(c);
                 }
@@ -506,7 +502,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     Control ct = controlDao.queryForId(response.getControlId());
                     ct.setEstadoDescarga("S");
                     controlDao.update(ct);
-                    Toast.makeText(getApplicationContext(),"Se envió con exito, controlId: " + ct.getId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Se envió con exito", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -520,9 +516,6 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         AppController.getInstance().addToRequestQueue(req);
 
     }
-
-
-
 
 
     //region Metodos para verificar conexion
@@ -615,8 +608,6 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     }
                     break;
                 case CARGAR_PRODUCTOS:
-                    Toast.makeText(this, "Control Actual Vendedor: " + getControlActual().getVendedor(), Toast.LENGTH_SHORT).show();
-
                     bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
                     break;
             }
@@ -642,6 +633,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         dialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //controlDao.delete(controlActual);
                 finish();
             }
         });

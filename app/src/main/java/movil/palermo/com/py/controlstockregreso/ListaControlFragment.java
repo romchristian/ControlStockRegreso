@@ -279,7 +279,6 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         try {
             lista = reposcionDetalleDao.queryBuilder()
                     .where().eq(ReposicionDetalle.COL_CONTROL, c)
-                    //.and().eq(ReposicionDetalle.COL_ESTADO_DESCARGA, "N")
                     .query();
 
         } catch (SQLException e) {
@@ -301,8 +300,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
                 public void onResponse(ResponseReposicion response) {
 
                     if (response.isExito()) {
-                        Toast.makeText(rootView.getContext().getApplicationContext(), "Exito: ", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(rootView.getContext().getApplicationContext(), "Exito!", Toast.LENGTH_LONG).show();
                     }
                 }
             };
