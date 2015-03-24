@@ -102,6 +102,10 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
             img = R.drawable.kentucky_20;
         }else if (p.getId() == 204) {
             img = R.drawable.kentucky_soft;
+        }else if (p.getId() == 411) {
+            img = R.drawable.sanmarino20;
+        }else if (p.getId() == 212) {
+            img = R.drawable.sanmarino10;
         }else{
             img = R.drawable.kit;
         }
