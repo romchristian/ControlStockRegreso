@@ -454,7 +454,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     }
 
     private void probarServicio() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, UtilJson.PREF_URL + "/test",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, (new UtilJson(this).prefUrl) + "/test",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -507,7 +507,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             }
         };
 
-        GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, UtilJson.PREF_URL + "/inserta", ResponseControl.class, body, listenerExito, this);
+        GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, (new UtilJson(this).prefUrl) + "/inserta", ResponseControl.class, body, listenerExito, this);
 
         int socketTimeout = 50000;//50 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

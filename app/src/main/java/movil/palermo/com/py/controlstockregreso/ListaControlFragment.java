@@ -248,7 +248,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
     }
 
     private void probarServicio(final Control c) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, UtilJson.PREF_URL + "/test",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, (new UtilJson(rootView.getContext()).prefUrl) + "/test",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -305,7 +305,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
                 }
             };
 
-            GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, UtilJson.PREF_URL + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, rootView.getContext());
+            GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, (new UtilJson(rootView.getContext()).prefUrl) + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, rootView.getContext());
 
             AppController.getInstance().addToRequestQueue(req);
         }

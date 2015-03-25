@@ -126,7 +126,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         return true;
     }
     private void probarServicio(final Login login) {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,UtilJson.PREF_URL + "/test" ,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,(new UtilJson(this).prefUrl) + "/test" ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -177,7 +177,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(login);
 
-        Request req = new JsonRequest<ResponseLogin>(Request.Method.POST, UtilJson.PREF_URL + "/login", body,
+        Request req = new JsonRequest<ResponseLogin>(Request.Method.POST, (new UtilJson(this).prefUrl) + "/login", body,
                 new Response.Listener<ResponseLogin>() {
                     @Override
                     public void onResponse(ResponseLogin response) {

@@ -130,7 +130,7 @@ public class SplashActivity extends ActionBarActivity {
     }
 
     private void probarServicio() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,UtilJson.PREF_URL + "/test" ,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,(new UtilJson(this).prefUrl) + "/test" ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -229,7 +229,11 @@ public class SplashActivity extends ActionBarActivity {
         unidadMedidaDao.create(m4);
     }
     private void productosRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/productos/123456",
+        String prefurl = new UtilJson(this).prefUrl;
+
+        //Toast.makeText(this,"URL: " + prefurl,Toast.LENGTH_LONG).show();
+
+        JsonArrayRequest req = new JsonArrayRequest(prefurl + "/productos/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -270,7 +274,7 @@ public class SplashActivity extends ActionBarActivity {
 
 
     private void conductorRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/conductores/123456",
+        JsonArrayRequest req = new JsonArrayRequest((new UtilJson(this).prefUrl) + "/conductores/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -311,7 +315,7 @@ public class SplashActivity extends ActionBarActivity {
 
 
     private void vendedorRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/vendedores/123456",
+        JsonArrayRequest req = new JsonArrayRequest((new UtilJson(this).prefUrl) + "/vendedores/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -351,7 +355,7 @@ public class SplashActivity extends ActionBarActivity {
     }
 
     private void vehiculoRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/vehiculos/123456",
+        JsonArrayRequest req = new JsonArrayRequest((new UtilJson(this).prefUrl)+ "/vehiculos/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -392,7 +396,7 @@ public class SplashActivity extends ActionBarActivity {
 
 
     private void unidadMedidaRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/unidades/123456",
+        JsonArrayRequest req = new JsonArrayRequest((new UtilJson(this).prefUrl) + "/unidades/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -436,7 +440,7 @@ public class SplashActivity extends ActionBarActivity {
 
 
     private void productoUMRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(UtilJson.PREF_URL + "/productosum/123456",
+        JsonArrayRequest req = new JsonArrayRequest((new UtilJson(this).prefUrl) + "/productosum/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

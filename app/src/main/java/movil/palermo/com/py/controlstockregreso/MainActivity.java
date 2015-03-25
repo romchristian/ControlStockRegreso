@@ -146,6 +146,10 @@ public class MainActivity extends ActionBarActivity
                         .commit();
                 break;
             case 2:
+                Intent i = new Intent(this,SettingsActivity.class);
+                startActivity(i);
+                break;
+            case 3:
                 logOut();
                 break;
 

@@ -3,8 +3,10 @@ package movil.palermo.com.py.controlstockregreso.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -45,9 +47,9 @@ import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
  */
 public class UtilJson {
 
-    public static final String PREF_URL = "http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio";
+    public String prefUrl;
     public static final String TAG = UtilJson.class.getSimpleName();
-    private Activity context;
+    private Context context;
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Conductor, Integer> conductorDao;
     private RuntimeExceptionDao<Vendedor, Integer> vendedorDao;
@@ -61,9 +63,23 @@ public class UtilJson {
     private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
 
 
-    public UtilJson(Activity context) {
+
+    public UtilJson(Context context) {
         this.context = context;
         inicializarDaos();
+
+        SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        prefUrl = sharedPrefs.getString("url_servidor","http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio");
+    }
+
+
+    public String getPrefUrl() {
+        return prefUrl;
+    }
+
+    public void setPrefUrl(String prefUrl) {
+        this.prefUrl = prefUrl;
     }
 
     private void inicializarDaos() {
@@ -122,7 +138,7 @@ public class UtilJson {
 
 
     private void probarServicio() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, UtilJson.PREF_URL + "/test",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, prefUrl + "/test",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -206,7 +222,7 @@ public class UtilJson {
             }
         };
 
-        GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, PREF_URL + "/inserta", ResponseControl.class, body, listenerExito, context);
+        GsonRequest<ResponseControl> req = new GsonRequest<ResponseControl>(Request.Method.POST, prefUrl + "/inserta", ResponseControl.class, body, listenerExito, context);
 
         int socketTimeout = 50000;//50 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -249,7 +265,7 @@ public class UtilJson {
                 }
             };
 
-            GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, UtilJson.PREF_URL + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, context);
+            GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, prefUrl + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, context);
 
             AppController.getInstance().addToRequestQueue(req);
         }
