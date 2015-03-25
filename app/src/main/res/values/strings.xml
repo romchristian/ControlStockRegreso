@@ -26,7 +26,7 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_main_crear_control">Nuevo Control</string>
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_splash">Control Stock</string>
     <string name="title_activity_lista_reposicion_producto">ListaReposicionProducto</string>
     <string name="title_activity_agregar_reposicion">AgregarReposicionActivity</string>
 
