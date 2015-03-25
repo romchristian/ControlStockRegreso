@@ -114,7 +114,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
                                 "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
                                 "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
                                 "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
-                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden, p.nombre");
+                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden");
 
         productoList.clear();
 
