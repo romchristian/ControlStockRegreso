@@ -171,7 +171,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
         if (obj2 != null && obj2 instanceof Control) {
             controlActual = (Control) obj2;
             ActionBar ab = getSupportActionBar();
-            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString());
+            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString()+ "        Reposición");
             cargaDetalles();
         }
     }

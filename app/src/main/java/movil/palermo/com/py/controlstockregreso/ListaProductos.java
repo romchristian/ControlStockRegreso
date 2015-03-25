@@ -74,7 +74,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         Object obj = getIntent().getSerializableExtra("CONTROL");
         if(obj != null && obj instanceof Control){
             controlActual = (Control)obj;
-            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString());
+            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString() +"        Stock Regreso");
         }
         recargaLista();
 

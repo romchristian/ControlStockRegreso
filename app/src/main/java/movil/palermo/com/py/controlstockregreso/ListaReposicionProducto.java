@@ -77,7 +77,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         Object obj = getIntent().getSerializableExtra("CONTROL");
         if(obj != null && obj instanceof Control){
             controlActual = (Control)obj;
-            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString());
+            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString() + "       Reposición");
         }
         recargaLista();
 
