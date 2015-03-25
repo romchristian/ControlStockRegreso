@@ -123,6 +123,8 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
             for (String[] row : results) {
                 productoList.add(new ProductoResumen(row));
             }
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

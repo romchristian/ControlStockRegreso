@@ -90,8 +90,6 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
             img = R.drawable.palermo_red;
         }else if (p.getNombre().toLowerCase().contains("plm 3")) {
             img = R.drawable.plm3;
-        }else if (p.getNombre().toLowerCase().contains("duo")) {
-            img = R.drawable.palermo_duo;
         }else if (p.getId() == 218) {
             img = R.drawable.kentucky_10;
         }else if (p.getId() == 403) {
@@ -106,6 +104,10 @@ public class ReposicionListAdapter extends BaseAdapter implements Filterable {
             img = R.drawable.sanmarino20;
         }else if (p.getId() == 412) {
             img = R.drawable.sanmarino10;
+        }else if (p.getId() == 409) {
+            img = R.drawable.duo20;
+        }else if (p.getId() == 410) {
+            img = R.drawable.duo10;
         }else{
             img = R.drawable.kit;
         }
