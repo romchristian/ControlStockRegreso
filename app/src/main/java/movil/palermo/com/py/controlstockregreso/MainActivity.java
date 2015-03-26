@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -146,8 +148,37 @@ public class MainActivity extends ActionBarActivity
                         .commit();
                 break;
             case 2:
-                Intent i = new Intent(this,SettingsActivity.class);
-                startActivity(i);
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                LayoutInflater inflater=this.getLayoutInflater();
+                //this is what I did to added the layout to the alert dialog
+                View layout=inflater.inflate(R.layout.dialog_login,null);
+                final EditText passwordInput=(EditText)layout.findViewById(R.id.txtPassword);
+                alert.setView(layout);
+                alert.setTitle("Acceso a configuraciones");
+                alert.setMessage("Ingrese la contraseña:");
+                alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (passwordInput.getText().toString().equalsIgnoreCase("test")){
+                            Intent settings = new Intent(alert.getContext(),SettingsActivity.class);
+                            startActivity(settings);
+                        }else
+                        {
+                            Toast.makeText(alert.getContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                alert.show();
+
+
+
                 break;
             case 3:
                 logOut();
