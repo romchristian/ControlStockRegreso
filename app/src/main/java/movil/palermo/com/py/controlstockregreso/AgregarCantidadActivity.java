@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.custom.ControlDetalleListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.SegmentedRadioGroup;
 import movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout;
 import movil.palermo.com.py.controlstockregreso.custom.UnidadMedidaSpinnerAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
@@ -61,6 +63,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     private ImageView okImg;
     private Control controlActual;
     private DatabaseHelper databaseHelper;
+    SegmentedRadioGroup segmentUnidadMedida;
     //endregion
 
     @Override
@@ -88,6 +91,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
         cargaExtras();
         configuraPanelSlideUp();
+        cargaSegmentUnidadMedida();
         cargaSpinnerUnidadMedida();
         configuraEfectos();
         configuraTecladoNumerico();
@@ -170,7 +174,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         if (obj2 != null && obj2 instanceof Control) {
             controlActual = (Control) obj2;
             ActionBar ab = getSupportActionBar();
-            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString()+ "        Stock Regreso");
+            ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString() + "        Stock Regreso");
             cargaDetalles();
         }
     }
@@ -188,6 +192,29 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    public void cargaSegmentUnidadMedida() {
+        segmentUnidadMedida = (SegmentedRadioGroup) findViewById(R.id.segment_unidamedida);
+        RadioButton rd1 = (RadioButton) findViewById(R.id.radio_cajas);
+        RadioButton rd2 = (RadioButton) findViewById(R.id.radio_gruesas);
+        RadioButton rd3 = (RadioButton) findViewById(R.id.radio_cajetillas);
+        RadioButton rd4 = (RadioButton) findViewById(R.id.radio_unidades);
+
+        if (productoSeleccionado.getKit() > 0) {
+            rd1.setVisibility(View.GONE);
+            rd2.setVisibility(View.GONE);
+            rd3.setVisibility(View.GONE);
+            rd4.setVisibility(View.VISIBLE);
+            segmentUnidadMedida.check(R.id.radio_unidades);
+        } else {
+            segmentUnidadMedida.check(R.id.radio_cajas);
+            rd1.setVisibility(View.VISIBLE);
+            rd2.setVisibility(View.VISIBLE);
+            rd3.setVisibility(View.VISIBLE);
+            rd4.setVisibility(View.GONE);
         }
 
     }
@@ -273,9 +300,60 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imgPlus:
-                agregaDetalle();
+                //agregaDetalle();
+                agregaDetalle2();
                 break;
         }
+    }
+
+    private int agregaDetalle2() {
+
+        int cantActual = 0;
+        String texto = cantidad.getText() == null ? "0" : cantidad.getText().toString();
+
+        if (cantidad.getText() == null || cantidad.getText().toString().compareToIgnoreCase("0") == 0 || cantidad.getText().toString().compareToIgnoreCase("") == 0) {
+            Toast.makeText(this, "No hay cantidad", Toast.LENGTH_LONG).show();
+            return 0;
+        }
+
+        if (productoSeleccionado != null) {
+            ControlDetalle d = new ControlDetalle();
+            UnidadMedida um = null;
+
+            switch (segmentUnidadMedida.getCheckedRadioButtonId()) {
+                case R.id.radio_cajas:
+                    um = unidadMedidaDao.queryForId(16);
+                    break;
+                case R.id.radio_gruesas:
+                    um = unidadMedidaDao.queryForId(15);
+                    break;
+                case R.id.radio_cajetillas:
+                    um = unidadMedidaDao.queryForId(25);
+                    break;
+                case R.id.radio_unidades:
+                    um = unidadMedidaDao.queryForId(29);
+                    break;
+            }
+
+            if (unidadMedida != null) {
+
+                d.setControl(controlActual);
+                d.setUnidadMedida(um);
+                d.setCantidad(Integer.valueOf(cantidad.getText().toString()));
+                d.setProducto(productoSeleccionado);
+                detalles.add(d);
+                adapter.notifyDataSetChanged();
+                controlDetalleDao.create(d);
+
+
+                cantidad.setText("");
+
+                okImg.setVisibility(View.VISIBLE);
+                okImg.startAnimation(fadeOut);
+            }
+        }
+
+        return 1;
     }
 
     private int agregaDetalle() {

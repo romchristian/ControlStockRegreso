@@ -8,17 +8,82 @@
         android:id="@+id/bottom_viewRepo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:background="#FFF">
 
         <TextView
             android:id="@+id/tituloUnidaMedidaRepo"
             android:layout_marginTop="20dp"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="50dp"
-            android:layout_width="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Unidad de Medida"
             android:textSize="14sp" />
+
+        <movil.palermo.com.py.controlstockregreso.custom.SegmentedRadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_margin="5dip"
+            android:layout_below="@+id/tituloUnidaMedidaRepo"
+            android:orientation="horizontal"
+            android:id="@+id/segment_unidamedidaRepo"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:checkedButton="@+id/radio_cajas">
+
+            <RadioButton
+                android:id="@+id/radio_cajas_repo"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:minWidth="40dip"
+                android:minHeight="33dip"
+                android:text="Cajas"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:button="@null"
+                android:gravity="center"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/radio_unidades_repo"
+                android:layout_width="200dp"
+                android:layout_height="80dp"
+                android:minWidth="40dip"
+                android:minHeight="33dip"
+                android:text="Unidades"
+                android:button="@null"
+                android:visibility="gone"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/radio_gruesas_repo"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:minWidth="40dip"
+                android:minHeight="33dip"
+                android:text="Gruesas"
+                android:button="@null"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/radio_cajetillas_repo"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:minWidth="40dip"
+                android:minHeight="33dip"
+                android:text="Caje."
+                android:button="@null"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/radio_colors" />
+
+
+
+        </movil.palermo.com.py.controlstockregreso.custom.SegmentedRadioGroup>
 
         <Spinner
             android:id="@+id/spinnerRepo"
@@ -27,15 +92,16 @@
             android:layout_height="80dp"
             android:layout_alignLeft="@+id/tituloUnidaMedidaRepo"
             android:layout_marginRight="50dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
 
 
         <TextView
             android:id="@+id/tituloCantidadRepo"
             android:layout_marginTop="20dp"
-            android:layout_below="@+id/spinnerRepo"
-            android:layout_alignLeft="@+id/spinnerRepo"
-            android:layout_width="wrap_content"
+            android:layout_below="@+id/segment_unidamedidaRepo"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:text="Cantidad"
             android:textSize="14sp" />
@@ -45,8 +111,8 @@
             android:layout_width="match_parent"
             android:layout_below="@+id/tituloCantidadRepo"
             android:layout_height="80dp"
-            android:layout_alignLeft="@+id/spinnerRepo"
-            android:layout_alignRight="@+id/spinnerRepo"
+            android:layout_alignLeft="@+id/segment_unidamedidaRepo"
+            android:layout_alignRight="@+id/segment_unidamedidaRepo"
             android:inputType="number"
             android:gravity="center"
             android:imeOptions="actionDone"

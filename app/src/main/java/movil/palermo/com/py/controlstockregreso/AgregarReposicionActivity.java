@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import java.util.List;
 import movil.palermo.com.py.controlstockregreso.R;
 import movil.palermo.com.py.controlstockregreso.custom.ControlDetalleListAdapter;
 import movil.palermo.com.py.controlstockregreso.custom.ReposicionDetalleListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.SegmentedRadioGroup;
 import movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout;
 import movil.palermo.com.py.controlstockregreso.custom.UnidadMedidaSpinnerAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
@@ -61,6 +63,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
     private ImageView okImg;
     private Control controlActual;
     private DatabaseHelper databaseHelper;
+    SegmentedRadioGroup segmentUnidadMedida;
     //endregion
 
     @Override
@@ -89,6 +92,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
 
         cargaExtras();
         configuraPanelSlideUp();
+        cargaSegmentUnidadMedida();
         cargaSpinnerUnidadMedida();
         configuraEfectos();
         configuraTecladoNumerico();
@@ -193,6 +197,29 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
 
     }
 
+
+    public void cargaSegmentUnidadMedida() {
+        segmentUnidadMedida = (SegmentedRadioGroup) findViewById(R.id.segment_unidamedidaRepo);
+        RadioButton rd1 = (RadioButton) findViewById(R.id.radio_cajas_repo);
+        RadioButton rd2 = (RadioButton) findViewById(R.id.radio_gruesas_repo);
+        RadioButton rd3 = (RadioButton) findViewById(R.id.radio_cajetillas_repo);
+        RadioButton rd4 = (RadioButton) findViewById(R.id.radio_unidades_repo);
+
+        if (productoSeleccionado.getKit() > 0) {
+            rd1.setVisibility(View.GONE);
+            rd2.setVisibility(View.GONE);
+            rd3.setVisibility(View.GONE);
+            rd4.setVisibility(View.VISIBLE);
+            segmentUnidadMedida.check(R.id.radio_unidades_repo);
+        } else {
+            segmentUnidadMedida.check(R.id.radio_cajas_repo);
+            rd1.setVisibility(View.VISIBLE);
+            rd2.setVisibility(View.VISIBLE);
+            rd3.setVisibility(View.VISIBLE);
+            rd4.setVisibility(View.GONE);
+        }
+
+    }
     public void cargaSpinnerUnidadMedida() {
         unidadMedida = (Spinner) findViewById(R.id.spinnerRepo);
         listaUnidadMedida.addAll(unidadMedidaDao.queryForAll());
@@ -274,9 +301,59 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imgPlusRepo:
-                agregaDetalle();
+                //agregaDetalle();
+                agregaDetalle2();
                 break;
         }
+    }
+
+
+    private int agregaDetalle2() {
+
+        int cantActual = 0;
+        String texto = cantidad.getText() == null ? "0" : cantidad.getText().toString();
+
+        if (cantidad.getText() == null || cantidad.getText().toString().compareToIgnoreCase("0") == 0 || cantidad.getText().toString().compareToIgnoreCase("") == 0) {
+            Toast.makeText(this, "No hay cantidad", Toast.LENGTH_LONG).show();
+            return 0;
+        }
+
+        if (productoSeleccionado != null) {
+            UnidadMedida um = null;
+
+
+            switch (segmentUnidadMedida.getCheckedRadioButtonId()) {
+                case R.id.radio_cajas_repo:
+                    um = unidadMedidaDao.queryForId(16);
+                    break;
+                case R.id.radio_gruesas_repo:
+                    um = unidadMedidaDao.queryForId(15);
+                    break;
+                case R.id.radio_cajetillas_repo:
+                    um = unidadMedidaDao.queryForId(25);
+                    break;
+                case R.id.radio_unidades_repo:
+                    um = unidadMedidaDao.queryForId(29);
+                    break;
+            }
+
+            if (unidadMedida != null) {
+                ReposicionDetalle d = new ReposicionDetalle(controlActual, 1, productoSeleccionado, um, Integer.valueOf(cantidad.getText().toString()));
+
+                detalles.add(d);
+                adapter.notifyDataSetChanged();
+                reposicionDetalleDao.create(d);
+
+
+                cantidad.setText("");
+
+                okImg.setVisibility(View.VISIBLE);
+                okImg.startAnimation(fadeOut);
+            }
+
+        }
+
+        return 1;
     }
 
     private int agregaDetalle() {

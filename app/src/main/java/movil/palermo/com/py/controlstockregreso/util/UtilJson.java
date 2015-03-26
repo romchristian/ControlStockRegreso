@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -14,11 +15,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,6 +37,7 @@ import movil.palermo.com.py.controlstockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.ControlSimple;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
+import movil.palermo.com.py.controlstockregreso.modelo.ProductoUM;
 import movil.palermo.com.py.controlstockregreso.modelo.ReposicionDetalle;
 import movil.palermo.com.py.controlstockregreso.modelo.ReposicionSimple;
 import movil.palermo.com.py.controlstockregreso.modelo.ResponseControl;
@@ -61,12 +67,14 @@ public class UtilJson {
     private RuntimeExceptionDao<Control, Integer> controlDao;
     private RuntimeExceptionDao<ControlDetalle, Integer> controlDetalleDao;
     private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
+    private RuntimeExceptionDao<ProductoUM, Integer> productoUMDao;
 
 
 
     public UtilJson(Context context) {
         this.context = context;
         inicializarDaos();
+
 
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -91,6 +99,7 @@ public class UtilJson {
         vendedorDao = databaseHelper.getVendedorDao();
         conductorDao = databaseHelper.getConductorDao();
         reposcionDetalleDao = databaseHelper.getReposicionDetalleDao();
+        productoUMDao = databaseHelper.getProductoUMDao();
     }
 
 
@@ -136,6 +145,11 @@ public class UtilJson {
         }
     }
 
+    public void recargaYLimpiaDatos() {
+        if (estaConectado()) {
+            probarServicioParaLimpiar();
+        }
+    }
 
     private void probarServicio() {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, prefUrl + "/test",
@@ -270,5 +284,282 @@ public class UtilJson {
             AppController.getInstance().addToRequestQueue(req);
         }
 
+    }
+
+
+    private void probarServicioParaLimpiar() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, prefUrl + "/test",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        if (response != null && response.compareTo("true") == 0) {
+                            cargaDatos();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        AppController.getInstance().addToRequestQueue(stringRequest);
+    }
+
+    private void cargaDatos() {
+
+        vehiculoDao.executeRaw("DELETE FROM controldetalle");
+        vehiculoDao.executeRaw("DELETE FROM control");
+
+        productosRequest();
+        conductorRequest();
+        vendedorRequest();
+        vehiculoRequest();
+        unidadMedidaRequest();
+        productoUMRequest();
+    }
+    private void productosRequest() {
+
+
+        //Toast.makeText(this,"URL: " + prefurl,Toast.LENGTH_LONG).show();
+
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productos/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            productoDao.executeRaw("delete from producto");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (productoDao.create(new Producto(obj.getInt("id"), obj.getString("nombre"), obj.getInt("unidadMedidadEstandar"), obj.getString("img"), obj.getInt("productoKit"),obj.getInt("orden"))) == 1) {
+
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+    private void conductorRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/conductores/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            conductorDao.executeRaw("delete from conductor");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (conductorDao.create(new Conductor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("ci"))) == 1) {
+
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+    private void vendedorRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vendedores/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            vendedorDao.executeRaw("delete from vendedor");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (vendedorDao.create(new Vendedor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("depositoId"), conductorDao.queryForId(obj.getInt("conductorId")))) == 1) {
+
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+    private void vehiculoRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl+ "/vehiculos/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            vehiculoDao.executeRaw("delete from vehiculo");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"),obj.getInt("nro"),obj.getInt("idMarca"))) == 1) {
+
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+    private void unidadMedidaRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/unidades/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            unidadMedidaDao.executeRaw("delete from unidadmedida");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (unidadMedidaDao.create(new UnidadMedida(obj.getInt("id"), obj.getString("nombre"))) == 1) {
+
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+    }
+    private void productoUMRequest() {
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productosum/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+// Limpio la tabla
+                            productoUMDao.executeRaw("delete from productoum");
+// Ahora cargo la tabla
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    if (productoUMDao.create(new ProductoUM(obj.getInt("productoId"), obj.getInt("unidadMedidaId"),obj.getInt("cantidad"))) == 1) {
+
+//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+                                    }
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+// Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
     }
 }
