@@ -29,5 +29,8 @@
         android:entryValues="@array/pref_servidor_values"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
+    <Preference
+        android:title="Actualizar BD"
+        android:key="actualizarBD"/>
 
 </PreferenceScreen>
