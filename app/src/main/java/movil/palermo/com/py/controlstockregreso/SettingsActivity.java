@@ -48,6 +48,15 @@ public class SettingsActivity extends PreferenceActivity {
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+
+        final Preference myPref =  findPreference("actualizarBD");
+        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Toast.makeText(preference.getContext(), "Base de Datos Actualizada", Toast.LENGTH_SHORT).show();
+                //Log.d("ACTUALIZARBD", "Base de datos actualizada " + preference.toString() );
+                return true;
+            }
+        });
     }
 
     /**
@@ -205,14 +214,7 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            final Preference myPref = (Preference) findPreference("actualizarBD");
-            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    //Toast.makeText(preference.getContext(), "Base de Datos Actualizada", Toast.LENGTH_SHORT).show();
-                    Log.d("ACTUALIZARBD", "Base de datos actualizada " + preference.toString() );
-                    return true;
-                }
-            });
+
 
             bindPreferenceSummaryToValue(findPreference("url_servidor"));
         }
