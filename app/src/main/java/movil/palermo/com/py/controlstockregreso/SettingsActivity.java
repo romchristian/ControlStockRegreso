@@ -18,9 +18,12 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 
 import java.util.List;
+
+import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -48,12 +51,21 @@ public class SettingsActivity extends PreferenceActivity {
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+        //UtilJson util;
+
 
         final Preference myPref =  findPreference("actualizarBD");
         myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(preference.getContext(), "Base de Datos Actualizada", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(preference.getContext(), "Base de Datos Actualizada", Toast.LENGTH_SHORT).show();
                 //Log.d("ACTUALIZARBD", "Base de datos actualizada " + preference.toString() );
+                UtilJson util;
+
+                util = new UtilJson(myPref.getContext());
+                Toast.makeText(preference.getContext(), "PREFURL:  " + util.getPrefUrl().toString(), Toast.LENGTH_SHORT).show();
+                util.recargaYLimpiaDatos();
+
+                //util.setPrefUrl();
                 return true;
             }
         });

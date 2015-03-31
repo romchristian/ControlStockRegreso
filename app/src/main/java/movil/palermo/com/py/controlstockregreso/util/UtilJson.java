@@ -92,14 +92,16 @@ public class UtilJson {
 
     private void inicializarDaos() {
         databaseHelper = new DatabaseHelper(context);
-        sesionDao = databaseHelper.getSesionDao();
+        //sesionDao = databaseHelper.getSesionDao();
         controlDao = databaseHelper.getControlDao();
         controlDetalleDao = databaseHelper.getControlDetalleDao();
         vehiculoDao = databaseHelper.getVehiculoDao();
         vendedorDao = databaseHelper.getVendedorDao();
         conductorDao = databaseHelper.getConductorDao();
         reposcionDetalleDao = databaseHelper.getReposicionDetalleDao();
+        productoDao = databaseHelper.getProductoDao();
         productoUMDao = databaseHelper.getProductoUMDao();
+        unidadMedidaDao = databaseHelper.getUnidadMedidaDao();
     }
 
 
@@ -147,6 +149,7 @@ public class UtilJson {
 
     public void recargaYLimpiaDatos() {
         if (estaConectado()) {
+            Toast.makeText(this.context, "Base de Datos Actualizada", Toast.LENGTH_SHORT).show();
             probarServicioParaLimpiar();
         }
     }
