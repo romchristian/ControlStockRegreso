@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
+import movil.palermo.com.py.controlstockregreso.SplashActivity;
 import movil.palermo.com.py.controlstockregreso.custom.GsonRequest;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
@@ -552,6 +553,10 @@ public class UtilJson {
 
                         }
 
+                        if(context instanceof SplashActivity){
+                            SplashActivity s = (SplashActivity) context;
+                            s.finalizarSplash();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -559,6 +564,10 @@ public class UtilJson {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(context,
                         error.getMessage(), Toast.LENGTH_SHORT).show();
+                if(context instanceof SplashActivity){
+                    SplashActivity s = (SplashActivity) context;
+                    s.finalizarSplash();
+                }
 
             }
         });

@@ -77,7 +77,7 @@ public class SplashActivity extends ActionBarActivity {
             SharedPreferences pref_login = getSharedPreferences(PREF_LOGIN,MODE_PRIVATE);
             SharedPreferences.Editor editor = pref_login.edit();
             editor.putBoolean("LOGUEADO",false);
-            new UtilJson(this.getApplicationContext()).recargaYLimpiaDatos();
+            new UtilJson(this).recargaYLimpiaDatos();
             //inicializarDaos();
             //probarServicio();
         }else{
@@ -94,7 +94,7 @@ public class SplashActivity extends ActionBarActivity {
         }
     }
 
-    private void finalizarSplash() {
+    public void finalizarSplash() {
         SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
