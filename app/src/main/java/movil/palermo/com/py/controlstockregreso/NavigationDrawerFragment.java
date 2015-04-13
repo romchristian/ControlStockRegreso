@@ -151,8 +151,8 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        "Recepciones",
-                        "Configuraciones"
+                        "Control de Stock",
+                        "Reposiciones"
 
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);

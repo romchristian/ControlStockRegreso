@@ -6,7 +6,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -26,7 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import movil.palermo.com.py.controlstockregreso.custom.ReposicionListAdapter;
+import movil.palermo.com.py.controlstockregreso.custom.ReposicionProductoListAdapter;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
 import movil.palermo.com.py.controlstockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.controlstockregreso.modelo.Producto;
@@ -42,7 +40,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     private String[] cajetillasXCajaRow;
     private String productoID;
     private List<ProductoReposicion> productoList = new ArrayList<ProductoReposicion>();
-    private ReposicionListAdapter adapter;
+    private ReposicionProductoListAdapter adapter;
     private DatabaseHelper databaseHelper;
     private RuntimeExceptionDao<Producto, Integer> reposicionDao;
     private RuntimeExceptionDao<ProductoUM, Integer> productoUMDao;
@@ -62,7 +60,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         lstVwProductos.setOnItemClickListener(this);
 
         //Seteo el custom adapter
-        adapter = new ReposicionListAdapter(this, productoList);
+        adapter = new ReposicionProductoListAdapter(this, productoList);
         lstVwProductos.setAdapter(adapter);
 
         //instancio la BD y cargo mi lista

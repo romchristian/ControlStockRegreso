@@ -148,7 +148,7 @@ public class MainActivity extends ActionBarActivity
                         .commit();
                 break;
             case 2:
-                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                /*final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 LayoutInflater inflater=this.getLayoutInflater();
                 //this is what I did to added the layout to the alert dialog
                 View layout=inflater.inflate(R.layout.dialog_login,null);
@@ -175,7 +175,7 @@ public class MainActivity extends ActionBarActivity
 
                     }
                 });
-                alert.show();
+                alert.show();*/
 
 
 
