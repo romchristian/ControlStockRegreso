@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
@@ -91,7 +93,7 @@ public class MainActivity extends ActionBarActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = "Nueva Recepción";//getTitle();
+        mTitle = "Stock de Regreso";//getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -146,8 +148,16 @@ public class MainActivity extends ActionBarActivity
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, ListaControlFragment.newInstance(position), "LISTA_CONTROL_FRAGMENT")
                         .commit();
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#669900")));
+
                 break;
             case 2:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, ListaReposicionFragment.newInstance(position), "LISTA_REPOSICION_FRAGMENT")
+                        .commit();
+
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#AC58FA")));
+
                 /*final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 LayoutInflater inflater=this.getLayoutInflater();
                 //this is what I did to added the layout to the alert dialog
@@ -195,7 +205,7 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = "Recepciones";
+                mTitle = "Stock de Regreso";
                 break;
             case 2:
                 mTitle = "Reposiciones";

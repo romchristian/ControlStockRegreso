@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movil.palermo.com.py.controlstockregreso.AppController;
+import movil.palermo.com.py.controlstockregreso.ListaReposicionFragment;
 import movil.palermo.com.py.controlstockregreso.SplashActivity;
+import movil.palermo.com.py.controlstockregreso.custom.ControlListAdapter;
 import movil.palermo.com.py.controlstockregreso.custom.GsonRequest;
 import movil.palermo.com.py.controlstockregreso.modelo.Conductor;
 import movil.palermo.com.py.controlstockregreso.modelo.Control;
@@ -54,6 +57,10 @@ import movil.palermo.com.py.controlstockregreso.modelo.Vendedor;
  */
 public class UtilJson {
 
+    final public static String OPERACION_GUARDA_DATOS = "guarda_datos";
+    final public static String OPERACION_CARGA_DATOS = "carga_datos";
+    final public static String OPERACION_CARGA_CONTROLES = "carga_controles";
+
     public String prefUrl;
     public static final String TAG = UtilJson.class.getSimpleName();
     private Context context;
@@ -70,6 +77,10 @@ public class UtilJson {
     private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
     private RuntimeExceptionDao<ProductoUM, Integer> productoUMDao;
 
+    private List<Control> controles;
+    private ControlListAdapter controlesAdapter;
+    private String deviceId;
+
 
 
     public UtilJson(Context context) {
@@ -79,9 +90,20 @@ public class UtilJson {
 
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        prefUrl = sharedPrefs.getString("url_servidor","http://172.16.11.20:8080/ServicioStockRegreso/webresources/servicio");
+        prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio");
+        controles = new ArrayList<>();
+        deviceId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
     public String getPrefUrl() {
         return prefUrl;
@@ -91,9 +113,26 @@ public class UtilJson {
         this.prefUrl = prefUrl;
     }
 
+
+    public List<Control> getControles() {
+        return controles;
+    }
+
+    public void setControles(List<Control> controles) {
+        this.controles = controles;
+    }
+
+    public ControlListAdapter getControlesAdapter() {
+        return controlesAdapter;
+    }
+
+    public void setControlesAdapter(ControlListAdapter controlesAdapter) {
+        this.controlesAdapter = controlesAdapter;
+    }
+
     private void inicializarDaos() {
         databaseHelper = new DatabaseHelper(context);
-        //sesionDao = databaseHelper.getSesionDao();
+        sesionDao = databaseHelper.getSesionDao();
         controlDao = databaseHelper.getControlDao();
         controlDetalleDao = databaseHelper.getControlDetalleDao();
         vehiculoDao = databaseHelper.getVehiculoDao();
@@ -144,25 +183,42 @@ public class UtilJson {
 
     public void enviarDatos() {
         if (estaConectado()) {
-            probarServicio();
+            probarServicio(OPERACION_GUARDA_DATOS);
+        }
+    }
+
+    public void recargaControles() {
+        if (estaConectado()) {
+            probarServicio(OPERACION_CARGA_CONTROLES);
         }
     }
 
     public void recargaYLimpiaDatos() {
         if (estaConectado()) {
             Toast.makeText(this.context, "Base de Datos Actualizada", Toast.LENGTH_SHORT).show();
-            probarServicioParaLimpiar();
+            probarServicio(OPERACION_CARGA_DATOS);
         }
     }
 
-    private void probarServicio() {
+    private void probarServicio(final String operacion) {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, prefUrl + "/test",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         if (response != null && response.compareTo("true") == 0) {
-                            guardaDatos();
+                            switch (operacion) {
+                                case OPERACION_GUARDA_DATOS:
+                                    guardaDatos();
+                                    break;
+                                case OPERACION_CARGA_DATOS:
+                                    cargaDatos();
+                                    break;
+                                case OPERACION_CARGA_CONTROLES:
+                                    cargaControles();
+                                    break;
+                            }
+
                         }
                     }
 
@@ -285,31 +341,16 @@ public class UtilJson {
 
             GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, prefUrl + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, context);
 
+            int socketTimeout = 50000;//50 seconds - change to what you want
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            req.setRetryPolicy(policy);
+
+
             AppController.getInstance().addToRequestQueue(req);
         }
 
     }
 
-
-    private void probarServicioParaLimpiar() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, prefUrl + "/test",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        if (response != null && response.compareTo("true") == 0) {
-                            cargaDatos();
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        AppController.getInstance().addToRequestQueue(stringRequest);
-    }
 
     private void cargaDatos() {
 
@@ -323,6 +364,108 @@ public class UtilJson {
         unidadMedidaRequest();
         productoUMRequest();
     }
+
+    private void cargaControles() {
+        controlesRequest();
+    }
+
+    private void controlesRequest() {
+
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/controlesautorizados/123456",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        if (response != null && response.length() > 0) {
+
+                            if(controles != null){
+                                controles.clear();
+                            }
+
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject obj = response.getJSONObject(i);
+                                    String uuid = obj.getString("uuid");
+                                    Log.d(TAG,"Response: " + response);
+
+                                    List<Control> lista = null;
+                                    try {
+                                        lista = controlDao.queryBuilder()
+                                                .where().eq(Control.COL_UUID, uuid)
+                                                .query();
+
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Log.d(TAG,"Lista: " + lista);
+
+                                    if (lista == null || lista.size() == 0) {
+                                        Log.d(TAG,"Lista 2: " + lista);
+
+                                        Sesion sesionActual = sesionDao.queryForId(1);
+                                        Control c = new Control();
+                                        c.setEstado("L");
+                                        c.setSesion(sesionActual);
+                                        c.setFechaControl(sesionActual.getFechaControl());
+                                        c.setUuid(uuid);
+                                        Conductor con = conductorDao.queryForId(obj.getInt("conductorId"));
+                                        c.setConductor(con);
+                                        Vendedor v = vendedorDao.queryForId(obj.getInt("vendedorId"));
+                                        Vehiculo vh = vehiculoDao.queryForId(obj.getInt("vehiculoId"));
+                                        c.setVendedor(v);
+                                        c.setVehiculo(vh);
+                                        c.setVehiculoChapa(vh.getChapa());
+                                        c.setEstadoDescarga("S");
+                                        controlDao.create(c);
+
+                                    }
+
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                    Toast.makeText(context,
+                                            "Error: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            listener();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(context,
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
+
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+
+    public void listener() {
+        try {
+
+            Log.d(TAG,"LISTENER...");
+            controles.clear();
+            controles.addAll(controlDao.queryBuilder().where().eq(Control.COL_ESTADO,"L").query());
+            Log.d(TAG,"CONTROLES... " + controles);
+
+            controlesAdapter.notifyDataSetChanged();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void productosRequest() {
 
 
@@ -340,7 +483,7 @@ public class UtilJson {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (productoDao.create(new Producto(obj.getInt("id"), obj.getString("nombre"), obj.getInt("unidadMedidadEstandar"), obj.getString("img"), obj.getInt("productoKit"),obj.getInt("orden"))) == 1) {
+                                    if (productoDao.create(new Producto(obj.getInt("id"), obj.getString("nombre"), obj.getInt("unidadMedidadEstandar"), obj.getString("img"), obj.getInt("productoKit"), obj.getInt("orden"))) == 1) {
 
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
@@ -364,8 +507,12 @@ public class UtilJson {
             }
         });
 // Adding request to request queue
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);
     }
+
     private void conductorRequest() {
         JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/conductores/123456",
                 new Response.Listener<JSONArray>() {
@@ -404,8 +551,12 @@ public class UtilJson {
             }
         });
 // Adding request to request queue
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);
     }
+
     private void vendedorRequest() {
         JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vendedores/123456",
                 new Response.Listener<JSONArray>() {
@@ -443,10 +594,14 @@ public class UtilJson {
             }
         });
 // Adding request to request queue
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);
     }
+
     private void vehiculoRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl+ "/vehiculos/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vehiculos/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -458,7 +613,7 @@ public class UtilJson {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"),obj.getInt("nro"),obj.getInt("idMarca"))) == 1) {
+                                    if (vehiculoDao.create(new Vehiculo(obj.getInt("id"), obj.getString("marca"), obj.getString("chapa"), obj.getInt("nro"), obj.getInt("idMarca"))) == 1) {
 
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
@@ -482,8 +637,12 @@ public class UtilJson {
             }
         });
 // Adding request to request queue
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);
     }
+
     private void unidadMedidaRequest() {
         JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/unidades/123456",
                 new Response.Listener<JSONArray>() {
@@ -523,8 +682,12 @@ public class UtilJson {
             }
         });
 // Adding request to request queue
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);
     }
+
     private void productoUMRequest() {
         JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productosum/123456",
                 new Response.Listener<JSONArray>() {
@@ -538,7 +701,7 @@ public class UtilJson {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (productoUMDao.create(new ProductoUM(obj.getInt("productoId"), obj.getInt("unidadMedidaId"),obj.getInt("cantidad"))) == 1) {
+                                    if (productoUMDao.create(new ProductoUM(obj.getInt("productoId"), obj.getInt("unidadMedidaId"), obj.getInt("cantidad"))) == 1) {
 
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
@@ -553,7 +716,7 @@ public class UtilJson {
 
                         }
 
-                        if(context instanceof SplashActivity){
+                        if (context instanceof SplashActivity) {
                             SplashActivity s = (SplashActivity) context;
                             s.finalizarSplash();
                         }
@@ -564,7 +727,7 @@ public class UtilJson {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(context,
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-                if(context instanceof SplashActivity){
+                if (context instanceof SplashActivity) {
                     SplashActivity s = (SplashActivity) context;
                     s.finalizarSplash();
                 }
@@ -572,6 +735,9 @@ public class UtilJson {
             }
         });
 // Adding request to request queue
+        int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);
     }
 }

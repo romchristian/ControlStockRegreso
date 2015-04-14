@@ -11,7 +11,9 @@ import java.util.List;
  * Created by cromero on 24/11/2014.
  */
 public class Control implements Serializable {
+    public final static String COL_ESTADO = "estado";
     public final static String COL_ESTADO_DESCARGA = "estadoDescarga";
+    public final static String COL_UUID = "uuid";
 
 
     @DatabaseField(generatedId = true)
@@ -35,6 +37,8 @@ public class Control implements Serializable {
     @DatabaseField
     private String estadoDescarga;
     private List<ControlDetalle> detalles;
+    @DatabaseField
+    private String uuid;
 
 
     public Control() {
@@ -143,5 +147,13 @@ public class Control implements Serializable {
 
     public void setEstadoDescarga(String estadoDescarga) {
         this.estadoDescarga = estadoDescarga;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

@@ -53,7 +53,7 @@
     </string-array>
     <string-array name="pref_servidor_values">
         <item>http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio</item>
-        <item>http://172.16.11.20:8080/ServicioStockRegreso/webresources/servicio</item>
+        <item>http://spkt.palermo.com.py:31180/ServicioStockRegreso/webresources/servicio</item>
     </string-array>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>

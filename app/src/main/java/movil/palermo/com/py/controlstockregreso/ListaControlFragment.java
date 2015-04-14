@@ -121,7 +121,13 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         pDialog.setMessage("Loading...");
         pDialog.show();
         controlList.clear();
-        controlList.addAll(controlDao.queryForAll());
+        try {
+
+            controlList.addAll(controlDao.queryBuilder().where().not().eq(Control.COL_ESTADO,"L").query());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         adapter.notifyDataSetChanged();
         if (adapter.getCount() > 0) {
             listaControl.setVisibility(View.VISIBLE);
@@ -172,15 +178,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
                 startActivity(i);*/
             }
         });
-        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Reposición", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
-                Intent i = new Intent(rootView.getContext(), ListaReposicionProducto.class);
-                i.putExtra("CONTROL", (Control) controlSeleccionado);
-                startActivityForResult(i, REPOSICION);
-            }
-        });
 
         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
             @Override

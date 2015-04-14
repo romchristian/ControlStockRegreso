@@ -59,7 +59,7 @@ public class ReposicionListAdapter extends BaseAdapter {
 
         Control c = reposiciones.get(position).getControl();
 
-        movil.setText(c.getVehiculo() != null ? "Móvil Nro: " + c.getVehiculo().getNumero() : "No definido");
+        movil.setText(c.getVehiculo() != null ? "MÃ³vil Nro: " + c.getVehiculo().getNumero() : "No definido");
 
         chofer.setText("Chof: " + c.getConductor() != null?c.getConductor().getNombre():"No definido");
         movilDetalle.setText(c.getVehiculo() != null ? c.getVehiculo().getMarca()+", Chapa: "+

@@ -17,6 +17,20 @@
         <!--<item name="android:windowAnimationStyle">@style/Animation.MyDialog</item>-->
     </style>
 
+    <style name="CustomActionBarThemeLila"
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+
+        <item name="android:actionBarStyle">@style/MyActionBarLila</item>
+
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBarLila</item>
+        <!--<item name="android:windowAnimationStyle">@style/Animation.MyDialog</item>-->
+    </style>
+
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -24,6 +38,14 @@
         <item name="android:singleLine">false</item>
         <!-- Support library compatibility -->
         <item name="background">@drawable/fondo_celeste</item>
+    </style>
+
+    <style name="MyActionBarLila"
+        parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/fondo_lila</item>
+        <item name="android:singleLine">false</item>
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/fondo_lila</item>
     </style>
 
     <style name="Animation.MyDialog" parent="android:Animation.Dialog">

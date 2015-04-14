@@ -16,16 +16,14 @@ public class ReposicionSimple {
 
     public ReposicionSimple(ReposicionDetalle rd) {
         Control c = rd.getControl();
-        Sesion s = c.getSesion();
-        String skey = s.getId() + "" + s.getFechaControl() + "" + s.getResponsable();
-        String ckey = skey+""+c.getId()+""+c.getVendedor().getId()+""+c.getConductor().getId()+""+c.getVehiculo().getId()+""+c.getFechaControl();
+
         this.productoId = rd.getProducto().getId();
         this.unidadmedidaId = rd.getUnidadMedida().getId();
         this.cantidad = rd.getCantidad();
 
-        String key = ckey+""+rd.getId()+""+productoId+""+unidadmedidaId;
+        String key = c.getUuid()+""+rd.getId()+""+productoId+""+unidadmedidaId;
 
-        this.controluuid = UUID.nameUUIDFromBytes(ckey.getBytes()).toString();
+        this.controluuid = c.getUuid();
         this.uuid = UUID.nameUUIDFromBytes(key.getBytes()).toString();
         this.id = rd.getId();
         this.controlid = rd.getControl().getId();

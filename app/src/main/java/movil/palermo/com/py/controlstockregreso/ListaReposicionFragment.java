@@ -6,6 +6,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -49,13 +52,12 @@ import movil.palermo.com.py.controlstockregreso.modelo.ResponseReposicion;
 import movil.palermo.com.py.controlstockregreso.util.UtilJson;
 
 
-
-public class ListaReposicionFragment  extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
+public class ListaReposicionFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaReposicion;
     Intent datos;
-    private List<ReposicionDetalle> reposicionList = new ArrayList<ReposicionDetalle>();
-    private ReposicionListAdapter adapter;
+    private List<Control> controlList = new ArrayList<Control>();
+    private ControlListAdapter adapter;
     private DatabaseHelper databaseHelper;
     //private RuntimeExceptionDao<ReposicionDetalle, Integer> reposicionDao;
     private ProgressDialog pDialog;
@@ -64,6 +66,7 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
     private Control controlSeleccionado;
     public static final int REPOSICION = 101;
     private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
+    private UtilJson utilJson;
 
 
     View rootView;
@@ -94,10 +97,13 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
         txtVwNuevoControl = (TextView) rootView.findViewById(R.id.txtVwNuevoControl);
         imgVwflecha = (ImageView) rootView.findViewById(R.id.imgFlecha);
 
-        adapter = new ReposicionListAdapter(getActivity(), reposicionList);
+        utilJson = new UtilJson(rootView.getContext());
+
+        utilJson.setControlesAdapter(new ControlListAdapter(getActivity(), utilJson.getControles()));
+
         listaReposicion.setOnItemClickListener(this);
 
-        listaReposicion.setAdapter(adapter);
+        listaReposicion.setAdapter(utilJson.getControlesAdapter());
 
 
         databaseHelper = new DatabaseHelper(getActivity());
@@ -112,20 +118,18 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
         pDialog.show();
-        reposicionList.clear();
-        reposicionList.addAll(reposcionDetalleDao.queryForAll());
-        adapter.notifyDataSetChanged();
-        if (adapter.getCount() > 0) {
-            listaReposicion.setVisibility(View.VISIBLE);
-            txtVwNuevoControl.setVisibility(View.GONE);
-            imgVwflecha.setVisibility(View.GONE);
-        } else {
-            listaReposicion.setVisibility(View.GONE);
-            txtVwNuevoControl.setVisibility(View.VISIBLE);
-            imgVwflecha.setVisibility(View.VISIBLE);
-        }
+
+
+        utilJson.recargaControles();
+
+
+        listaReposicion.setVisibility(View.VISIBLE);
+        txtVwNuevoControl.setVisibility(View.GONE);
+        imgVwflecha.setVisibility(View.GONE);
+
         hidePDialog();
     }
+
 
     private void hidePDialog() {
         if (pDialog != null) {
@@ -146,41 +150,9 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
 
         controlSeleccionado = (Control) adapterView.getItemAtPosition(position);
 
-        AlertDialog dialog = new AlertDialog.Builder(view.getContext()).create();
-        dialog.setTitle("Advertencia!");
-        dialog.setMessage("Seleccione la acción a realizar?");
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Editar Reposición", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent captureIntent = new Intent(rootView.getContext(), CaptureActivity.class);
-                //captureIntent.putExtra("CONTROL", (Control) adapterView.getItemAtPosition(position));
-                CaptureActivityIntents.setPromptMessage(captureIntent, "Escaneando código de autorización...");
-                startActivityForResult(captureIntent, 1);
-
-
-
-               /* Intent i = new Intent(rootView.getContext(),MainCrearControlActivity.class);
-                i.putExtra("CONTROL", (Control) parent.getItemAtPosition(pos));
-                startActivity(i);*/
-            }
-        });
-        /*dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Reposición", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                Intent i = new Intent(rootView.getContext(), ListaReposicionProducto.class);
-                i.putExtra("CONTROL", (Control) controlSeleccionado);
-                startActivityForResult(i, REPOSICION);
-            }
-        });*/
-
-        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+        Intent i = new Intent(rootView.getContext(), ListaReposicionProducto.class);
+        i.putExtra("CONTROL", (Control) controlSeleccionado);
+        startActivityForResult(i, REPOSICION);
     }
 
     @Override
@@ -192,9 +164,9 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
             switch (requestCode) {
                 case REPOSICION:
                     Object obj = data.getSerializableExtra("RESULTADO");
-                    Toast.makeText(rootView.getContext(), "Envio datos 1", Toast.LENGTH_SHORT).show();
-                    if(obj != null && obj instanceof Control){
-                        Toast.makeText(rootView.getContext(), "Envio datos 2", Toast.LENGTH_SHORT).show();
+
+                    if (obj != null && obj instanceof Control) {
+
                         //envio reposiciones
                         Control c = (Control) obj;
                         enviarDatos(c);
@@ -222,7 +194,7 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
                         controlSeleccionado.setEstado(EstadoControl.MODIFICADO.toString());
                         startActivity(i);
                     } else {
-                        Toast.makeText(rootView.getContext(), "Código de verificación incorrecto", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(rootView.getContext(), "CÃ³digo de verificaciÃ³n incorrecto", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -233,7 +205,7 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
 
 
     private void enviarDatos(Control c) {
-        UtilJson util = new UtilJson((Activity)rootView.getContext());
+        UtilJson util = new UtilJson((Activity) rootView.getContext());
         if (util.estaConectado()) {
             probarServicio(c);
         }
@@ -246,9 +218,9 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         if (response != null && response.compareTo("true") == 0) {
-                            try{
+                            try {
                                 insertaReposicion(c);
-                            }catch (JSONException e){
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
@@ -280,7 +252,7 @@ public class ListaReposicionFragment  extends android.support.v4.app.Fragment im
         if (lista != null && !lista.isEmpty()) {
 
             List<ReposicionSimple> lista2 = new ArrayList<>();
-            for(ReposicionDetalle r : lista){
+            for (ReposicionDetalle r : lista) {
                 ReposicionSimple rs = new ReposicionSimple(r);
                 lista2.add(rs);
             }
