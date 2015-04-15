@@ -12,7 +12,7 @@
         android:layout_marginBottom="20dp"
         android:textColor="#ffffff"/>
 
-    <movil.palermo.com.py.controlstockregreso.custom.RoundedImageView
+    <movil.palermo.com.py.stockregreso.custom.RoundedImageView
         android:id="@+id/thumbnail"
         android:layout_width="70dp"
         android:layout_height="70dp"

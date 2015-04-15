@@ -1,4 +1,4 @@
-<movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<movil.palermo.com.py.stockregreso.custom.SlidingUpPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sliding_up_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +22,7 @@
             android:textSize="14sp" />
 
 
-        <movil.palermo.com.py.controlstockregreso.custom.SegmentedRadioGroup
+        <movil.palermo.com.py.stockregreso.custom.SegmentedRadioGroup
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_margin="5dip"
@@ -83,7 +83,7 @@
                 android:textColor="@color/radio_colors" />
 
 
-        </movil.palermo.com.py.controlstockregreso.custom.SegmentedRadioGroup>
+        </movil.palermo.com.py.stockregreso.custom.SegmentedRadioGroup>
 
         <Spinner
             android:id="@+id/spinner"
@@ -196,4 +196,4 @@
             android:background="#ddd" />
 
     </LinearLayout>
-</movil.palermo.com.py.controlstockregreso.custom.SlidingUpPaneLayout>
+</movil.palermo.com.py.stockregreso.custom.SlidingUpPaneLayout>
