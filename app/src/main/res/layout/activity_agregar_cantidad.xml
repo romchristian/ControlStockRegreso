@@ -31,7 +31,7 @@
             android:id="@+id/segment_unidamedida"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:checkedButton="@+id/radio_cajas">
+            android:checkedButton="@+id/radio_gruesas">
 
             <RadioButton
                 android:id="@+id/radio_cajas"

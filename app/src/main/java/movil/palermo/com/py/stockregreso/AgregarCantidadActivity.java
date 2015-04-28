@@ -206,7 +206,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             rd4.setVisibility(View.VISIBLE);
             segmentUnidadMedida.check(R.id.radio_unidades);
         } else {
-            segmentUnidadMedida.check(R.id.radio_cajas);
+            segmentUnidadMedida.check(R.id.radio_gruesas);
             rd1.setVisibility(View.VISIBLE);
             rd2.setVisibility(View.VISIBLE);
             rd3.setVisibility(View.VISIBLE);

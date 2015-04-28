@@ -30,6 +30,8 @@
         android:layout_toRightOf="@+id/thumbnail"
         android:layout_marginLeft="8dp"
         android:textSize="16dp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:text="SAN MARINO AT. BOX 20S"
         android:textStyle="bold" />
 

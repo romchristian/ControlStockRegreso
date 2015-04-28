@@ -31,6 +31,8 @@
         android:layout_marginLeft="8dp"
         android:textSize="16dp"
         android:text="SAN MARINO AT. BOX 20S"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textStyle="bold" />
     <TextView
         android:id="@+id/tituloRepoCajas"
@@ -39,6 +41,7 @@
         android:layout_below="@id/nombre"
         android:layout_marginLeft="10dp"
         android:layout_toLeftOf="@+id/tituloRepoGruesas"
+
         android:text="Cajas"
         android:textSize="16sp"/>
 

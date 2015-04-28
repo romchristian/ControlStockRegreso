@@ -210,7 +210,7 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
             rd4.setVisibility(View.VISIBLE);
             segmentUnidadMedida.check(R.id.radio_unidades_repo);
         } else {
-            segmentUnidadMedida.check(R.id.radio_cajas_repo);
+            segmentUnidadMedida.check(R.id.radio_gruesas_repo);
             rd1.setVisibility(View.VISIBLE);
             rd2.setVisibility(View.VISIBLE);
             rd3.setVisibility(View.VISIBLE);

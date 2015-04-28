@@ -12,8 +12,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -71,10 +75,10 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
-        logueado = pref.getBoolean("LOGUEADO",false);
+        SharedPreferences pref = getSharedPreferences(PREFERENCIAS, MODE_PRIVATE);
+        logueado = pref.getBoolean("LOGUEADO", false);
         //logueado = true;
-        if (logueado){
+        if (logueado) {
             inicializarDaos();
             pDialog = new ProgressDialog(this);
             pDialog.setMessage("Actualizando...");
@@ -88,8 +92,8 @@ public class MainActivity extends ActionBarActivity
                 okImg.startAnimation(fadeOut);*/
                 }
             });
-        }else{
-            Intent i = new Intent(this,LoginActivity.class);
+        } else {
+            Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
         }
@@ -129,36 +133,6 @@ public class MainActivity extends ActionBarActivity
 
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#AC58FA")));
 
-                /*final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                LayoutInflater inflater=this.getLayoutInflater();
-                //this is what I did to added the layout to the alert dialog
-                View layout=inflater.inflate(R.layout.dialog_login,null);
-                final EditText passwordInput=(EditText)layout.findViewById(R.id.txtPassword);
-                alert.setView(layout);
-                alert.setTitle("Acceso a configuraciones");
-                alert.setMessage("Ingrese la contraseña:");
-                alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (passwordInput.getText().toString().equalsIgnoreCase("test")){
-                            Intent settings = new Intent(alert.getContext(),SettingsActivity.class);
-                            startActivity(settings);
-                        }else
-                        {
-                            Toast.makeText(alert.getContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                alert.show();*/
-
-
 
                 break;
             case 3:
@@ -190,10 +164,9 @@ public class MainActivity extends ActionBarActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
-        actionBar.setSubtitle(sp.getString("NOMBRE",""));
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS, MODE_PRIVATE);
+        actionBar.setSubtitle(sp.getString("NOMBRE", ""));
     }
-
 
 
     @Override
@@ -220,7 +193,35 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_actualizar:
                 break;
             case R.id.action_settings:
-                return true;
+
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                LayoutInflater inflater = this.getLayoutInflater();
+                //this is what I did to added the layout to the alert dialog
+                View layout = inflater.inflate(R.layout.dialog_login, null);
+                final EditText passwordInput = (EditText) layout.findViewById(R.id.txtPassword);
+                alert.setView(layout);
+                alert.setTitle("Acceso a configuraciones");
+                alert.setMessage("Ingrese la contraseña:");
+                alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (passwordInput.getText().toString().equalsIgnoreCase("test")) {
+                            Intent settings = new Intent(alert.getContext(), SettingsActivity.class);
+                            startActivity(settings);
+                        } else {
+                            Toast.makeText(alert.getContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                alert.show();
+
             case R.id.action_extraer_bd:
                 databaseHelper.extraerBD("hola");
                 break;
@@ -242,13 +243,13 @@ public class MainActivity extends ActionBarActivity
         logOut();
     }
 
-    public void logOut(){
+    public void logOut() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Cerrar Sesión?");
-        dialog.setPositiveButton("SI",new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                SharedPreferences pref = getSharedPreferences(LoginActivity.PREFERENCIAS,MODE_PRIVATE);
+                SharedPreferences pref = getSharedPreferences(LoginActivity.PREFERENCIAS, MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putBoolean("LOGUEADO", false);
                 editor.commit();
@@ -256,7 +257,7 @@ public class MainActivity extends ActionBarActivity
             }
         });
 
-        dialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 

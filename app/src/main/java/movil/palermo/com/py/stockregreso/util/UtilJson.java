@@ -92,6 +92,8 @@ public class UtilJson {
         controles = new ArrayList<>();
         deviceId = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+
+
     }
 
 
