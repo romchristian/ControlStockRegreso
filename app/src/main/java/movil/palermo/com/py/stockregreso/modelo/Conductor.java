@@ -14,17 +14,21 @@ public class Conductor implements Serializable{
     private String nombre;
     @DatabaseField
     private Integer ci;
+    @DatabaseField(foreign = true,columnName = "vehiculo_id",canBeNull = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+    private Vehiculo vehiculo;
     @DatabaseField
     private String estado;
 
-    public Conductor() {
+    public Conductor(){
+
     }
 
-    public Conductor(Integer id, String nombre, Integer ci) {
+    public Conductor(Integer id, String nombre, Integer ci, Vehiculo vehiculo) {
         this.id = id;
         this.nombre = nombre;
         this.ci = ci;
         this.estado = "N";
+        this.vehiculo = vehiculo;
     }
 
     public Integer getId() {
@@ -58,4 +62,13 @@ public class Conductor implements Serializable{
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
+
 }

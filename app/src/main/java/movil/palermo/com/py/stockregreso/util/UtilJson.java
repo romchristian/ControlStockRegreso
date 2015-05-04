@@ -88,7 +88,8 @@ public class UtilJson {
 
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:31180/ServicioStockRegreso/webresources/servicio");
+        //prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:31180/ServicioStockRegreso/webresources/servicio");
+        prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio");
         controles = new ArrayList<>();
         deviceId = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -358,8 +359,8 @@ public class UtilJson {
         vehiculoDao.executeRaw("DELETE FROM control");
 
         productosRequest();
-        conductorRequest();
-        vendedorRequest();
+        //conductorRequest();
+        //vendedorRequest();
         vehiculoRequest();
         unidadMedidaRequest();
         productoUMRequest();
@@ -526,7 +527,8 @@ public class UtilJson {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
-                                    if (conductorDao.create(new Conductor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("ci"))) == 1) {
+                                    //return y == null ? null : y.intValue();
+                                    if (conductorDao.create(new Conductor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("ci"), vehiculoDao.queryForId(obj.isNull("vehiculoId") ? 0 : obj.getInt("vehiculoId")))) == 1) {
 
 //updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
                                     }
@@ -538,6 +540,7 @@ public class UtilJson {
                                             Toast.LENGTH_LONG).show();
                                 }
                             }
+                            vendedorRequest();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -601,6 +604,7 @@ public class UtilJson {
     }
 
     private void vehiculoRequest() {
+
         JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vehiculos/123456",
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -625,6 +629,7 @@ public class UtilJson {
                                             Toast.LENGTH_LONG).show();
                                 }
                             }
+                            conductorRequest();
                         }
                     }
                 }, new Response.ErrorListener() {

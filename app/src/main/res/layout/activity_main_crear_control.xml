@@ -15,13 +15,127 @@
         android:textColor="#444"
         android:textStyle="bold"
         android:gravity="center_horizontal" />-->
+    <FrameLayout
+        android:id="@+id/recuadroVendedor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/fondo_recuadro">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/thumbnailVendedor"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_user3"/>
+
+            <TextView
+                android:id="@+id/txtVwVendedorTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/thumbnailVendedor"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:text="Vendedor: "
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtVwVendedorValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtVwVendedorTitulo"
+                android:layout_marginTop="10dp"
+                android:hint="Seleccione un vendedor"
+                android:layout_toRightOf="@+id/thumbnailVendedor"
+                android:paddingBottom="0dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="0dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:id="@+id/search_vendedor"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_arrow_right" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/recuadroChofer"
+        android:layout_below="@+id/recuadroVendedor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+
+        android:background="@drawable/fondo_recuadro">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/thumbnailConductor"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_user5"/>
+
+            <TextView
+                android:id="@+id/txtVwChoferTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/thumbnailConductor"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:text="Conductor: "
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtVwChoferValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtVwChoferTitulo"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/thumbnailConductor"
+                android:hint="Seleccione un conductor"
+                android:paddingBottom="0dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="0dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:id="@+id/search_chofer"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_arrow_right" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
 
     <FrameLayout
         android:id="@+id/recuadroMovil"
+        android:layout_below="@+id/recuadroChofer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginRight="20dp"
         android:clickable="true"
         android:layout_marginLeft="20dp"
@@ -75,124 +189,14 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/recuadroChofer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@+id/recuadroMovil"
-        android:background="@drawable/fondo_recuadro">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/thumbnailConductor"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_action_user5"/>
-
-            <TextView
-                android:id="@+id/txtVwChoferTitulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/thumbnailConductor"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:text="Conductor: "
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtVwChoferValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtVwChoferTitulo"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/thumbnailConductor"
-                android:hint="Seleccione un conductor"
-                android:paddingBottom="0dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="0dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <ImageView
-                android:id="@+id/search_chofer"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_action_arrow_right" />
-        </RelativeLayout>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/recuadroVendedor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/recuadroChofer"
-        android:background="@drawable/fondo_recuadro">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/thumbnailVendedor"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_action_user3"/>
-
-            <TextView
-                android:id="@+id/txtVwVendedorTitulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/thumbnailVendedor"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:text="Vendedor: "
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtVwVendedorValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtVwVendedorTitulo"
-                android:layout_marginTop="10dp"
-                android:hint="Seleccione un vendedor"
-                android:layout_toRightOf="@+id/thumbnailVendedor"
-                android:paddingBottom="0dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="0dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <ImageView
-                android:id="@+id/search_vendedor"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_action_arrow_right" />
-        </RelativeLayout>
-
-    </FrameLayout>
 
 
     <Button
-        android:layout_below="@+id/recuadroVendedor"
+
         android:id="@+id/bttnCargarProductos"
+        android:layout_below="@+id/recuadroMovil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

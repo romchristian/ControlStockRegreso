@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -120,6 +121,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             controlActual = (Control) obj;
             vendedorSeleccionado = controlActual.getVendedor();
             conductorSeleccionado = controlActual.getConductor();
+            //conductorSeleccionado = vendedorSeleccionado.getConductor();
             vehiculoSeleccionado = controlActual.getVehiculo();
             txtVendedorValue.setText(vendedorSeleccionado.getNombre());
             recuadroVendedor.setBackgroundResource(R.drawable.recuadro_seleccionado);
@@ -577,8 +579,17 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     if (obj instanceof Vendedor) {
                         vendedorSeleccionado = (Vendedor) obj;
                         txtVendedorValue.setText(vendedorSeleccionado != null ? vendedorSeleccionado.getNombre() : "Seleccione un vendedor");
+                        txtChoferValue.setText(vendedorSeleccionado.getConductor() != null ? vendedorSeleccionado.getConductor().getNombre() : "Seleccione un conductor");
+                        txtMovilValue.setText(vendedorSeleccionado.getConductor().getVehiculo() != null ? vendedorSeleccionado.getConductor().getVehiculo().getMarca() + ", Chapa: " + vendedorSeleccionado.getConductor().getVehiculo().getChapa() : "Seleccione un Móvil");
+                        //Toast.makeText(this, "Conductor " + vendedorSeleccionado.getConductor(), Toast.LENGTH_LONG).show();
+                        conductorSeleccionado = vendedorSeleccionado.getConductor();
+                        vehiculoSeleccionado = vendedorSeleccionado.getConductor().getVehiculo();
                         getControlActual().setVendedor(vendedorSeleccionado);
+                        getControlActual().setConductor(conductorSeleccionado);
+                        getControlActual().setVehiculo(vehiculoSeleccionado);
                         recuadroVendedor.setBackgroundResource(R.drawable.recuadro_seleccionado);
+                        recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
+                        recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
                     }
                     break;
@@ -586,8 +597,12 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                     if (obj instanceof Conductor) {
                         conductorSeleccionado = (Conductor) obj;
                         txtChoferValue.setText(conductorSeleccionado != null ? conductorSeleccionado.getNombre() : "Seleccione un conductor");
+                        txtMovilValue.setText(conductorSeleccionado.getVehiculo() != null ? conductorSeleccionado.getVehiculo().getMarca() + ", Chapa: " + conductorSeleccionado.getVehiculo().getChapa() : "Seleccione un Móvil");
+                        vehiculoSeleccionado = conductorSeleccionado.getVehiculo();
                         getControlActual().setConductor(conductorSeleccionado);
+                        getControlActual().setVehiculo(vehiculoSeleccionado);
                         recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
+                        recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
                     }
                     break;
