@@ -575,7 +575,7 @@ public class UtilJson {
                                     JSONObject obj = response.getJSONObject(i);
                                     if (vendedorDao.create(new Vendedor(obj.getInt("id"), obj.getString("nombre"), obj.getInt("depositoId"), conductorDao.queryForId(obj.getInt("conductorId")))) == 1) {
 
-//updateProgress(Double.valueOf((i * 100) / response.length()).intValue());
+
                                     }
                                 } catch (JSONException e) {
 
