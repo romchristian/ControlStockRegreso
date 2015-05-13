@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -69,6 +72,7 @@ public class NavigationDrawerFragment extends Fragment {
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
+    private String version;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private ImageView thumbnail;
@@ -96,6 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
         selectItem(mCurrentSelectedPosition);
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -109,11 +114,15 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
 
+
         View headerView =  inflater.inflate(R.layout.drawer_header, null, false);
         View footerView =  inflater.inflate(R.layout.drawer_footer, null, false);
 
         TextView nombre = (TextView) headerView.findViewById(R.id.nombre);
+        TextView txtVersion = (TextView) headerView.findViewById(R.id.txtVersion);
         thumbnail = (ImageView) headerView.findViewById(R.id.thumbnail);
+        version = obtenerVersion(headerView.getContext());
+        txtVersion.setText("Version: " + version.toString());
 
 
         pref = getActivity().getSharedPreferences(LoginActivity.PREFERENCIAS, Context.MODE_PRIVATE);
@@ -155,6 +164,20 @@ public class NavigationDrawerFragment extends Fragment {
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
+    }
+
+    private String obtenerVersion(Context context) {
+        PackageManager manager = context.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(
+                    context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = info.versionName;
+        //Toast.makeText(context, "Version: " + version, Toast.LENGTH_LONG).show();
+        return version;
     }
 
     public boolean isDrawerOpen() {

@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -282,6 +284,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         txtVendedorValue = (TextView) findViewById(R.id.txtVwVendedorValue);
         txtChoferValue = (TextView) findViewById(R.id.txtVwChoferValue);
         txtMovilValue = (TextView) findViewById(R.id.txtVwMovilValue);
+
 
 
         searchVendedor = (ImageView) findViewById(R.id.search_vendedor);
