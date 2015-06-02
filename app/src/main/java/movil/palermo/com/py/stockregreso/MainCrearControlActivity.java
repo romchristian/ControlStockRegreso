@@ -636,6 +636,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             Toast.makeText(this, "Debe de terminar de cargar el control", Toast.LENGTH_SHORT).show();
         } else {
             cancelar();
+
         }
     }
 
@@ -645,7 +646,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         dialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //controlDao.delete(controlActual);
+                controlDao.delete(controlActual);
                 finish();
             }
         });

@@ -115,7 +115,7 @@ public class ListaControlFragment extends android.support.v4.app.Fragment implem
         controlList.clear();
         try {
 
-            controlList.addAll(controlDao.queryBuilder().where().not().eq(Control.COL_ESTADO,"L").query());
+            controlList.addAll(controlDao.queryBuilder().where().not().eq(Control.COL_ESTADO,"NUEVO").query());
 
         } catch (SQLException e) {
             e.printStackTrace();
