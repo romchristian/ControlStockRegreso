@@ -3,6 +3,8 @@ package movil.palermo.com.py.stockregreso;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -37,6 +40,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     Button button;
     EditText usuario;
     EditText password;
+    TextView version;
     public final static String PREFERENCIAS = "PREF_LOGIN";
     private Login login;
 
@@ -49,8 +53,9 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         button = (Button) findViewById(R.id.button_login);
         usuario = (EditText)findViewById(R.id.editText_usuario);
         password = (EditText)findViewById(R.id.editText_pass);
-
+        version = (TextView)findViewById(R.id.txtVersion);
         button.setOnClickListener(this);
+        version.setText("Version: " + obtenerVersion(this));
         SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("LOGUEADO", false);
@@ -208,5 +213,18 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
             }
         };
         AppController.getInstance().addToRequestQueue(req);
+    }
+    private String obtenerVersion(Context context) {
+        PackageManager manager = context.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(
+                    context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = info.versionName;
+        //Toast.makeText(context, "Version: " + version, Toast.LENGTH_LONG).show();
+        return version;
     }
 }
