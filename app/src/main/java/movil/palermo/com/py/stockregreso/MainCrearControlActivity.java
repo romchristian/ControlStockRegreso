@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -104,9 +105,15 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     private Sesion sesionActual;
     private Control controlActual;
 
+    public String telefonoId;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        telefonoId =  Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.d("TELEFONOID", this.telefonoId);
 
         configuraActionBar();
         setContentView(R.layout.activity_main_crear_control);
@@ -489,7 +496,8 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
 
     private void insertaRequest(final Control c) throws JSONException {
 
-        SesionSimple s = new SesionSimple(c.getSesion());
+        Log.d("INSERTARID", this.telefonoId);
+        SesionSimple s = new SesionSimple(c.getSesion(), telefonoId);
         ControlSimple cs = new ControlSimple(c);
         s.setControlSimple(cs);
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(s);

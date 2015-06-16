@@ -18,8 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
@@ -39,6 +41,7 @@ import movil.palermo.com.py.stockregreso.modelo.Control;
 import movil.palermo.com.py.stockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.stockregreso.modelo.EstadoControl;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionDetalle;
+import movil.palermo.com.py.stockregreso.modelo.ReposicionLista;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionSimple;
 import movil.palermo.com.py.stockregreso.modelo.ResponseReposicion;
 import movil.palermo.com.py.stockregreso.util.UtilJson;
@@ -59,6 +62,8 @@ public class ListaReposicionFragment extends android.support.v4.app.Fragment imp
     public static final int REPOSICION = 101;
     private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
     private UtilJson utilJson;
+    public String telefonoId;
+
 
 
     View rootView;
@@ -160,8 +165,8 @@ public class ListaReposicionFragment extends android.support.v4.app.Fragment imp
                     if (obj != null && obj instanceof Control) {
 
                         //envio reposiciones
-                        Control c = (Control) obj;
-                        enviarDatos(c);
+                        //Control c = (Control) obj;
+                        utilJson.enviarDatos();//enviarDatos(c);
                     }
                     break;
                 case 1:
@@ -267,4 +272,49 @@ public class ListaReposicionFragment extends android.support.v4.app.Fragment imp
         }
 
     }
+    /*private void insertaReposicion(final Control c) throws JSONException {
+
+        List<ReposicionDetalle> lista = null;
+        try {
+            lista = reposcionDetalleDao.queryBuilder()
+                    .where().eq(ReposicionDetalle.COL_CONTROL, c)
+                    .query();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (lista != null && !lista.isEmpty()) {
+
+            List<ReposicionSimple> lista2 = new ArrayList<>();
+            for (ReposicionDetalle r : lista) {
+                ReposicionSimple rs = new ReposicionSimple(r);
+                lista2.add(rs);
+            }
+            ReposicionLista reposiciones = new ReposicionLista(lista2,telefonoId);
+
+            //final String body = new GsonBuilder().setPrettyPrinting().create().toJson(lista2);
+            final String body = new GsonBuilder().setPrettyPrinting().create().toJson(reposiciones);
+
+            Response.Listener<ResponseReposicion> listenerExito = new Response.Listener<ResponseReposicion>() {
+                @Override
+                public void onResponse(ResponseReposicion response) {
+
+                    if (response.isExito()) {
+                        Toast.makeText(rootView.getContext(), "Exito!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+
+            GsonRequest<ResponseReposicion> req = new GsonRequest<ResponseReposicion>(Request.Method.POST, (new UtilJson(rootView.getContext()).prefUrl) + "/insertaReposicion", ResponseReposicion.class, body, listenerExito, rootView.getContext());
+
+            int socketTimeout = 50000;//50 seconds - change to what you want
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            req.setRetryPolicy(policy);
+
+
+            AppController.getInstance().addToRequestQueue(req);
+        }
+
+    }*/
 }

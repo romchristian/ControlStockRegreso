@@ -41,6 +41,7 @@ import movil.palermo.com.py.stockregreso.modelo.DatabaseHelper;
 import movil.palermo.com.py.stockregreso.modelo.Producto;
 import movil.palermo.com.py.stockregreso.modelo.ProductoUM;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionDetalle;
+import movil.palermo.com.py.stockregreso.modelo.ReposicionLista;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionSimple;
 import movil.palermo.com.py.stockregreso.modelo.ResponseControl;
 import movil.palermo.com.py.stockregreso.modelo.ResponseReposicion;
@@ -77,7 +78,7 @@ public class UtilJson {
 
     private List<Control> controles;
     private ControlListAdapter controlesAdapter;
-    private String deviceId;
+    public String telefonoId;
 
 
 
@@ -91,19 +92,21 @@ public class UtilJson {
         prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:31180/ServicioStockRegreso/webresources/servicio");
         //prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio");
         controles = new ArrayList<>();
-        deviceId = Settings.Secure.getString(context.getContentResolver(),
+        telefonoId = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+        Log.d("POCKETID", this.getTelefonoId());
+
 
 
     }
 
 
-    public String getDeviceId() {
-        return deviceId;
+    public String getTelefonoId() {
+        return telefonoId;
     }
 
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+    public void setTelefonoId(String telefonoId) {
+        this.telefonoId = telefonoId;
     }
 
     public String getPrefUrl() {
@@ -280,10 +283,12 @@ public class UtilJson {
 
     private void insertaRequest(final Control c) throws JSONException {
 
-        SesionSimple s = new SesionSimple(c.getSesion());
+        SesionSimple s = new SesionSimple(c.getSesion(), telefonoId);
         ControlSimple cs = new ControlSimple(c);
         s.setControlSimple(cs);
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(s);
+
+
 
         Response.Listener<ResponseControl> listenerExito = new Response.Listener<ResponseControl>() {
             @Override
@@ -327,8 +332,10 @@ public class UtilJson {
                 ReposicionSimple rs = new ReposicionSimple(r);
                 lista2.add(rs);
             }
+            ReposicionLista reposiciones = new ReposicionLista(lista2,telefonoId);
 
-            final String body = new GsonBuilder().setPrettyPrinting().create().toJson(lista2);
+            //final String body = new GsonBuilder().setPrettyPrinting().create().toJson(lista2);
+            final String body = new GsonBuilder().setPrettyPrinting().create().toJson(reposiciones);
 
             Response.Listener<ResponseReposicion> listenerExito = new Response.Listener<ResponseReposicion>() {
                 @Override
@@ -372,7 +379,7 @@ public class UtilJson {
 
     private void controlesRequest() {
 
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/controlesautorizados/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/controlesautorizados/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -472,7 +479,7 @@ public class UtilJson {
 
         //Toast.makeText(this,"URL: " + prefurl,Toast.LENGTH_LONG).show();
 
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productos/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productos/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -515,7 +522,7 @@ public class UtilJson {
     }
 
     private void conductorRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/conductores/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/conductores/"+ this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -561,7 +568,7 @@ public class UtilJson {
     }
 
     private void vendedorRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vendedores/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vendedores/"+ this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -605,7 +612,7 @@ public class UtilJson {
 
     private void vehiculoRequest() {
 
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vehiculos/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vehiculos/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -649,7 +656,7 @@ public class UtilJson {
     }
 
     private void unidadMedidaRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/unidades/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/unidades/"+ this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -694,7 +701,7 @@ public class UtilJson {
     }
 
     private void productoUMRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productosum/123456",
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productosum/"+ this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

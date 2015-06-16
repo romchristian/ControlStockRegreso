@@ -6,6 +6,7 @@ package movil.palermo.com.py.stockregreso.modelo;
 public class Login {
     private String usuario;
     private String password;
+    private String telefonoId;
 
     public String getUsuario() {
         return usuario;
@@ -21,5 +22,13 @@ public class Login {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getTelefonoId() {
+        return telefonoId;
+    }
+
+    public void setTelefonoId(String telefonoId) {
+        this.telefonoId = telefonoId;
     }
 }

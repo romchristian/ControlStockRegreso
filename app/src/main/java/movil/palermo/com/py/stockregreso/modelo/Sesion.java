@@ -53,4 +53,5 @@ public class Sesion implements Serializable{
     public void setResponsable(String responsable) {
         this.responsable = responsable;
     }
+
 }

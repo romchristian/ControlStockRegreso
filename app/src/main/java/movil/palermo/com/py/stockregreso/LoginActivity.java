@@ -7,8 +7,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,11 +45,16 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     TextView version;
     public final static String PREFERENCIAS = "PREF_LOGIN";
     private Login login;
+    public String telefonoId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        telefonoId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
         button = (Button) findViewById(R.id.button_login);
@@ -93,6 +100,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     login = new Login();
                     login.setUsuario(usuario.getText().toString());
                     login.setPassword(password.getText().toString());
+                    login.setTelefonoId(telefonoId);
                     enviarDatos(login);
                 }else{
                     Toast.makeText(this,"Debe ingresar Usuario y Contraseña",Toast.LENGTH_LONG).show();
