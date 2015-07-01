@@ -40,6 +40,7 @@ import movil.palermo.com.py.stockregreso.util.UtilJson;
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener{
 
     Button button;
+    Button buttonRegistrar;
     EditText usuario;
     EditText password;
     TextView version;
@@ -58,10 +59,12 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
         button = (Button) findViewById(R.id.button_login);
+        buttonRegistrar = (Button) findViewById(R.id.button_regitrar);
         usuario = (EditText)findViewById(R.id.editText_usuario);
         password = (EditText)findViewById(R.id.editText_pass);
         version = (TextView)findViewById(R.id.txtVersion);
         button.setOnClickListener(this);
+        buttonRegistrar.setOnClickListener(this);
         version.setText("Version: " + obtenerVersion(this));
         SharedPreferences pref = getSharedPreferences(PREFERENCIAS,MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -106,6 +109,11 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                     Toast.makeText(this,"Debe ingresar Usuario y Contraseña",Toast.LENGTH_LONG).show();
                 }
                 break;
+            case R.id.button_regitrar:
+                Intent i = new Intent(this,RegistrarActivity.class);
+                startActivity(i);
+                break;
+
         }
     }
 

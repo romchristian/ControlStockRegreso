@@ -11,12 +11,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -25,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +42,19 @@ import movil.palermo.com.py.stockregreso.modelo.Control;
 import movil.palermo.com.py.stockregreso.modelo.ControlDetalle;
 import movil.palermo.com.py.stockregreso.modelo.ControlSimple;
 import movil.palermo.com.py.stockregreso.modelo.DatabaseHelper;
+import movil.palermo.com.py.stockregreso.modelo.Login;
 import movil.palermo.com.py.stockregreso.modelo.Producto;
 import movil.palermo.com.py.stockregreso.modelo.ProductoUM;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionDetalle;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionLista;
 import movil.palermo.com.py.stockregreso.modelo.ReposicionSimple;
 import movil.palermo.com.py.stockregreso.modelo.ResponseControl;
+import movil.palermo.com.py.stockregreso.modelo.ResponseLogin;
+import movil.palermo.com.py.stockregreso.modelo.ResponseRegistro;
 import movil.palermo.com.py.stockregreso.modelo.ResponseReposicion;
 import movil.palermo.com.py.stockregreso.modelo.Sesion;
 import movil.palermo.com.py.stockregreso.modelo.SesionSimple;
+import movil.palermo.com.py.stockregreso.modelo.SupervisorSimple;
 import movil.palermo.com.py.stockregreso.modelo.UnidadMedida;
 import movil.palermo.com.py.stockregreso.modelo.Vehiculo;
 import movil.palermo.com.py.stockregreso.modelo.Vendedor;
@@ -81,7 +89,6 @@ public class UtilJson {
     public String telefonoId;
 
 
-
     public UtilJson(Context context) {
         this.context = context;
         inicializarDaos();
@@ -89,13 +96,12 @@ public class UtilJson {
 
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:31180/ServicioStockRegreso/webresources/servicio");
-        //prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio");
+        //prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:31180/ServicioStockRegreso/webresources/servicio");
+        prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.11.17:3080/ServicioStockRegreso/webresources/servicio");
         controles = new ArrayList<>();
         telefonoId = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         Log.d("POCKETID", this.getTelefonoId());
-
 
 
     }
@@ -186,6 +192,33 @@ public class UtilJson {
         }
     }
 
+    public void enviarRegistro(SupervisorSimple s) {
+        if (estaConectado()) {
+            probarServicioRegistro(s);
+        }
+    }
+
+    private void probarServicioRegistro(final SupervisorSimple s) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, prefUrl + "/test",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        if (response != null && response.compareTo("true") == 0) {
+                            registra(s);
+
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        AppController.getInstance().addToRequestQueue(stringRequest);
+    }
+
     public void recargaControles() {
         if (estaConectado()) {
             probarServicio(OPERACION_CARGA_CONTROLES);
@@ -230,6 +263,14 @@ public class UtilJson {
         AppController.getInstance().addToRequestQueue(stringRequest);
     }
 
+    private void registra(SupervisorSimple s) {
+        try {
+            registroRequest(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private void guardaDatos() {
         try {
@@ -284,7 +325,6 @@ public class UtilJson {
         final String body = new GsonBuilder().setPrettyPrinting().create().toJson(s);
 
 
-
         Response.Listener<ResponseControl> listenerExito = new Response.Listener<ResponseControl>() {
             @Override
             public void onResponse(ResponseControl response) {
@@ -327,7 +367,7 @@ public class UtilJson {
                 ReposicionSimple rs = new ReposicionSimple(r);
                 lista2.add(rs);
             }
-            ReposicionLista reposiciones = new ReposicionLista(lista2,telefonoId);
+            ReposicionLista reposiciones = new ReposicionLista(lista2, telefonoId);
 
             //final String body = new GsonBuilder().setPrettyPrinting().create().toJson(lista2);
             final String body = new GsonBuilder().setPrettyPrinting().create().toJson(reposiciones);
@@ -381,7 +421,7 @@ public class UtilJson {
                         Log.d(TAG, response.toString());
                         if (response != null && response.length() > 0) {
 
-                            if(controles != null){
+                            if (controles != null) {
                                 controles.clear();
                             }
 
@@ -389,7 +429,7 @@ public class UtilJson {
                                 try {
                                     JSONObject obj = response.getJSONObject(i);
                                     String uuid = obj.getString("uuid");
-                                    Log.d(TAG,"Response: " + response);
+                                    Log.d(TAG, "Response: " + response);
 
                                     List<Control> lista = null;
                                     try {
@@ -401,10 +441,10 @@ public class UtilJson {
                                         e.printStackTrace();
                                     }
 
-                                    Log.d(TAG,"Lista: " + lista);
+                                    Log.d(TAG, "Lista: " + lista);
 
                                     if (lista == null || lista.size() == 0) {
-                                        Log.d(TAG,"Lista 2: " + lista);
+                                        Log.d(TAG, "Lista 2: " + lista);
 
                                         Sesion sesionActual = sesionDao.queryForId(1);
                                         Control c = new Control();
@@ -457,10 +497,10 @@ public class UtilJson {
     public void listener() {
         try {
 
-            Log.d(TAG,"LISTENER...");
+            Log.d(TAG, "LISTENER...");
             controles.clear();
-            controles.addAll(controlDao.queryBuilder().where().eq(Control.COL_ESTADO,"L").query());
-            Log.d(TAG,"CONTROLES... " + controles);
+            controles.addAll(controlDao.queryBuilder().where().eq(Control.COL_ESTADO, "L").query());
+            Log.d(TAG, "CONTROLES... " + controles);
 
             controlesAdapter.notifyDataSetChanged();
         } catch (SQLException e) {
@@ -517,7 +557,7 @@ public class UtilJson {
     }
 
     private void conductorRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/conductores/"+ this.telefonoId,
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/conductores/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -563,7 +603,7 @@ public class UtilJson {
     }
 
     private void vendedorRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vendedores/"+ this.telefonoId,
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/vendedores/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -651,7 +691,7 @@ public class UtilJson {
     }
 
     private void unidadMedidaRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/unidades/"+ this.telefonoId,
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/unidades/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -696,7 +736,7 @@ public class UtilJson {
     }
 
     private void productoUMRequest() {
-        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productosum/"+ this.telefonoId,
+        JsonArrayRequest req = new JsonArrayRequest(prefUrl + "/productosum/" + this.telefonoId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -743,6 +783,50 @@ public class UtilJson {
         });
 // Adding request to request queue
         int socketTimeout = 50000;//50 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        req.setRetryPolicy(policy);
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+
+    private void registroRequest(final SupervisorSimple su) throws JSONException {
+
+        final String body = new GsonBuilder().setPrettyPrinting().create().toJson(su);
+
+        Request req = new JsonRequest<ResponseRegistro>(Request.Method.POST, prefUrl + "/registra", body,
+                new Response.Listener<ResponseRegistro>() {
+                    @Override
+                    public void onResponse(ResponseRegistro response) {
+                        if (response.isExito()) {
+                            Toast.makeText(context, "Se Registro con exito!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, "No se puede registrar, ya existe!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "ERROR AL REGISTRAR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+
+            @Override
+            protected Response<ResponseRegistro> parseNetworkResponse(NetworkResponse response) {
+                String jsonString = null;
+                try {
+                    jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                ResponseRegistro resp = new GsonBuilder().create().fromJson(jsonString, ResponseRegistro.class);
+                Response<ResponseRegistro> result = Response.success(resp, HttpHeaderParser.parseCacheHeaders(response));
+                return result;
+            }
+        };
+        int socketTimeout = 20000;//50 seconds - change to what you want
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         req.setRetryPolicy(policy);
         AppController.getInstance().addToRequestQueue(req);

@@ -59,6 +59,16 @@
             android:textColor="#ffffff"
             android:id="@+id/button_login"
             android:background="@drawable/fondo_boton_2"/>
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrar"
+            android:textColor="#ffffff"
+            android:id="@+id/button_regitrar"
+            android:background="@drawable/fondo_boton_finalizar"/>
+
         <TextView
             android:id="@+id/txtVersion"
             android:layout_marginTop="30dp"
