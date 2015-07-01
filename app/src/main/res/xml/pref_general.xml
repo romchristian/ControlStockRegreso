@@ -9,11 +9,11 @@
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <!--EditTextPreference
-        android:key="example_text"
-        android:title="@string/pref_title_display_name"
-        android:defaultValue="@string/pref_default_display_name"
+        android:key="telefonoid"
+        android:title="Telefono ID"
+        android:defaultValue="NULL"
         android:selectAllOnFocus="true"
-        android:inputType="textCapWords"
+        android:inputType="none"
         android:capitalize="words"
         android:singleLine="true"
         android:maxLines="1" /-->
@@ -32,5 +32,7 @@
     <Preference
         android:title="Actualizar BD"
         android:key="actualizarBD"/>
-
-</PreferenceScreen>
+    <Preference
+         android:title="Telefono ID"
+         android:key="telefonoid"/>
+ </PreferenceScreen>

@@ -150,12 +150,7 @@ public class UtilJson {
 
 
     public Boolean estaConectado() {
-        if (conectadoWifi()) {
-            return true;
-        } else {
-
-            return false;
-        }
+        return conectadoWifi();
     }
 
 

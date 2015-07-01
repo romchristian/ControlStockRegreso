@@ -116,11 +116,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     }
     //region Metodos para verificar conexion
     protected Boolean estaConectado() {
-        if (conectadoWifi()) {
-            return true;
-        } else {
-            return false;
-        }
+        return conectadoWifi();
     }
 
     protected Boolean conectadoWifi() {
@@ -177,6 +173,8 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         editor.putString("PASS_"+login.getUsuario(), login.getPassword());
         editor.putString("NOMBRE_"+login.getUsuario(), nombre);
         editor.putString("NOMBRE", nombre);
+        editor.putString("TELEFONOID",telefonoId);
+        Log.d("TELEFONOID", telefonoId);
         editor.commit();
         Intent i;
         i = new Intent(getApplicationContext(),MainActivity.class);

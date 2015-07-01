@@ -144,11 +144,11 @@ public class SlidingUpPaneLayout extends ViewGroup{
 
     public interface PanelSlideListener {
 
-        public void onPanelSlide(View panel, float slideOffset);
+        void onPanelSlide(View panel, float slideOffset);
 
-        public void onPanelOpened(View panel);
+        void onPanelOpened(View panel);
 
-        public void onPanelClosed(View panel);
+        void onPanelClosed(View panel);
     }
 
     public SlidingUpPaneLayout(Context context) {

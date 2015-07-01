@@ -2,6 +2,7 @@ package movil.palermo.com.py.stockregreso;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -15,11 +16,12 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
-import movil.palermo.com.py.stockregreso.util.UtilJson;
-
 
 import java.util.List;
+
+import movil.palermo.com.py.stockregreso.util.UtilJson;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -40,11 +42,18 @@ public class SettingsActivity extends PreferenceActivity {
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
-
+    public static String telefonoId;
+    public static SharedPreferences sp;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        sp = getSharedPreferences(LoginActivity.PREFERENCIAS, MODE_PRIVATE);
+        telefonoId= sp.getString("TELEFONOID","");
+
+        Log.d("TELEFONOID", telefonoId + " en settings");
+        //Preference preference = findPreference("telefonoId");
+        //preference.setSummary(telefonoId);
 
         setupSimplePreferencesScreen();
         //UtilJson util;
@@ -65,6 +74,10 @@ public class SettingsActivity extends PreferenceActivity {
                 return true;
             }
         });
+
+
+        Preference pref =  findPreference("telefonoid");
+        pref.setSummary(telefonoId);
     }
 
     /**
@@ -199,6 +212,7 @@ public class SettingsActivity extends PreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
+
         // Trigger the listener immediately with the preference's
         // current value.
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
@@ -216,7 +230,14 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
             addPreferencesFromResource(R.xml.pref_general);
+
+
+            //EditTextPreference editTextPref = (EditTextPreference) findPreference("telefonoid");
+            //editTextPref
+             //       .setSummary(telefonoId);
+
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
@@ -225,6 +246,14 @@ public class SettingsActivity extends PreferenceActivity {
 
 
             bindPreferenceSummaryToValue(findPreference("url_servidor"));
+
+            Preference preference = findPreference("telefonoid");
+//            Log.d("TELEFONOID", telefonoId + " en general");
+//            preference.setSummary(telefonoId);
+//            bindPreferenceSummaryToValue(preference);
+
+            //preference.setTitle(telefonoId);
+
         }
     }
 

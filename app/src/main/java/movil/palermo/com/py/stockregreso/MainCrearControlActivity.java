@@ -77,6 +77,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     private TextView txtVendedorValue, txtChoferValue, txtMovilValue;
     private ImageView searchVendedor, searchChofer, searchMovil;
     private FrameLayout recuadroVendedor, recuadroChofer, recuadroMovil;
+    private TextView txtPrefTelefonoId;
     private boolean actualizacionCorrecta;
 
     //Para conectarse con la BD
@@ -111,8 +112,14 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        telefonoId =  Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        //telefonoId =  Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                //Settings.Secure.ANDROID_ID);
+
+        //txtPrefTelefonoId =(TextView) findViewById(R.id.prefTelefonoId);
+        //txtPrefTelefonoId.setText(telefonoId);
+
+        SharedPreferences sp = getSharedPreferences(LoginActivity.PREFERENCIAS, MODE_PRIVATE);
+        telefonoId= sp.getString("TELEFONOID","");
         Log.d("TELEFONOID", this.telefonoId);
 
         configuraActionBar();
@@ -151,11 +158,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
                     .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, c)
                     .query();
-            if (lista != null && !(lista.isEmpty())) {
-                return true;
-            } else {
-                return false;
-            }
+            return lista != null && !(lista.isEmpty());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -528,12 +531,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     //region Metodos para verificar conexion
 
     protected Boolean estaConectado() {
-        if (conectadoWifi()) {
-            return true;
-        } else {
-
-            return false;
-        }
+        return conectadoWifi();
     }
 
 

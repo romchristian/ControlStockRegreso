@@ -50,11 +50,9 @@ import movil.palermo.com.py.stockregreso.util.UtilJson;
 public class ListaReposicionFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaReposicion;
-    Intent datos;
     private List<Control> controlList = new ArrayList<Control>();
     private ControlListAdapter adapter;
     private DatabaseHelper databaseHelper;
-    //private RuntimeExceptionDao<ReposicionDetalle, Integer> reposicionDao;
     private ProgressDialog pDialog;
     private TextView txtVwNuevoControl;
     private ImageView imgVwflecha;
@@ -62,7 +60,7 @@ public class ListaReposicionFragment extends android.support.v4.app.Fragment imp
     public static final int REPOSICION = 101;
     private RuntimeExceptionDao<ReposicionDetalle, Integer> reposcionDetalleDao;
     private UtilJson utilJson;
-    public String telefonoId;
+
 
 
 
