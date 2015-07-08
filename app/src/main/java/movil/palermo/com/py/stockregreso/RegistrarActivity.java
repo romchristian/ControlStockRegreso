@@ -1,7 +1,8 @@
 package movil.palermo.com.py.stockregreso;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ public class RegistrarActivity extends ActionBarActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        configuraActionBar();
         setContentView(R.layout.activity_registrar);
         editEmpresa = (EditText) findViewById(R.id.edit_empresa);
         editSucursal = (EditText) findViewById(R.id.edit_sucursal);
@@ -97,6 +99,12 @@ public class RegistrarActivity extends ActionBarActivity implements View.OnClick
 
         }
     }
+    private void configuraActionBar() {
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle("Registrar nuevo usuario");
+        //actionBar.hide();
+    }
 
     private boolean validar() {
         return true;
@@ -105,4 +113,5 @@ public class RegistrarActivity extends ActionBarActivity implements View.OnClick
     private void salir() {
         finish();
     }
+
 }
