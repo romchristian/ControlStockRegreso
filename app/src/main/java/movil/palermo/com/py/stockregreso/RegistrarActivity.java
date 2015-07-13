@@ -6,30 +6,43 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import movil.palermo.com.py.stockregreso.modelo.SupervisorSimple;
 import movil.palermo.com.py.stockregreso.util.UtilJson;
 
-public class RegistrarActivity extends ActionBarActivity implements View.OnClickListener {
+public class RegistrarActivity extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private EditText editEmpresa;
-    private EditText editSucursal;
+    //private EditText editEmpresa;
+    private Spinner spinnerSucursal;
     private EditText editNombre;
     private EditText editUser;
     private EditText editPassword;
     private Button btnAceptar;
     private Button btnCancelar;
+    private Integer empresaid =null;
+    private Integer sucursalid =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         configuraActionBar();
         setContentView(R.layout.activity_registrar);
-        editEmpresa = (EditText) findViewById(R.id.edit_empresa);
-        editSucursal = (EditText) findViewById(R.id.edit_sucursal);
+        //editEmpresa = (EditText) findViewById(R.id.edit_empresa);
+        spinnerSucursal = (Spinner) findViewById(R.id.spinnerSucursal);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sucursales_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinnerSucursal.setAdapter(adapter);
+        spinnerSucursal.setOnItemSelectedListener(this);
+
         editNombre = (EditText) findViewById(R.id.edit_nombre);
         editUser = (EditText) findViewById(R.id.edit_user);
         editPassword = (EditText) findViewById(R.id.edit_password);
@@ -78,11 +91,10 @@ public class RegistrarActivity extends ActionBarActivity implements View.OnClick
         UtilJson utilJson = new UtilJson(this);
         if(validar()) {
             SupervisorSimple s = new SupervisorSimple();
-            Integer empresaid =null;
-            Integer sucursalid =null;
+            //Integer empresaid =null;
+            //Integer sucursalid =null;
             try {
-                empresaid = Integer.parseInt(editEmpresa.getText().toString());
-                sucursalid = Integer.parseInt(editSucursal.getText().toString());
+                empresaid = 1;
                 s.setEmpresaId(empresaid);
                 s.setSucursalId(sucursalid);
                 s.setNombre(editNombre.getText().toString());
@@ -93,7 +105,7 @@ public class RegistrarActivity extends ActionBarActivity implements View.OnClick
 
                 finish();
             }catch (Exception ex){
-                Toast.makeText(this,"Hay campor invalidos",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Hay campos no válidos",Toast.LENGTH_LONG).show();
             }
 
 
@@ -114,4 +126,35 @@ public class RegistrarActivity extends ActionBarActivity implements View.OnClick
         finish();
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        String sucursal = parent.getItemAtPosition(pos).toString();
+        switch (sucursal){
+            case "ASU":
+                sucursalid = 1;
+                //Toast.makeText(this,"Sucursal: " + sucursal + " " + sucursalid ,Toast.LENGTH_SHORT).show();
+                break;
+            case "CDE":
+                sucursalid = 2;
+                //Toast.makeText(this,"Sucursal: " + sucursal + " " + sucursalid ,Toast.LENGTH_SHORT).show();
+                break;
+            case "PJC":
+                sucursalid = 4;
+                //Toast.makeText(this,"Sucursal: " + sucursal + " " + sucursalid ,Toast.LENGTH_SHORT).show();
+                break;
+            case "ENC":
+                sucursalid = 111;
+                //Toast.makeText(this,"Sucursal: " + sucursal + " " + sucursalid ,Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                sucursalid = 1;
+                break;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

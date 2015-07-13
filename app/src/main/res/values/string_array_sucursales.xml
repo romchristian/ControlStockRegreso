@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sucursales_array">
+        <item>ASU</item>
+        <item>CDE</item>
+        <item>PJC</item>
+        <item>ENC</item>
+    </string-array>
+</resources>
