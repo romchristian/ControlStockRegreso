@@ -47,7 +47,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     private Login login;
     public String telefonoId;
 
-
+   //Solo una prueba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
