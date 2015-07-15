@@ -21,6 +21,9 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
+
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,25 +34,30 @@
             android:textSize="24dp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edit_empresa"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="Tabacos del Paraguay S.A."
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:hint="Empresa ID"
-            android:imeOptions="actionNext"
-            android:inputType="number"
-            android:numeric="integer" />
+            android:textSize="18sp"
+            android:text="Seleccionar sucursal"
+            android:textAlignment="center"/>
+        <Spinner
+            android:id="@+id/spinnerSucursal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
 
-        <EditText
-            android:id="@+id/edit_sucursal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:hint="SUCURSAL ID"
-            android:imeOptions="actionNext"
-            android:inputType="number"
-            android:numeric="integer" />
+            />
 
         <EditText
             android:id="@+id/edit_nombre"
