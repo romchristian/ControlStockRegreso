@@ -5,11 +5,11 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "movil.palermo.com.py.stockregreso"
+        applicationId "movil.palermo.com.py.stockregresomovil"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 9
-        versionName "1.0 RC 4"
+        versionCode 11
+        versionName "1.1"
     }
     buildTypes {
         release {

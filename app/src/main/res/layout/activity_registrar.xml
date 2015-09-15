@@ -7,7 +7,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="movil.palermo.com.py.stockregreso.RegistrarActivity">
+    tools:context="movil.palermo.com.py.stockregresomovil.RegistrarActivity">
 
 
     <LinearLayout

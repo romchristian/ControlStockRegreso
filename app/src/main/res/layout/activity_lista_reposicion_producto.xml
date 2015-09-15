@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="movil.palermo.com.py.stockregreso.ListaReposicionProducto"
+    tools:context="movil.palermo.com.py.stockregresomovil.ListaReposicionProducto"
     android:layout_marginTop="?attr/actionBarSize" >
 
     <ListView
