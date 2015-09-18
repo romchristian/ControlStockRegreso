@@ -131,7 +131,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
 
-                String currentDBPath = "/data/data/movil.palermo.com.py.stockregreso/databases/"+DATABASE_NAME;
+                String currentDBPath = "/data/data/movil.palermo.com.py.stockregresomovil/databases/"+DATABASE_NAME;
                 //String currentDBPath = "/storage/sdcard0/Download/"+DATABASE_NAME;
                 Log.d("DatabaseHelper","PATHHHHHHHHHHHHHHHHHHHHHHHHHH: " + currentDBPath);
                 Log.d("DatabaseHelper","destino: " + sd.getAbsolutePath());
