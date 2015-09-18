@@ -48,8 +48,8 @@
     </string-array>
 
     <string-array name="pref_servidor_titles">
-        <item>Test</item>
         <item>Produccion</item>
+        <item>Test</item>
     </string-array>
     <string-array name="pref_servidor_values">
         <item>http://spkt.palermo.com.py:41180/ServicioStockRegreso/webresources/servicio</item>
