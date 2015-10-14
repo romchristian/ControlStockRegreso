@@ -85,25 +85,25 @@ public class ReposicionProductoListAdapter extends BaseAdapter implements Filter
         if (p.getNombre().toLowerCase().contains("blue")) {
             img = R.drawable.palermo_blue;
         } else if (p.getNombre().toLowerCase().contains("green")) {
-            img = R.drawable.palermo_green;
+            img = R.drawable.palermo_gren;
         }else if (p.getNombre().toLowerCase().contains("red")) {
             img = R.drawable.palermo_red;
         }else if (p.getNombre().toLowerCase().contains("plm 3")) {
-            img = R.drawable.plm3;
+            img = R.drawable.palermo_3;
         }else if (p.getId() == 218) {
             img = R.drawable.kentucky_10;
         }else if (p.getId() == 403) {
-            img = R.drawable.sanmarino_20;
+            img = R.drawable.san_marino_20;
         }else if (p.getId() == 404) {
-            img = R.drawable.sanmarino_10;
+            img = R.drawable.san_marino_20;
         }else if (p.getId() == 198) {
             img = R.drawable.kentucky_20;
         }else if (p.getId() == 204) {
             img = R.drawable.kentucky_soft;
         }else if (p.getId() == 411) {
-            img = R.drawable.sanmarino20;
+            img = R.drawable.san_marino_20;
         }else if (p.getId() == 412) {
-            img = R.drawable.sanmarino10;
+            img = R.drawable.san_marino_20;
         }else if (p.getId() == 409) {
             img = R.drawable.duo20;
         }else if (p.getId() == 410) {

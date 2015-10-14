@@ -241,19 +241,19 @@ public class AgregarReposicionActivity extends ActionBarActivity implements View
             if (productoSeleccionado.getNombre().toLowerCase().contains("blue")) {
                 img = R.drawable.palermo_blue;
             } else if (productoSeleccionado.getNombre().toLowerCase().contains("green")) {
-                img = R.drawable.palermo_green;
+                img = R.drawable.palermo_gren;
             } else if (productoSeleccionado.getNombre().toLowerCase().contains("red")) {
                 img = R.drawable.palermo_red;
             } else if (productoSeleccionado.getNombre().toLowerCase().contains("plm 3")) {
-                img = R.drawable.plm3;
+                img = R.drawable.palermo_3;
             } else if (productoSeleccionado.getNombre().toLowerCase().contains("duo")) {
                 img = R.drawable.palermo_duo;
             } else if (productoSeleccionado.getId() == 218) {
                 img = R.drawable.kentucky_10;
             } else if (productoSeleccionado.getId() == 403) {
-                img = R.drawable.sanmarino_20;
+                img = R.drawable.san_marino_20;
             } else if (productoSeleccionado.getId() == 404) {
-                img = R.drawable.sanmarino_10;
+                img = R.drawable.san_marino_20;
             } else if (productoSeleccionado.getId() == 198) {
                 img = R.drawable.kentucky_20;
             } else if (productoSeleccionado.getId() == 204) {
