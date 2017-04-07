@@ -94,8 +94,8 @@ public class UtilJson {
 
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:41180/ServicioStockRegreso/webresources/servicio");
-        //prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.8.78:8080/ServicioStockRegreso/webresources/servicio");
+        //prefUrl = sharedPrefs.getString("url_servidor", "http://spkt.palermo.com.py:41180/ServicioStockRegreso/webresources/servicio");
+        prefUrl = sharedPrefs.getString("url_servidor", "http://172.16.11.17:41180/ServicioStockRegreso/webresources/servicio");
         controles = new ArrayList<>();
         telefonoId = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);

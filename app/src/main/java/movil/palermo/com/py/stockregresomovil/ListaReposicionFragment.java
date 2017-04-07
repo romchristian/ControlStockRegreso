@@ -101,6 +101,7 @@ public class ListaReposicionFragment extends android.support.v4.app.Fragment imp
 
         databaseHelper = new DatabaseHelper(getActivity());
         reposcionDetalleDao = databaseHelper.getReposicionDetalleDao();
+
         recargaLista();
 
         return rootView;

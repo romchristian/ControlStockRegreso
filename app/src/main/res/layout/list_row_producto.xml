@@ -34,6 +34,22 @@
         android:ellipsize="end"
         android:text="SAN MARINO AT. BOX 20S"
         android:textStyle="bold" />
+    <!-- Imprimir esdevolucion -->
+   <!-- <TextView
+        android:id="@+id/esdevolucion"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_marginLeft="8dp"
+        android:textSize="16dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="esdevolucion"
+        android:textStyle="bold" />
+    Imprimir esdevolucion -->
+
 
     <TextView
         android:id="@+id/tituloCajas"

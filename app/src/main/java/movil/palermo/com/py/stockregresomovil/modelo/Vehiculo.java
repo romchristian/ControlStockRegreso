@@ -27,10 +27,10 @@ public class Vehiculo implements Serializable{
     }
 
     public Vehiculo(Integer id, String marca, String chapa) {
-        this.id = id;
-        this.marca = marca;
-        this.chapa = chapa;
-        this.estado = "N";
+            this.id = id;
+            this.marca = marca;
+            this.chapa = chapa;
+            this.estado = "N";
     }
 
 

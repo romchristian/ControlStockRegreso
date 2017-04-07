@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class ControlDetalle implements Serializable{
     public final static String COL_PRODUCTO_NOMBRE = "producto_id";
     public final static String COL_CONTROL_NOMBRE = "control_id";
+    public final static String COL_CONTROL_DEVOLUCION = "esDevolucion";
 
 
     @DatabaseField(generatedId = true)
@@ -26,17 +27,20 @@ public class ControlDetalle implements Serializable{
     private UnidadMedida unidadMedida;
     @DatabaseField
     private Integer cantidad;
+    @DatabaseField
+    private Integer esDevolucion;
 
     public ControlDetalle() {
 
     }
 
-    public ControlDetalle(Control control, Integer orden, Producto producto, UnidadMedida unidadMedida, Integer cantidad) {
+    public ControlDetalle(Control control, Integer orden, Producto producto, UnidadMedida unidadMedida, Integer cantidad, Integer esDevolucion) {
         this.control = control;
         this.orden = orden;
         this.producto = producto;
         this.unidadMedida = unidadMedida;
         this.cantidad = cantidad;
+        this.esDevolucion = esDevolucion;
     }
 
     public Integer getId() {
@@ -79,11 +83,17 @@ public class ControlDetalle implements Serializable{
         this.unidadMedida = unidadMedida;
     }
 
-    public Integer getCantidad() {
-        return cantidad;
-    }
+    public Integer getCantidad() {  return cantidad; }
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public Integer getEsDevolucion() {
+        return esDevolucion;
+    }
+
+    public void setEsDevolucion(Integer esDevolucion) {
+        this.esDevolucion = esDevolucion;
     }
 }

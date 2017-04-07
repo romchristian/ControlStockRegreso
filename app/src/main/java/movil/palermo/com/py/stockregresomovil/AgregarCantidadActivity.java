@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -60,6 +62,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
     private ImageView okImg;
     private Control controlActual;
     private DatabaseHelper databaseHelper;
+    private Integer esDevolucion;
     SegmentedRadioGroup segmentUnidadMedida;
     //endregion
 
@@ -92,6 +95,12 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
         cargaSpinnerUnidadMedida();
         configuraEfectos();
         configuraTecladoNumerico();
+
+        //Object param2 = getIntent().getSerializableExtra("DEVOLUCION");
+
+//        if (param2 != null && param2 instanceof Integer) {
+       //     esDevolucion = (Integer) param2;
+  //      }
 
     }
 
@@ -166,6 +175,11 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             configuraActionBar();
         }
 
+        Object param2 = getIntent().getSerializableExtra("DEVOLUCION");
+
+        if (param2 != null && param2 instanceof Integer) {
+            esDevolucion = (Integer) param2;
+        }
 
         Object obj2 = getIntent().getSerializableExtra("CONTROL");
         if (obj2 != null && obj2 instanceof Control) {
@@ -174,6 +188,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString() + "        Stock Regreso");
             cargaDetalles();
         }
+
+
     }
 
     private void cargaDetalles() {
@@ -182,6 +198,7 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
             List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
                     .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, controlActual)
                     .and().eq(ControlDetalle.COL_PRODUCTO_NOMBRE, productoSeleccionado)
+                    .and().eq(ControlDetalle.COL_CONTROL_DEVOLUCION, esDevolucion)
                     .query();
             if (lista != null) {
                 detalles.addAll(lista);
@@ -295,15 +312,22 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
 
     @Override
     public void onClick(View view) {
+        // int duration = Toast.LENGTH_SHORT;
+        // Toast toast = Toast.makeText(this, "Devolucion " + esDevolucion, duration);
+        // toast.show();
         switch (view.getId()) {
             case R.id.imgPlus:
                 //agregaDetalle();
+                int duration = Toast.LENGTH_SHORT;
+                Log.d("DEV", "Devolucion " + esDevolucion);
+
                 agregaDetalle2();
                 break;
         }
     }
 
     private int agregaDetalle2() {
+
 
         int cantActual = 0;
         String texto = cantidad.getText() == null ? "0" : cantidad.getText().toString();
@@ -338,6 +362,8 @@ public class AgregarCantidadActivity extends ActionBarActivity implements View.O
                 d.setUnidadMedida(um);
                 d.setCantidad(Integer.valueOf(cantidad.getText().toString()));
                 d.setProducto(productoSeleccionado);
+                d.setEsDevolucion(esDevolucion);
+
                 detalles.add(d);
                 adapter.notifyDataSetChanged();
                 controlDetalleDao.create(d);
