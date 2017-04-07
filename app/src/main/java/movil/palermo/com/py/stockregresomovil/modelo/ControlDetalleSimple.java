@@ -12,6 +12,7 @@ public class ControlDetalleSimple {
     private Integer productoId;
     private Integer unidadMedidaId;
     private Integer cantidad;
+    private Integer esDevolucion;
 
     public ControlDetalleSimple(String controlKey, ControlDetalle cd) {
         this.orden = cd.getOrden();
@@ -21,6 +22,7 @@ public class ControlDetalleSimple {
         String key = controlKey+""+cd.getId()+""+productoId+""+unidadMedidaId;
         this.uuid = UUID.nameUUIDFromBytes(key.getBytes()).toString();
         this.controlUuid = UUID.nameUUIDFromBytes(controlKey.getBytes()).toString();
+        this.esDevolucion = cd.getEsDevolucion();
     }
 
     public String getUuid() {
@@ -69,5 +71,13 @@ public class ControlDetalleSimple {
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public Integer getEsDevolucion() {
+        return esDevolucion;
+    }
+
+    public void setEsDevolucion(Integer esDevolucion) {
+        this.esDevolucion = esDevolucion;
     }
 }

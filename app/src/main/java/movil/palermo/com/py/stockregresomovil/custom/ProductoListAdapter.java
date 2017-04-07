@@ -76,6 +76,7 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
         TextView cantGruesas = (TextView) convertView.findViewById(R.id.cantGruesas);
         TextView tituloCajetillas=(TextView) convertView.findViewById(R.id.tituloUnidades);
         TextView cantCajetillas = (TextView) convertView.findViewById(R.id.cantUnidades);
+       // TextView esdevolucion = (TextView) convertView.findViewById(R.id.esdevolucion);
 
         // getting movie data for the row
         ProductoResumen p = filteredProductos.get(position);
@@ -85,33 +86,35 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
 
         int img = 0;
         if (p.getNombre().toLowerCase().contains("blue")) {
-            img = R.drawable.palermo_blue;
+            img = R.drawable.palermoblue20;
         } else if (p.getNombre().toLowerCase().contains("green")) {
-            img = R.drawable.palermo_gren;
-        }else if (p.getNombre().toLowerCase().contains("red")) {
-            img = R.drawable.palermo_red;
+            img = R.drawable.palermogreen20;
+        }else if (p.getNombre().toLowerCase().contains("palermo red")) {
+            img = R.drawable.palermored20;
         }else if (p.getNombre().toLowerCase().contains("tres")) {
-            img = R.drawable.palermo_3;
+            img = R.drawable.palermotres20;
         }else if (p.getNombre().toLowerCase().contains("duo")) {
-            img = R.drawable.palermo_duo;
+            img = R.drawable.palermoduo20;
         }else if (p.getId() == 218) {
             img = R.drawable.kentucky_10;
         }else if (p.getId() == 403) {
-            img = R.drawable.san_marino_20;
+            img = R.drawable.sanmarino_20;
         }else if (p.getId() == 404) {
-            img = R.drawable.san_marino_20;
+            img = R.drawable.sanmarino_10;
         }else if (p.getId() == 198) {
             img = R.drawable.kentucky_20;
         }else if (p.getId() == 204) {
             img = R.drawable.kentucky_soft;
         }else if (p.getId() == 411) {
-            img = R.drawable.san_marino_20;
+            img = R.drawable.sanmarino20;
         }else if (p.getId() == 412) {
-            img = R.drawable.san_marino_20;
-        }else if (p.getId() == 409) {
-            img = R.drawable.palermo_duo;
+              img = R.drawable.sanmarino10;
+        }else if (p.getId() == 413) {
+            img = R.drawable.sanmarino20;
+        }else if (p.getId() == 702) {
+            img = R.drawable.palermoduo20;
         }else if (p.getId() == 410) {
-            img = R.drawable.palermo_duo;
+            img = R.drawable.duo10;
         }else{
             img = R.drawable.kit;
         }
@@ -119,24 +122,40 @@ public class ProductoListAdapter extends BaseAdapter implements Filterable {
         thumbNail.setImageResource(img);
         nombre.setText(p.getNombre());
 
-        if(p.getKit()>0){
-            tituloCajas.setVisibility(TextView.GONE);
-            cantCajas.setVisibility(TextView.GONE);
-            tituloGruesas.setVisibility(TextView.GONE);
-            cantGruesas.setVisibility(TextView.GONE);
-            tituloCajetillas.setText("Unidades");
-            cantCajetillas.setText(""+  p.getCantUnidad());
-        }else{
-            tituloCajas.setVisibility(TextView.VISIBLE);
-            cantCajas.setVisibility(TextView.VISIBLE);
-            tituloGruesas.setVisibility(TextView.VISIBLE);
-            cantGruesas.setVisibility(TextView.VISIBLE);
-            cantCajas.setText(""+ (p.getCantCajas()));
-            cantGruesas.setText(""+(p.getCantGruesas()));
-            tituloCajetillas.setText("Cajetillas");
-            cantCajetillas.setText(""+ p.getCantCajetillas());
-        }
+        if (p.getEsDevolucion() == 1){
+            if (p.getKit() == 0) {
+                tituloCajas.setVisibility(TextView.VISIBLE);
+                cantCajas.setVisibility(TextView.VISIBLE);
+                tituloGruesas.setVisibility(TextView.VISIBLE);
+                cantGruesas.setVisibility(TextView.VISIBLE);
+                cantCajas.setText("" + (p.getCantCajas()));
+                cantGruesas.setText("" + (p.getCantGruesas()));
+                tituloCajetillas.setText("Cajetillas");
+                cantCajetillas.setText("" + p.getCantCajetillas());
+                //esdevolucion.setText("" + p.getEsDevolucion());
+            }
+        }else {
+            if (p.getKit() > 0) {
+                tituloCajas.setVisibility(TextView.GONE);
+                cantCajas.setVisibility(TextView.GONE);
+                tituloGruesas.setVisibility(TextView.GONE);
+                cantGruesas.setVisibility(TextView.GONE);
+                tituloCajetillas.setText("Unidades");
+                cantCajetillas.setText("" + p.getCantUnidad());
+                //esdevolucion.setText("" + p.getEsDevolucion());
 
+            } else {
+                tituloCajas.setVisibility(TextView.VISIBLE);
+                cantCajas.setVisibility(TextView.VISIBLE);
+                tituloGruesas.setVisibility(TextView.VISIBLE);
+                cantGruesas.setVisibility(TextView.VISIBLE);
+                cantCajas.setText("" + (p.getCantCajas()));
+                cantGruesas.setText("" + (p.getCantGruesas()));
+                tituloCajetillas.setText("Cajetillas");
+                cantCajetillas.setText("" + p.getCantCajetillas());
+               // esdevolucion.setText("" + p.getEsDevolucion());
+            }
+        }
         return convertView;
     }
 

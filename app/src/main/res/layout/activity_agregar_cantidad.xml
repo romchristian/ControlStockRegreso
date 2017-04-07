@@ -1,4 +1,5 @@
-<movil.palermo.com.py.stockregresomovil.custom.SlidingUpPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<movil.palermo.com.py.stockregresomovil.custom.SlidingUpPaneLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sliding_up_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

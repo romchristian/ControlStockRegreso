@@ -25,7 +25,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "stock.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
 
     public DatabaseHelper(Context context) {
@@ -68,7 +68,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-            Log.i(DatabaseHelper.class.getName(), "onUpgrade");
+        Log.i(DatabaseHelper.class.getName(), "onUpgrade");
+
+        if (oldVersion < 4)
+            getControlDetalleDao().executeRaw("ALTER TABLE `controldetalle` ADD COLUMN esDevolucion INTEGER;");
+
     }
 
 
@@ -84,7 +88,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public RuntimeExceptionDao<Vendedor, Integer> getVendedorDao() {
         return getRuntimeExceptionDao(Vendedor.class);
     }
-
 
 
     public RuntimeExceptionDao<Conductor, Integer> getConductorDao() {
@@ -123,29 +126,27 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
 
-    public void extraerBD(String packagename){
+    public void extraerBD(String packagename) {
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
 
 
+            String currentDBPath = "/data/data/movil.palermo.com.py.stockregresomovil/databases/" + DATABASE_NAME;
+            //String currentDBPath = "/storage/sdcard0/Download/"+DATABASE_NAME;
+            Log.d("DatabaseHelper", "PATHHHHHHHHHHHHHHHHHHHHHHHHHH: " + currentDBPath);
+            Log.d("DatabaseHelper", "destino: " + sd.getAbsolutePath());
+            String backupDBPath = "stock.db";
+            File currentDB = new File(currentDBPath);
+            File backupDB = new File(sd, backupDBPath);
 
-
-                String currentDBPath = "/data/data/movil.palermo.com.py.stockregresomovil/databases/"+DATABASE_NAME;
-                //String currentDBPath = "/storage/sdcard0/Download/"+DATABASE_NAME;
-                Log.d("DatabaseHelper","PATHHHHHHHHHHHHHHHHHHHHHHHHHH: " + currentDBPath);
-                Log.d("DatabaseHelper","destino: " + sd.getAbsolutePath());
-                String backupDBPath = "stock.db";
-                File currentDB = new File(currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-
-                //if (currentDB.exists()) {
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-                //}
+            //if (currentDB.exists()) {
+            FileChannel src = new FileInputStream(currentDB).getChannel();
+            FileChannel dst = new FileOutputStream(backupDB).getChannel();
+            dst.transferFrom(src, 0, src.size());
+            src.close();
+            dst.close();
+            //}
 
         } catch (Exception e) {
             throw new RuntimeException(e);

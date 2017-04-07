@@ -11,7 +11,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo_tabacos"/>
+        android:src="@drawable/logopalermo"/>
     <TextView
         android:id="@+id/mensaje"
         android:layout_width="wrap_content"

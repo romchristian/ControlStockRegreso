@@ -2,9 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainCrearControl"
+    tools:context=".MainCrearControlActivity"
     android:layout_marginTop="?attr/actionBarSize">
 
+    <!--"?attr/actionBarSize"-->
     <!--<TextView
         android:id="@+id/titulo"
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
         android:id="@+id/recuadroVendedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="3dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:background="@drawable/fondo_recuadro">
@@ -189,10 +190,6 @@
 
     </FrameLayout>
 
-
-
-
-
     <Button
 
         android:id="@+id/bttnCargarProductos"
@@ -205,7 +202,7 @@
         android:padding="10dp"
         android:background="@drawable/fondo_boton_cargar_prod"
         android:enabled="false"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:text="Cargar Productos"
@@ -213,17 +210,36 @@
         android:textStyle="bold" />
 
     <Button
+
+        android:id="@+id/bttnCargarDevolucion"
+        android:layout_below="@+id/bttnCargarProductos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:background="@drawable/fondo_boton_cargar_devol"
+        android:enabled="false"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Devolución de Productos Vencidos"
+        android:textColor="@drawable/boton_texto"
+        android:textStyle="bold" />
+
+    <Button
         android:id="@+id/bttnFinalizarControl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bttnCargarProductos"
+        android:layout_below="@+id/bttnCargarDevolucion"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="center_horizontal"
         android:padding="10dp"
         android:background="@drawable/fondo_boton_finalizar"
         android:enabled="false"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:text="Finalizar"

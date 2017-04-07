@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -31,7 +33,7 @@ import movil.palermo.com.py.stockregresomovil.modelo.Producto;
 import movil.palermo.com.py.stockregresomovil.modelo.ProductoResumen;
 
 
-public class ListaProductos extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ListaProductos extends  ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     public static final int CONTAR_PRODUCTOS = 201;
 
 
@@ -44,6 +46,7 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     private ProgressDialog pDialog;
     private Intent datos;
 
+    private Integer esDevolucion = 0;
     private ArrayAdapter<String> adaptador;
 
     private Control controlActual;
@@ -52,8 +55,6 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_productos);
-
-
 
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
@@ -68,13 +69,27 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         productoDao = databaseHelper.getProductoDao();
 
         ActionBar ab = getSupportActionBar();
-        ab.setTitle("Seleccione el producto");
+       // ab.setTitle("Seleccione el producto");
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
         if(obj != null && obj instanceof Control){
             controlActual = (Control)obj;
             ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString() +"        Stock Regreso");
         }
+
+
+        Object param2 = getIntent().getSerializableExtra("DEVOLUCION");
+
+        if(param2 != null && param2 instanceof Integer){
+            esDevolucion = (Integer) param2;
+        }
+
+        if (esDevolucion == 1) {
+            ab.setTitle("Seleccione el producto");
+        }else {
+            ab.setTitle("Seleccione el producto");
+        }
+
         recargaLista();
 
     }
@@ -90,7 +105,16 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
 
     @Override
     protected void onRestart() {
+
+
         super.onRestart();
+        Object param2 = getIntent().getSerializableExtra("DEVOLUCION");
+
+
+
+        if(param2 != null && param2 instanceof Integer){
+            esDevolucion = (Integer) param2;
+        }
         recargaLista();
     }
 
@@ -105,15 +129,31 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         int idControl = controlActual.getId();
         Log.d("TAG", "Dentro RECARGA LISTA " + idControl);
 
+        Log.d("TAG", "Dentro esDevolucion " + esDevolucion);
+        GenericRawResults<String[]> rawResults = null;
+        if (esDevolucion == 0) {
+            rawResults= productoDao.queryRaw(
+                            "select p.id, p.nombre, p.kit, " +
+                                    "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as cajas, " +
+                                    "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as gruesas, " +
+                                    "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as cajetillas, " +
+                                    "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as unidad, " +
+                                    "     max(d.esDevolucion) as esDevolucion " +
+                                    "     from producto p left join controldetalle d on d.producto_id = p.id " +
+                                    "     group by p.id,p.nombre order by p.orden");
 
-        GenericRawResults<String[]> rawResults =
-                productoDao.queryRaw(
+        } else if (esDevolucion == 1){
+            rawResults= productoDao.queryRaw(
                         "select p.id, p.nombre, p.kit, " +
-                                "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
-                                "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
-                                "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
-                                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
-                                " from producto p left join controldetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden");
+                                    "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as cajas, " +
+                                    "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as gruesas, " +
+                                    "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as cajetillas, " +
+                                    "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as unidad, " +
+                                    "     max(d.esDevolucion) as esDevolucion " +
+                                    "     from producto p left join controldetalle d on d.producto_id = p.id " +
+                                    "     where p.kit = 0 " +
+                                    "     group by p.id,p.nombre order by p.orden");
+            }
 
         productoList.clear();
 
@@ -206,8 +246,10 @@ public class ListaProductos extends ActionBarActivity implements View.OnClickLis
         Intent intent = new Intent(this, AgregarCantidadActivity.class);
         ProductoResumen pr = (ProductoResumen) adapterView.getItemAtPosition(i);
         productoDao.queryForId(pr.getId());
+
         intent.putExtra("PRODUCTO", productoDao.queryForId(pr.getId()));
         intent.putExtra("CONTROL", controlActual);
+        intent.putExtra("DEVOLUCION", esDevolucion);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }

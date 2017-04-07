@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,7 +63,7 @@ import movil.palermo.com.py.stockregresomovil.util.UtilJson;
 /**
  * Created by Christian on 08/12/2014.
  */
-public class MainCrearControlActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainCrearControlActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static String TAG = MainCrearControlActivity.class.getSimpleName();
 
@@ -71,7 +72,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
     public static final int AGREGAR_MOVIL = 103;
     public static final int CARGAR_PRODUCTOS = 104;
 
-    private Button bttnCargarProductos, bttnFinalizarControl;
+    private Button bttnCargarProductos, bttnCargarDevolucion, bttnFinalizarControl;
     private TextView txtVendedorValue, txtChoferValue, txtMovilValue;
     private ImageView searchVendedor, searchChofer, searchMovil;
     private FrameLayout recuadroVendedor, recuadroChofer, recuadroMovil;
@@ -128,6 +129,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         inicializaSesion();
         configuraEfectos();
         bttnCargarProductos.setEnabled(false);
+        bttnCargarDevolucion.setEnabled(false);
         bttnFinalizarControl.setEnabled(false);
 
         Object obj = getIntent().getSerializableExtra("CONTROL");
@@ -144,6 +146,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             txtMovilValue.setText(vehiculoSeleccionado.getMarca() + " Chapa: " + vehiculoSeleccionado.getChapa());
             recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
             bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+            bttnCargarDevolucion.setEnabled(sePuedeCargarDevolucion());
             bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
         } else {
             bttnFinalizarControl.setEnabled(false);
@@ -155,6 +158,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         try {
             List<ControlDetalle> lista = controlDetalleDao.queryBuilder()
                     .where().eq(ControlDetalle.COL_CONTROL_NOMBRE, c)
+                    .and().eq(ControlDetalle.COL_CONTROL_DEVOLUCION, 0) //Habilita el boton finalizar solo si existen Productos cargados con esDevolucion = 0, osea que no son devolucion
                     .query();
             return lista != null && !(lista.isEmpty());
 
@@ -299,6 +303,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         searchChofer = (ImageView) findViewById(R.id.search_chofer);
         searchMovil = (ImageView) findViewById(R.id.search_movil);
         bttnCargarProductos = (Button) findViewById(R.id.bttnCargarProductos);
+        bttnCargarDevolucion= (Button) findViewById(R.id.bttnCargarDevolucion);
         bttnFinalizarControl = (Button) findViewById(R.id.bttnFinalizarControl);
         okImg = (ImageView) findViewById(R.id.ok_img);
 
@@ -342,6 +347,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         recuadroVendedor.setOnClickListener(this);
         recuadroChofer.setOnClickListener(this);
         bttnCargarProductos.setOnClickListener(this);
+        bttnCargarDevolucion.setOnClickListener(this);
         bttnFinalizarControl.setOnClickListener(this);
     }
 
@@ -384,7 +390,14 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
             return false;
         }
     }
-
+    private boolean sePuedeCargarDevolucion() {
+        if (vendedorSeleccionado != null && conductorSeleccionado != null && vehiculoSeleccionado != null) {
+            bttnCargarDevolucion.requestFocus();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     protected void onRestart() {
@@ -403,6 +416,17 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                 controlDao.createOrUpdate(getControlActual());
                 intentMain = new Intent(this, ListaProductos.class);
                 intentMain.putExtra("CONTROL", getControlActual());
+                intentMain.putExtra("DEVOLUCION", 0);
+                startActivityForResult(intentMain, CARGAR_PRODUCTOS);
+                break;
+            case R.id.bttnCargarDevolucion:
+                getControlActual().setFechaControl(MainActivity.removeTime(new Date()));
+                getControlActual().setSesion(sesionActual);
+                getControlActual().setKm(0);//falta el input
+                controlDao.createOrUpdate(getControlActual());
+                intentMain = new Intent(this, ListaProductos.class);
+                intentMain.putExtra("CONTROL", getControlActual());
+                intentMain.putExtra("DEVOLUCION", 1);
                 startActivityForResult(intentMain, CARGAR_PRODUCTOS);
                 break;
             case R.id.bttnFinalizarControl:
@@ -573,6 +597,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
         txtMovilValue.setText("");
         recuadroMovil.setBackgroundResource(R.drawable.recuadro);
         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+        bttnCargarDevolucion.setEnabled(sePuedeCargarDevolucion());
         bttnFinalizarControl.setEnabled(sePuedeFinalizarControl(controlActual));
     }
 
@@ -598,6 +623,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                         recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+                        bttnCargarDevolucion.setEnabled(sePuedeCargarDevolucion());
                     }
                     break;
                 case AGREGAR_CHOFER:
@@ -611,6 +637,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                         recuadroChofer.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+                        bttnCargarDevolucion.setEnabled(sePuedeCargarDevolucion());
                     }
                     break;
                 case AGREGAR_MOVIL:
@@ -621,6 +648,7 @@ public class MainCrearControlActivity extends ActionBarActivity implements View.
                         getControlActual().setVehiculoChapa(vehiculoSeleccionado.getChapa());
                         recuadroMovil.setBackgroundResource(R.drawable.recuadro_seleccionado);
                         bttnCargarProductos.setEnabled(sePuedeCargarProductos());
+                        bttnCargarDevolucion.setEnabled(sePuedeCargarDevolucion());
                     }
                     break;
                 case CARGAR_PRODUCTOS:

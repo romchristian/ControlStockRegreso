@@ -47,6 +47,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     private RuntimeExceptionDao<ProductoUM, Integer> productoUMDao;
     private ProgressDialog pDialog;
     private Intent datos;
+    private Integer esDevolucion;
 
     private Control controlActual;
 
@@ -54,8 +55,6 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_reposicion_producto);
-
-
 
         lstVwProductos = (ListView) findViewById(R.id.lstVwProductos);
         lstVwProductos.setOnItemClickListener(this);
@@ -78,12 +77,16 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
             controlActual = (Control)obj;
             ab.setSubtitle("Móvil Nro: " + controlActual.getVehiculo().getNumero().toString() + "       Reposición");
         }
+
+        Object param2 = getIntent().getSerializableExtra("DEVOLUCION");
+
+        if(param2 != null && param2 instanceof Integer){
+            esDevolucion = (Integer) param2;
+        }
+
         recargaLista();
 
     }
-
-
-
 
     @Override
     protected void onRestart() {
@@ -135,10 +138,10 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
                 "on p.id = resumen.pid \n" +
                 "order by p.orden, p.nombre";*/
         String consulta =    "select p.id, p.nombre, p.kit, " +
-                "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajas, " +
-                "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " then d.cantidad else 0 end) as gruesas, " +
-                "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " then d.cantidad else 0 end) as cajetillas, " +
-                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " then d.cantidad else 0 end) as unidad " +
+                "     sum(case when d.unidad_medida_id = 16 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as cajas, " +
+                "     sum(case when d.unidad_medida_id = 15 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as gruesas, " +
+                "     sum(case when d.unidad_medida_id = 25 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as cajetillas, " +
+                "     sum(case when d.unidad_medida_id = 29 and d.control_id = " + idControl + " and d.esDevolucion = " + esDevolucion + " then d.cantidad else 0 end) as unidad " +
                 " from producto p left join reposiciondetalle d   on d.producto_id = p.id group by p.id,p.nombre order by p.orden";
 
 
@@ -225,6 +228,7 @@ public class ListaReposicionProducto extends ActionBarActivity implements  Adapt
         reposicionDao.queryForId(rep.getId());
         intent.putExtra("PRODUCTO", reposicionDao.queryForId(rep.getId()));
         intent.putExtra("CONTROL", controlActual);
+        intent.putExtra("DEVOLUCION", esDevolucion);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }

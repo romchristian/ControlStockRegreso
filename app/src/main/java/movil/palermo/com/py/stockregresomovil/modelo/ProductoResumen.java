@@ -18,6 +18,7 @@ public class ProductoResumen implements Serializable{
     private int cantGruesas;
     private int cantCajetillas;
     private int cantUnidad;
+    private int esDevolucion;
 
     public ProductoResumen() {
 
@@ -31,8 +32,17 @@ public class ProductoResumen implements Serializable{
         this.cantGruesas = Integer.valueOf(row[4]==null?"0":row[4]);
         this.cantCajetillas = Integer.valueOf(row[5]==null?"0":row[5]);
         this.cantUnidad =  Integer.valueOf(row[6]==null?"0":row[6]);
+        this.esDevolucion =  Integer.valueOf(row[7]==null?"0":row[7]);
+
     }
 
+    public int getEsDevolucion() {
+        return esDevolucion;
+    }
+
+    public void setEsDevolucion(int esDevolucion) {
+        this.esDevolucion = esDevolucion;
+    }
 
     public int getId() {
         return id;

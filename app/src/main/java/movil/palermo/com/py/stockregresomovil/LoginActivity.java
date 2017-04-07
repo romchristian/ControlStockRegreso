@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +39,7 @@ import movil.palermo.com.py.stockregresomovil.modelo.ResponseLogin;
 import movil.palermo.com.py.stockregresomovil.util.UtilJson;
 
 
-public class LoginActivity extends ActionBarActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button button;
     EditText usuario;
@@ -56,7 +57,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 Settings.Secure.ANDROID_ID);
 
         setContentView(R.layout.activity_login);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         button = (Button) findViewById(R.id.button_login);
         usuario = (EditText)findViewById(R.id.editText_usuario);
         password = (EditText)findViewById(R.id.editText_pass);
